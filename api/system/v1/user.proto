@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package api.system.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "validate/validate.proto";
+
+option go_package = "universal/api/system/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.system.v1";
+
+service User {
+	rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+		option (google.api.http) = {
+			post: "/api/system/v1/users"
+			body: "*"
+		};
+	}
+	rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+		option (google.api.http) = {
+			put: "/api/system/v1/users/{id}"
+			body: "*"
+		};
+	}
+	rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/api/system/v1/users/{id}"
+		};
+	}
+	rpc GetUser (GetUserRequest) returns (GetUserReply) {
+		option (google.api.http) = {
+			get: "/api/system/v1/users/{id}"
+		};
+	}
+	rpc ListUser (ListUserRequest) returns (ListUserReply) {
+		option (google.api.http) = {
+			get: "/api/system/v1/users"
+		};
+	}
+}
+
+message UserInfo {
+	int64 id = 1;
+	string username = 2 [(validate.rules).string.min_len = 1];
+	string email = 3 [(validate.rules).string.email = true];
+	string password = 4;
+	string phone = 5;
+	string nickname = 6;
+	string avatar = 7;
+	int32 status = 8;
+	google.protobuf.Timestamp created_at = 9;
+	google.protobuf.Timestamp updated_at = 10;
+}
+
+message CreateUserRequest {
+	string username = 1 [(validate.rules).string = {min_len: 3, max_len: 50}];
+	string email = 2 [(validate.rules).string.email = true];
+	string password = 3 [(validate.rules).string.min_len = 6];
+	string phone = 4;
+	string nickname = 5 [(validate.rules).string.max_len = 100];
+	string avatar = 6;
+	int32 status = 7;
+}
+
+message CreateUserReply {
+	UserInfo user = 1;
+}
+
+message UpdateUserRequest {
+	int64 id = 1 [(validate.rules).int64.gt = 0];
+	string email = 2 [(validate.rules).string.email = true];
+	string password = 3;
+	string phone = 4;
+	string nickname = 5 [(validate.rules).string.max_len = 100];
+	string avatar = 6;
+	int32 status = 7;
+}
+
+message UpdateUserReply {
+	UserInfo user = 1;
+}
+
+message DeleteUserRequest {
+	int64 id = 1 [(validate.rules).int64.gt = 0];
+}
+
+message GetUserRequest {
+	int64 id = 1 [(validate.rules).int64.gt = 0];
+}
+
+message GetUserReply {
+	UserInfo user = 1;
+}
+
+message ListUserRequest {
+	int32 page = 1 [(validate.rules).int32 = {gte: 1}];
+	int32 page_size = 2 [(validate.rules).int32 = {gte: 1, lte: 100}];
+	string keyword = 3;
+	int32 status = 4;
+}
+
+message ListUserReply {
+	repeated UserInfo users = 1;
+	int64 total = 2;
+	int32 page = 3;
+	int32 page_size = 4;
+}

@@ -12,7 +12,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo)
+var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewUserRepo)
 
 // Data .
 type Data struct {
@@ -32,7 +32,7 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 		return nil, nil, err
 	}
 	// 数据库迁移
-	//if err = db.AutoMigrate(&User{}, &APIKey{}, &File{}); err != nil {
+	//if err = db.AutoMigrate(&v1.UserInfo{}); err != nil {
 	//	helper.Fatalf("failed to migrate database: %v", err)
 	//	return nil, nil, err
 	//}
