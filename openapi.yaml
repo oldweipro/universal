@@ -3,14 +3,14 @@
 
 openapi: 3.0.3
 info:
-    title: User API
+    title: Universal API
     version: 0.0.1
 paths:
     /api/system/v1/users:
         get:
             tags:
-                - User
-            operationId: User_ListUser
+                - Universal
+            operationId: Universal_ListUser
             parameters:
                 - name: page
                   in: query
@@ -46,9 +46,9 @@ paths:
                                 $ref: '#/components/schemas/Status'
         post:
             tags:
-                - User
+                - Universal
             description: 基础CRUD操作
-            operationId: User_CreateUser
+            operationId: Universal_CreateUser
             requestBody:
                 content:
                     application/json:
@@ -71,9 +71,9 @@ paths:
     /api/system/v1/users/batch-delete:
         post:
             tags:
-                - User
+                - Universal
             description: 扩展操作
-            operationId: User_BatchDeleteUser
+            operationId: Universal_BatchDeleteUser
             requestBody:
                 content:
                     application/json:
@@ -96,8 +96,8 @@ paths:
     /api/system/v1/users/stats:
         get:
             tags:
-                - User
-            operationId: User_GetUserStats
+                - Universal
+            operationId: Universal_GetUserStats
             responses:
                 "200":
                     description: OK
@@ -114,8 +114,8 @@ paths:
     /api/system/v1/users/{id}:
         get:
             tags:
-                - User
-            operationId: User_GetUser
+                - Universal
+            operationId: Universal_GetUser
             parameters:
                 - name: id
                   in: path
@@ -137,8 +137,8 @@ paths:
                                 $ref: '#/components/schemas/Status'
         put:
             tags:
-                - User
-            operationId: User_UpdateUser
+                - Universal
+            operationId: Universal_UpdateUser
             parameters:
                 - name: id
                   in: path
@@ -166,8 +166,8 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - User
-            operationId: User_DeleteUser
+                - Universal
+            operationId: Universal_DeleteUser
             parameters:
                 - name: id
                   in: path
@@ -190,8 +190,8 @@ paths:
     /api/system/v1/users/{id}/password:
         patch:
             tags:
-                - User
-            operationId: User_ChangePassword
+                - Universal
+            operationId: Universal_ChangePassword
             parameters:
                 - name: id
                   in: path
@@ -220,8 +220,8 @@ paths:
     /api/system/v1/users/{id}/status:
         patch:
             tags:
-                - User
-            operationId: User_UpdateUserStatus
+                - Universal
+            operationId: Universal_UpdateUserStatus
             parameters:
                 - name: id
                   in: path
@@ -427,4 +427,4 @@ components:
                     type: string
                     format: date-time
 tags:
-    - name: User
+    - name: Universal

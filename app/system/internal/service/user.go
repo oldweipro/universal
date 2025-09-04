@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
+	"universal/app/system/internal/biz"
+
 	pb "universal/api/system/v1"
-	"universal/internal/biz"
 )
 
 type UserService struct {
@@ -54,7 +55,6 @@ func (s *UserService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest)
 func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
 	return &pb.GetUserReply{}, nil
 }
-
 func (s *UserService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
 	// 转换protobuf请求为业务层请求
 	bizReq := &biz.ListUserRequest{
@@ -90,7 +90,6 @@ func (s *UserService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*p
 		PageSize: bizResp.PageSize,
 	}, nil
 }
-
 func (s *UserService) BatchDeleteUser(ctx context.Context, req *pb.BatchDeleteUserRequest) (*pb.BatchDeleteUserReply, error) {
 	return &pb.BatchDeleteUserReply{}, nil
 }

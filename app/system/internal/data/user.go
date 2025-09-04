@@ -2,8 +2,8 @@ package data
 
 import (
 	"context"
-	"universal/internal/biz"
-	"universal/internal/data/model"
+	"universal/app/system/internal/biz"
+	"universal/app/system/internal/data/model"
 
 	"golang.org/x/crypto/bcrypt"
 
