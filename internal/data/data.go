@@ -2,6 +2,7 @@ package data
 
 import (
 	"universal/internal/conf"
+	"universal/internal/data/model"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
@@ -32,10 +33,10 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 		return nil, nil, err
 	}
 	// 数据库迁移
-	//if err = db.AutoMigrate(&v1.UserInfo{}); err != nil {
-	//	helper.Fatalf("failed to migrate database: %v", err)
-	//	return nil, nil, err
-	//}
+	if err = db.AutoMigrate(&model.User{}); err != nil {
+		helper.Fatalf("failed to migrate database: %v", err)
+		return nil, nil, err
+	}
 
 	// 初始化Redis连接
 	rdb := redis.NewClient(&redis.Options{

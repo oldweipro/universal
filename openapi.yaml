@@ -3,7 +3,7 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: User API
     version: 0.0.1
 paths:
     /api/system/v1/users:
@@ -37,16 +37,23 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.system.v1.ListUserReply'
+                                $ref: '#/components/schemas/ListUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         post:
             tags:
                 - User
+            description: 基础CRUD操作
             operationId: User_CreateUser
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.system.v1.CreateUserRequest'
+                            $ref: '#/components/schemas/CreateUserRequest'
                 required: true
             responses:
                 "200":
@@ -54,7 +61,56 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.system.v1.CreateUserReply'
+                                $ref: '#/components/schemas/CreateUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/system/v1/users/batch-delete:
+        post:
+            tags:
+                - User
+            description: 扩展操作
+            operationId: User_BatchDeleteUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BatchDeleteUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BatchDeleteUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/system/v1/users/stats:
+        get:
+            tags:
+                - User
+            operationId: User_GetUserStats
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetUserStatsReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/system/v1/users/{id}:
         get:
             tags:
@@ -72,7 +128,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.system.v1.GetUserReply'
+                                $ref: '#/components/schemas/GetUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         put:
             tags:
                 - User
@@ -87,7 +149,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.system.v1.UpdateUserRequest'
+                            $ref: '#/components/schemas/UpdateUserRequest'
                 required: true
             responses:
                 "200":
@@ -95,7 +157,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.system.v1.UpdateUserReply'
+                                $ref: '#/components/schemas/UpdateUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         delete:
             tags:
                 - User
@@ -109,34 +177,116 @@ paths:
             responses:
                 "200":
                     description: OK
-                    content: {}
-    /helloworld/{name}:
-        get:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OperationReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/system/v1/users/{id}/password:
+        patch:
             tags:
-                - Greeter
-            description: Sends a greeting
-            operationId: Greeter_SayHello
+                - User
+            operationId: User_ChangePassword
             parameters:
-                - name: name
+                - name: id
                   in: path
                   required: true
                   schema:
                     type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ChangePasswordRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+                                $ref: '#/components/schemas/OperationReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/system/v1/users/{id}/status:
+        patch:
+            tags:
+                - User
+            operationId: User_UpdateUserStatus
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateUserStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OperationReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
-        api.system.v1.CreateUserReply:
+        BatchDeleteUserReply:
+            type: object
+            properties:
+                deletedCount:
+                    type: integer
+                    format: int32
+                failedCount:
+                    type: integer
+                    format: int32
+                failedIds:
+                    type: array
+                    items:
+                        type: string
+                message:
+                    type: string
+        BatchDeleteUserRequest:
+            type: object
+            properties:
+                ids:
+                    type: array
+                    items:
+                        type: string
+            description: 扩展操作消息定义
+        ChangePasswordRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                oldPassword:
+                    type: string
+                newPassword:
+                    type: string
+        CreateUserReply:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/api.system.v1.UserInfo'
-        api.system.v1.CreateUserRequest:
+                    $ref: '#/components/schemas/UserInfo'
+        CreateUserRequest:
             type: object
             properties:
                 username:
@@ -154,18 +304,37 @@ components:
                 status:
                     type: integer
                     format: int32
-        api.system.v1.GetUserReply:
+        GetUserReply:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/api.system.v1.UserInfo'
-        api.system.v1.ListUserReply:
+                    $ref: '#/components/schemas/UserInfo'
+        GetUserStatsReply:
+            type: object
+            properties:
+                totalUsers:
+                    type: string
+                activeUsers:
+                    type: string
+                disabledUsers:
+                    type: string
+                todayNewUsers:
+                    type: string
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListUserReply:
             type: object
             properties:
                 users:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.system.v1.UserInfo'
+                        $ref: '#/components/schemas/UserInfo'
                 total:
                     type: string
                 page:
@@ -174,12 +343,39 @@ components:
                 pageSize:
                     type: integer
                     format: int32
-        api.system.v1.UpdateUserReply:
+        OperationReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+                affectedCount:
+                    type: integer
+                    format: int32
+            description: 通用操作响应
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateUserReply:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/api.system.v1.UserInfo'
-        api.system.v1.UpdateUserRequest:
+                    $ref: '#/components/schemas/UserInfo'
+        UpdateUserRequest:
             type: object
             properties:
                 id:
@@ -197,7 +393,15 @@ components:
                 status:
                     type: integer
                     format: int32
-        api.system.v1.UserInfo:
+        UpdateUserStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+        UserInfo:
             type: object
             properties:
                 id:
@@ -206,10 +410,9 @@ components:
                     type: string
                 email:
                     type: string
-                password:
-                    type: string
                 phone:
                     type: string
+                    description: 密码字段已移除，不在响应中返回
                 nickname:
                     type: string
                 avatar:
@@ -223,13 +426,5 @@ components:
                 updatedAt:
                     type: string
                     format: date-time
-        helloworld.v1.HelloReply:
-            type: object
-            properties:
-                message:
-                    type: string
-            description: The response message containing the greetings
 tags:
-    - name: Greeter
-      description: The greeting service definition.
     - name: User
