@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"universal/app/user/internal/conf"
@@ -21,17 +22,22 @@ import (
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name = "user"
+	Name = "universal.user.service"
 	// Version is the version of the compiled software.
 	Version = "v1.0.0"
 	// flagconf is the config flag.
 	flagconf string
 
-	id, _ = os.Hostname()
+	id = generateServiceID()
 )
 
 func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
+}
+
+func generateServiceID() string {
+	hostname, _ := os.Hostname()
+	return fmt.Sprintf("%s-%s-%d", hostname, Name, os.Getpid())
 }
 
 func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, r registry.Registrar) *kratos.App {

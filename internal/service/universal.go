@@ -2,16 +2,19 @@ package service
 
 import (
 	"context"
+	"universal/internal/biz"
 
 	pb "universal/api/universal/v1"
 )
 
 type UniversalService struct {
 	pb.UnimplementedUniversalServer
+
+	uc *biz.UserUsecase
 }
 
-func NewUniversalService() *UniversalService {
-	return &UniversalService{}
+func NewUniversalService(uc *biz.UserUsecase) *UniversalService {
+	return &UniversalService{uc: uc}
 }
 
 func (s *UniversalService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
@@ -27,7 +30,28 @@ func (s *UniversalService) GetUser(ctx context.Context, req *pb.GetUserRequest) 
 	return &pb.GetUserReply{}, nil
 }
 func (s *UniversalService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
-	return &pb.ListUserReply{Page: 1, PageSize: 10}, nil
+	user, err := s.uc.ListUser(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	users := make([]*pb.UserInfo, len(user.Users))
+	for i, u := range user.Users {
+		users[i] = &pb.UserInfo{
+			Id:       u.ID,
+			Username: u.Username,
+			Email:    u.Email,
+			Phone:    u.Phone,
+			Nickname: u.Nickname,
+			Avatar:   u.Avatar,
+			Status:   u.Status,
+		}
+	}
+	return &pb.ListUserReply{
+		Page:     user.Page,
+		PageSize: user.PageSize,
+		Total:    user.Total,
+		Users:    users,
+	}, nil
 }
 func (s *UniversalService) BatchDeleteUser(ctx context.Context, req *pb.BatchDeleteUserRequest) (*pb.BatchDeleteUserReply, error) {
 	return &pb.BatchDeleteUserReply{}, nil

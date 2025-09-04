@@ -1,9 +1,9 @@
 server:
   http:
-    addr: 0.0.0.0:8101 # 可以不写端口让consul自动分配
+    addr: 0.0.0.0:0 # 端口动态分配
     timeout: 1s
   grpc:
-    addr: 0.0.0.0:9101
+    addr: 0.0.0.0:0 # 端口动态分配
     timeout: 1s
 data:
   database:
