@@ -4,8 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-
-	"universal/internal/conf"
+	"universal/app/gateway/internal/conf"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"

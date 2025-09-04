@@ -558,7 +558,7 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x06consul\x18\x01 \x01(\v2\x1b.kratos.api.Registry.ConsulR\x06consul\x1a:\n" +
 	"\x06Consul\x12\x18\n" +
 	"\aaddress\x18\x01 \x01(\tR\aaddress\x12\x16\n" +
-	"\x06scheme\x18\x02 \x01(\tR\x06schemeB\x1eZ\x1cuniversal/internal/conf;confb\x06proto3"
+	"\x06scheme\x18\x02 \x01(\tR\x06schemeB*Z(universal/app/gateway/internal/conf;confb\x06proto3"
 
 var (
 	file_conf_conf_proto_rawDescOnce sync.Once

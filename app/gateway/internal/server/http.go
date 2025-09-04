@@ -1,10 +1,10 @@
 package server
 
 import (
+	gatewayv1 "universal/api/gateway/v1"
 	v1 "universal/api/helloworld/v1"
-	universalv1 "universal/api/universal/v1"
-	"universal/internal/conf"
-	"universal/internal/service"
+	"universal/app/gateway/internal/conf"
+	"universal/app/gateway/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -12,7 +12,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, universalService *service.UniversalService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, gatewayService *service.GatewayService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -29,6 +29,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, universalSer
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
-	universalv1.RegisterUniversalHTTPServer(srv, universalService)
+	gatewayv1.RegisterGatewayHTTPServer(srv, gatewayService)
 	return srv
 }

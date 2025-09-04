@@ -9,11 +9,11 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
-	"universal/internal/biz"
-	"universal/internal/conf"
-	"universal/internal/data"
-	"universal/internal/server"
-	"universal/internal/service"
+	"universal/app/gateway/internal/biz"
+	"universal/app/gateway/internal/conf"
+	"universal/app/gateway/internal/data"
+	"universal/app/gateway/internal/server"
+	"universal/app/gateway/internal/service"
 )
 
 import (
@@ -35,9 +35,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, registry *conf.Regist
 	greeterService := service.NewGreeterService(greeterUsecase)
 	userRepo := data.NewUserRepo(dataData, logger)
 	userUsecase := biz.NewUserUsecase(userRepo, logger)
-	universalService := service.NewUniversalService(userUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, universalService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, universalService, logger)
+	gatewayService := service.NewGatewayService(userUsecase)
+	grpcServer := server.NewGRPCServer(confServer, greeterService, gatewayService, logger)
+	httpServer := server.NewHTTPServer(confServer, greeterService, gatewayService, logger)
 	registrar := data.NewRegistrar(registry)
 	app := newApp(logger, grpcServer, httpServer, registrar)
 	return app, func() {

@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
+	"universal/app/gateway/internal/biz"
 
 	v1 "universal/api/helloworld/v1"
-	"universal/internal/biz"
 )
 
 // GreeterService is a greeter service.

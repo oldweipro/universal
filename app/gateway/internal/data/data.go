@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 	userv1 "universal/api/user/v1"
-	"universal/internal/conf"
+	"universal/app/gateway/internal/conf"
 
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"

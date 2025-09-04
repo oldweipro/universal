@@ -3,14 +3,14 @@
 
 openapi: 3.0.3
 info:
-    title: Universal API
+    title: Gateway API
     version: 0.0.1
 paths:
     /api/user/v1/users:
         get:
             tags:
-                - Universal
-            operationId: Universal_ListUser
+                - Gateway
+            operationId: Gateway_ListUser
             parameters:
                 - name: page
                   in: query
@@ -46,9 +46,9 @@ paths:
                                 $ref: '#/components/schemas/Status'
         post:
             tags:
-                - Universal
+                - Gateway
             description: 基础CRUD操作
-            operationId: Universal_CreateUser
+            operationId: Gateway_CreateUser
             requestBody:
                 content:
                     application/json:
@@ -71,9 +71,9 @@ paths:
     /api/user/v1/users/batch-delete:
         post:
             tags:
-                - Universal
+                - Gateway
             description: 扩展操作
-            operationId: Universal_BatchDeleteUser
+            operationId: Gateway_BatchDeleteUser
             requestBody:
                 content:
                     application/json:
@@ -96,8 +96,8 @@ paths:
     /api/user/v1/users/stats:
         get:
             tags:
-                - Universal
-            operationId: Universal_GetUserStats
+                - Gateway
+            operationId: Gateway_GetUserStats
             responses:
                 "200":
                     description: OK
@@ -114,8 +114,8 @@ paths:
     /api/user/v1/users/{id}:
         get:
             tags:
-                - Universal
-            operationId: Universal_GetUser
+                - Gateway
+            operationId: Gateway_GetUser
             parameters:
                 - name: id
                   in: path
@@ -137,8 +137,8 @@ paths:
                                 $ref: '#/components/schemas/Status'
         put:
             tags:
-                - Universal
-            operationId: Universal_UpdateUser
+                - Gateway
+            operationId: Gateway_UpdateUser
             parameters:
                 - name: id
                   in: path
@@ -166,8 +166,8 @@ paths:
                                 $ref: '#/components/schemas/Status'
         delete:
             tags:
-                - Universal
-            operationId: Universal_DeleteUser
+                - Gateway
+            operationId: Gateway_DeleteUser
             parameters:
                 - name: id
                   in: path
@@ -190,8 +190,8 @@ paths:
     /api/user/v1/users/{id}/password:
         patch:
             tags:
-                - Universal
-            operationId: Universal_ChangePassword
+                - Gateway
+            operationId: Gateway_ChangePassword
             parameters:
                 - name: id
                   in: path
@@ -220,8 +220,8 @@ paths:
     /api/user/v1/users/{id}/status:
         patch:
             tags:
-                - Universal
-            operationId: Universal_UpdateUserStatus
+                - Gateway
+            operationId: Gateway_UpdateUserStatus
             parameters:
                 - name: id
                   in: path
@@ -427,4 +427,4 @@ components:
                     type: string
                     format: date-time
 tags:
-    - name: Universal
+    - name: Gateway
