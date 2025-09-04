@@ -8,7 +8,8 @@ import "validate/validate.proto";
 
 option go_package = "universal/api/system/v1;v1";
 option java_multiple_files = true;
-option java_package = "api.system.v1";
+option java_package = "com.oldwei.universal.api.system.v1";
+option java_outer_classname = "SystemProtoV1";
 
 service User {
 	// 基础CRUD操作

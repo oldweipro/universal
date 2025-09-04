@@ -1154,8 +1154,8 @@ const file_api_system_v1_user_proto_rawDesc = "" +
 	"\x0fBatchDeleteUser\x12%.api.system.v1.BatchDeleteUserRequest\x1a#.api.system.v1.BatchDeleteUserReply\",\x82\xd3\xe4\x93\x02&:\x01*\"!/api/system/v1/users/batch-delete\x12\x86\x01\n" +
 	"\x10UpdateUserStatus\x12&.api.system.v1.UpdateUserStatusRequest\x1a\x1d.api.system.v1.OperationReply\"+\x82\xd3\xe4\x93\x02%:\x01*2 /api/system/v1/users/{id}/status\x12\x84\x01\n" +
 	"\x0eChangePassword\x12$.api.system.v1.ChangePasswordRequest\x1a\x1d.api.system.v1.OperationReply\"-\x82\xd3\xe4\x93\x02':\x01*2\"/api/system/v1/users/{id}/password\x12x\n" +
-	"\fGetUserStats\x12\".api.system.v1.GetUserStatsRequest\x1a .api.system.v1.GetUserStatsReply\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/system/v1/users/statsB-\n" +
-	"\rapi.system.v1P\x01Z\x1auniversal/api/system/v1;v1b\x06proto3"
+	"\fGetUserStats\x12\".api.system.v1.GetUserStatsRequest\x1a .api.system.v1.GetUserStatsReply\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/system/v1/users/statsBQ\n" +
+	"\"com.oldwei.universal.api.system.v1B\rSystemProtoV1P\x01Z\x1auniversal/api/system/v1;v1b\x06proto3"
 
 var (
 	file_api_system_v1_user_proto_rawDescOnce sync.Once

@@ -2,7 +2,7 @@ package server
 
 import (
 	v1 "universal/api/helloworld/v1"
-	sysV1 "universal/api/system/v1"
+	systemv1 "universal/api/system/v1"
 	"universal/internal/conf"
 	"universal/internal/service"
 
@@ -29,6 +29,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, user *servic
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
-	sysV1.RegisterUserHTTPServer(srv, user)
+	systemv1.RegisterUserHTTPServer(srv, user)
 	return srv
 }
