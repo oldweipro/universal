@@ -16,54 +16,54 @@ service Universal {
   // 基础CRUD操作
   rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
     option (google.api.http) = {
-      post: "/api/system/v1/users"
+      post: "/api/user/v1/users"
       body: "*"
     };
   }
   rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
     option (google.api.http) = {
-      put: "/api/system/v1/users/{id}"
+      put: "/api/user/v1/users/{id}"
       body: "*"
     };
   }
   rpc DeleteUser (DeleteUserRequest) returns (OperationReply) {
     option (google.api.http) = {
-      delete: "/api/system/v1/users/{id}"
+      delete: "/api/user/v1/users/{id}"
     };
   }
   rpc GetUser (GetUserRequest) returns (GetUserReply) {
     option (google.api.http) = {
-      get: "/api/system/v1/users/{id}"
+      get: "/api/user/v1/users/{id}"
     };
   }
   rpc ListUser (ListUserRequest) returns (ListUserReply) {
     option (google.api.http) = {
-      get: "/api/system/v1/users"
+      get: "/api/user/v1/users"
     };
   }
 
   // 扩展操作
   rpc BatchDeleteUser (BatchDeleteUserRequest) returns (BatchDeleteUserReply) {
     option (google.api.http) = {
-      post: "/api/system/v1/users/batch-delete"
+      post: "/api/user/v1/users/batch-delete"
       body: "*"
     };
   }
   rpc UpdateUserStatus (UpdateUserStatusRequest) returns (OperationReply) {
     option (google.api.http) = {
-      patch: "/api/system/v1/users/{id}/status"
+      patch: "/api/user/v1/users/{id}/status"
       body: "*"
     };
   }
   rpc ChangePassword (ChangePasswordRequest) returns (OperationReply) {
     option (google.api.http) = {
-      patch: "/api/system/v1/users/{id}/password"
+      patch: "/api/user/v1/users/{id}/password"
       body: "*"
     };
   }
   rpc GetUserStats (GetUserStatsRequest) returns (GetUserStatsReply) {
     option (google.api.http) = {
-      get: "/api/system/v1/users/stats"
+      get: "/api/user/v1/users/stats"
     };
   }
 }

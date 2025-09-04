@@ -133,7 +133,7 @@ func NewNode(node int64) (*Node, error) {
 
 // Generate creates and returns a unique snowflake ID
 // To help guarantee uniqueness
-// - Make sure your system is keeping accurate system time
+// - Make sure your user is keeping accurate user time
 // - Make sure you never have multiple nodes running with the same node ID
 func (n *Node) Generate() ID {
 

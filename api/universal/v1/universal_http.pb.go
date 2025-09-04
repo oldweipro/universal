@@ -45,15 +45,15 @@ type UniversalHTTPServer interface {
 
 func RegisterUniversalHTTPServer(s *http.Server, srv UniversalHTTPServer) {
 	r := s.Route("/")
-	r.POST("/api/system/v1/users", _Universal_CreateUser0_HTTP_Handler(srv))
-	r.PUT("/api/system/v1/users/{id}", _Universal_UpdateUser0_HTTP_Handler(srv))
-	r.DELETE("/api/system/v1/users/{id}", _Universal_DeleteUser0_HTTP_Handler(srv))
-	r.GET("/api/system/v1/users/{id}", _Universal_GetUser0_HTTP_Handler(srv))
-	r.GET("/api/system/v1/users", _Universal_ListUser0_HTTP_Handler(srv))
-	r.POST("/api/system/v1/users/batch-delete", _Universal_BatchDeleteUser0_HTTP_Handler(srv))
-	r.PATCH("/api/system/v1/users/{id}/status", _Universal_UpdateUserStatus0_HTTP_Handler(srv))
-	r.PATCH("/api/system/v1/users/{id}/password", _Universal_ChangePassword0_HTTP_Handler(srv))
-	r.GET("/api/system/v1/users/stats", _Universal_GetUserStats0_HTTP_Handler(srv))
+	r.POST("/api/user/v1/users", _Universal_CreateUser0_HTTP_Handler(srv))
+	r.PUT("/api/user/v1/users/{id}", _Universal_UpdateUser0_HTTP_Handler(srv))
+	r.DELETE("/api/user/v1/users/{id}", _Universal_DeleteUser0_HTTP_Handler(srv))
+	r.GET("/api/user/v1/users/{id}", _Universal_GetUser0_HTTP_Handler(srv))
+	r.GET("/api/user/v1/users", _Universal_ListUser0_HTTP_Handler(srv))
+	r.POST("/api/user/v1/users/batch-delete", _Universal_BatchDeleteUser0_HTTP_Handler(srv))
+	r.PATCH("/api/user/v1/users/{id}/status", _Universal_UpdateUserStatus0_HTTP_Handler(srv))
+	r.PATCH("/api/user/v1/users/{id}/password", _Universal_ChangePassword0_HTTP_Handler(srv))
+	r.GET("/api/user/v1/users/stats", _Universal_GetUserStats0_HTTP_Handler(srv))
 }
 
 func _Universal_CreateUser0_HTTP_Handler(srv UniversalHTTPServer) func(ctx http.Context) error {
@@ -279,7 +279,7 @@ func NewUniversalHTTPClient(client *http.Client) UniversalHTTPClient {
 
 func (c *UniversalHTTPClientImpl) BatchDeleteUser(ctx context.Context, in *BatchDeleteUserRequest, opts ...http.CallOption) (*BatchDeleteUserReply, error) {
 	var out BatchDeleteUserReply
-	pattern := "/api/system/v1/users/batch-delete"
+	pattern := "/api/user/v1/users/batch-delete"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUniversalBatchDeleteUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -292,7 +292,7 @@ func (c *UniversalHTTPClientImpl) BatchDeleteUser(ctx context.Context, in *Batch
 
 func (c *UniversalHTTPClientImpl) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...http.CallOption) (*OperationReply, error) {
 	var out OperationReply
-	pattern := "/api/system/v1/users/{id}/password"
+	pattern := "/api/user/v1/users/{id}/password"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUniversalChangePassword))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -305,7 +305,7 @@ func (c *UniversalHTTPClientImpl) ChangePassword(ctx context.Context, in *Change
 
 func (c *UniversalHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*CreateUserReply, error) {
 	var out CreateUserReply
-	pattern := "/api/system/v1/users"
+	pattern := "/api/user/v1/users"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUniversalCreateUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -318,7 +318,7 @@ func (c *UniversalHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUser
 
 func (c *UniversalHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...http.CallOption) (*OperationReply, error) {
 	var out OperationReply
-	pattern := "/api/system/v1/users/{id}"
+	pattern := "/api/user/v1/users/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUniversalDeleteUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -331,7 +331,7 @@ func (c *UniversalHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUser
 
 func (c *UniversalHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserReply, error) {
 	var out GetUserReply
-	pattern := "/api/system/v1/users/{id}"
+	pattern := "/api/user/v1/users/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUniversalGetUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -344,7 +344,7 @@ func (c *UniversalHTTPClientImpl) GetUser(ctx context.Context, in *GetUserReques
 
 func (c *UniversalHTTPClientImpl) GetUserStats(ctx context.Context, in *GetUserStatsRequest, opts ...http.CallOption) (*GetUserStatsReply, error) {
 	var out GetUserStatsReply
-	pattern := "/api/system/v1/users/stats"
+	pattern := "/api/user/v1/users/stats"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUniversalGetUserStats))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -357,7 +357,7 @@ func (c *UniversalHTTPClientImpl) GetUserStats(ctx context.Context, in *GetUserS
 
 func (c *UniversalHTTPClientImpl) ListUser(ctx context.Context, in *ListUserRequest, opts ...http.CallOption) (*ListUserReply, error) {
 	var out ListUserReply
-	pattern := "/api/system/v1/users"
+	pattern := "/api/user/v1/users"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUniversalListUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -370,7 +370,7 @@ func (c *UniversalHTTPClientImpl) ListUser(ctx context.Context, in *ListUserRequ
 
 func (c *UniversalHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...http.CallOption) (*UpdateUserReply, error) {
 	var out UpdateUserReply
-	pattern := "/api/system/v1/users/{id}"
+	pattern := "/api/user/v1/users/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUniversalUpdateUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -383,7 +383,7 @@ func (c *UniversalHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUser
 
 func (c *UniversalHTTPClientImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...http.CallOption) (*OperationReply, error) {
 	var out OperationReply
-	pattern := "/api/system/v1/users/{id}/status"
+	pattern := "/api/user/v1/users/{id}/status"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUniversalUpdateUserStatus))
 	opts = append(opts, http.PathTemplate(pattern))

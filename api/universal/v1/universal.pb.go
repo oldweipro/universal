@@ -1141,20 +1141,20 @@ const file_api_universal_v1_universal_proto_rawDesc = "" +
 	"totalUsers\x12!\n" +
 	"\factive_users\x18\x02 \x01(\x03R\vactiveUsers\x12%\n" +
 	"\x0edisabled_users\x18\x03 \x01(\x03R\rdisabledUsers\x12&\n" +
-	"\x0ftoday_new_users\x18\x04 \x01(\x03R\rtodayNewUsers2\x84\t\n" +
-	"\tUniversal\x12u\n" +
+	"\x0ftoday_new_users\x18\x04 \x01(\x03R\rtodayNewUsers2\xf2\b\n" +
+	"\tUniversal\x12s\n" +
 	"\n" +
-	"CreateUser\x12#.api.universal.v1.CreateUserRequest\x1a!.api.universal.v1.CreateUserReply\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/system/v1/users\x12z\n" +
+	"CreateUser\x12#.api.universal.v1.CreateUserRequest\x1a!.api.universal.v1.CreateUserReply\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/user/v1/users\x12x\n" +
 	"\n" +
-	"UpdateUser\x12#.api.universal.v1.UpdateUserRequest\x1a!.api.universal.v1.UpdateUserReply\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\x1a\x19/api/system/v1/users/{id}\x12v\n" +
+	"UpdateUser\x12#.api.universal.v1.UpdateUserRequest\x1a!.api.universal.v1.UpdateUserReply\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\x1a\x17/api/user/v1/users/{id}\x12t\n" +
 	"\n" +
-	"DeleteUser\x12#.api.universal.v1.DeleteUserRequest\x1a .api.universal.v1.OperationReply\"!\x82\xd3\xe4\x93\x02\x1b*\x19/api/system/v1/users/{id}\x12n\n" +
-	"\aGetUser\x12 .api.universal.v1.GetUserRequest\x1a\x1e.api.universal.v1.GetUserReply\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/api/system/v1/users/{id}\x12l\n" +
-	"\bListUser\x12!.api.universal.v1.ListUserRequest\x1a\x1f.api.universal.v1.ListUserReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/system/v1/users\x12\x91\x01\n" +
-	"\x0fBatchDeleteUser\x12(.api.universal.v1.BatchDeleteUserRequest\x1a&.api.universal.v1.BatchDeleteUserReply\",\x82\xd3\xe4\x93\x02&:\x01*\"!/api/system/v1/users/batch-delete\x12\x8c\x01\n" +
-	"\x10UpdateUserStatus\x12).api.universal.v1.UpdateUserStatusRequest\x1a .api.universal.v1.OperationReply\"+\x82\xd3\xe4\x93\x02%:\x01*2 /api/system/v1/users/{id}/status\x12\x8a\x01\n" +
-	"\x0eChangePassword\x12'.api.universal.v1.ChangePasswordRequest\x1a .api.universal.v1.OperationReply\"-\x82\xd3\xe4\x93\x02':\x01*2\"/api/system/v1/users/{id}/password\x12~\n" +
-	"\fGetUserStats\x12%.api.universal.v1.GetUserStatsRequest\x1a#.api.universal.v1.GetUserStatsReply\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/system/v1/users/statsBZ\n" +
+	"DeleteUser\x12#.api.universal.v1.DeleteUserRequest\x1a .api.universal.v1.OperationReply\"\x1f\x82\xd3\xe4\x93\x02\x19*\x17/api/user/v1/users/{id}\x12l\n" +
+	"\aGetUser\x12 .api.universal.v1.GetUserRequest\x1a\x1e.api.universal.v1.GetUserReply\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/user/v1/users/{id}\x12j\n" +
+	"\bListUser\x12!.api.universal.v1.ListUserRequest\x1a\x1f.api.universal.v1.ListUserReply\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/user/v1/users\x12\x8f\x01\n" +
+	"\x0fBatchDeleteUser\x12(.api.universal.v1.BatchDeleteUserRequest\x1a&.api.universal.v1.BatchDeleteUserReply\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/api/user/v1/users/batch-delete\x12\x8a\x01\n" +
+	"\x10UpdateUserStatus\x12).api.universal.v1.UpdateUserStatusRequest\x1a .api.universal.v1.OperationReply\")\x82\xd3\xe4\x93\x02#:\x01*2\x1e/api/user/v1/users/{id}/status\x12\x88\x01\n" +
+	"\x0eChangePassword\x12'.api.universal.v1.ChangePasswordRequest\x1a .api.universal.v1.OperationReply\"+\x82\xd3\xe4\x93\x02%:\x01*2 /api/user/v1/users/{id}/password\x12|\n" +
+	"\fGetUserStats\x12%.api.universal.v1.GetUserStatsRequest\x1a#.api.universal.v1.GetUserStatsReply\" \x82\xd3\xe4\x93\x02\x1a\x12\x18/api/user/v1/users/statsBZ\n" +
 	"%com.oldwei.universal.api.universal.v1B\x10UniversalProtoV1P\x01Z\x1duniversal/api/universal/v1;v1b\x06proto3"
 
 var (

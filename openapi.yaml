@@ -6,7 +6,7 @@ info:
     title: Universal API
     version: 0.0.1
 paths:
-    /api/system/v1/users:
+    /api/user/v1/users:
         get:
             tags:
                 - Universal
@@ -68,7 +68,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/system/v1/users/batch-delete:
+    /api/user/v1/users/batch-delete:
         post:
             tags:
                 - Universal
@@ -93,7 +93,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/system/v1/users/stats:
+    /api/user/v1/users/stats:
         get:
             tags:
                 - Universal
@@ -111,7 +111,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/system/v1/users/{id}:
+    /api/user/v1/users/{id}:
         get:
             tags:
                 - Universal
@@ -187,7 +187,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/system/v1/users/{id}/password:
+    /api/user/v1/users/{id}/password:
         patch:
             tags:
                 - Universal
@@ -217,7 +217,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/system/v1/users/{id}/status:
+    /api/user/v1/users/{id}/status:
         patch:
             tags:
                 - Universal

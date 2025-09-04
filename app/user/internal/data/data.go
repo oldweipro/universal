@@ -1,8 +1,8 @@
 package data
 
 import (
-	"universal/app/system/internal/conf"
-	"universal/app/system/internal/data/model"
+	"universal/app/user/internal/conf"
+	"universal/app/user/internal/data/model"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"

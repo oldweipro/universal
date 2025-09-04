@@ -1,9 +1,9 @@
 package server
 
 import (
-	v1 "universal/api/system/v1"
-	"universal/app/system/internal/conf"
-	"universal/app/system/internal/service"
+	v1 "universal/api/user/v1"
+	"universal/app/user/internal/conf"
+	"universal/app/user/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"

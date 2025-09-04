@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"universal/app/system/internal/biz"
+	"universal/app/user/internal/biz"
 
-	pb "universal/api/system/v1"
+	pb "universal/api/user/v1"
 )
 
 type UserService struct {
