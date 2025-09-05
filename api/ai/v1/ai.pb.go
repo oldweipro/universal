@@ -22,477 +22,515 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 对话记录
-type Conversation struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                  // 对话ID
-	UserId        int64                  `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                            // 用户ID
-	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`                                                                             // 对话标题
-	ModelName     string                 `protobuf:"bytes,4,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`                                                    // 使用的模型名称
-	SystemPrompt  string                 `protobuf:"bytes,5,opt,name=system_prompt,json=systemPrompt,proto3" json:"system_prompt,omitempty"`                                           // 系统提示词
-	Config        map[string]string      `protobuf:"bytes,6,rep,name=config,proto3" json:"config,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 对话配置参数
-	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`                                                                          // 对话状态 (0:正常, 1:已删除)
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                    // 创建时间
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                                                    // 更新时间
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
+// 时间粒度枚举
+type AnalyticsGranularity int32
 
-func (x *Conversation) Reset() {
-	*x = Conversation{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+const (
+	AnalyticsGranularity_ANALYTICS_GRANULARITY_UNSPECIFIED AnalyticsGranularity = 0
+	AnalyticsGranularity_ANALYTICS_GRANULARITY_HOUR        AnalyticsGranularity = 1 // 小时
+	AnalyticsGranularity_ANALYTICS_GRANULARITY_DAY         AnalyticsGranularity = 2 // 天
+	AnalyticsGranularity_ANALYTICS_GRANULARITY_WEEK        AnalyticsGranularity = 3 // 周
+	AnalyticsGranularity_ANALYTICS_GRANULARITY_MONTH       AnalyticsGranularity = 4 // 月
+)
 
-func (x *Conversation) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Conversation) ProtoMessage() {}
-
-func (x *Conversation) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
+// Enum value maps for AnalyticsGranularity.
+var (
+	AnalyticsGranularity_name = map[int32]string{
+		0: "ANALYTICS_GRANULARITY_UNSPECIFIED",
+		1: "ANALYTICS_GRANULARITY_HOUR",
+		2: "ANALYTICS_GRANULARITY_DAY",
+		3: "ANALYTICS_GRANULARITY_WEEK",
+		4: "ANALYTICS_GRANULARITY_MONTH",
 	}
-	return mi.MessageOf(x)
+	AnalyticsGranularity_value = map[string]int32{
+		"ANALYTICS_GRANULARITY_UNSPECIFIED": 0,
+		"ANALYTICS_GRANULARITY_HOUR":        1,
+		"ANALYTICS_GRANULARITY_DAY":         2,
+		"ANALYTICS_GRANULARITY_WEEK":        3,
+		"ANALYTICS_GRANULARITY_MONTH":       4,
+	}
+)
+
+func (x AnalyticsGranularity) Enum() *AnalyticsGranularity {
+	p := new(AnalyticsGranularity)
+	*p = x
+	return p
 }
 
-// Deprecated: Use Conversation.ProtoReflect.Descriptor instead.
-func (*Conversation) Descriptor() ([]byte, []int) {
+func (x AnalyticsGranularity) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (AnalyticsGranularity) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_ai_v1_ai_proto_enumTypes[0].Descriptor()
+}
+
+func (AnalyticsGranularity) Type() protoreflect.EnumType {
+	return &file_api_ai_v1_ai_proto_enumTypes[0]
+}
+
+func (x AnalyticsGranularity) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use AnalyticsGranularity.Descriptor instead.
+func (AnalyticsGranularity) EnumDescriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Conversation) GetId() int64 {
-	if x != nil {
-		return x.Id
+// 分析指标枚举
+type AnalyticsMetric int32
+
+const (
+	AnalyticsMetric_ANALYTICS_METRIC_UNSPECIFIED        AnalyticsMetric = 0
+	AnalyticsMetric_ANALYTICS_METRIC_CONVERSATION_COUNT AnalyticsMetric = 1 // 对话数量
+	AnalyticsMetric_ANALYTICS_METRIC_MESSAGE_COUNT      AnalyticsMetric = 2 // 消息数量
+	AnalyticsMetric_ANALYTICS_METRIC_TOKEN_USAGE        AnalyticsMetric = 3 // Token使用量
+	AnalyticsMetric_ANALYTICS_METRIC_RESPONSE_TIME      AnalyticsMetric = 4 // 响应时间
+	AnalyticsMetric_ANALYTICS_METRIC_USER_ENGAGEMENT    AnalyticsMetric = 5 // 用户参与度
+	AnalyticsMetric_ANALYTICS_METRIC_TOOL_USAGE         AnalyticsMetric = 6 // 工具使用情况
+)
+
+// Enum value maps for AnalyticsMetric.
+var (
+	AnalyticsMetric_name = map[int32]string{
+		0: "ANALYTICS_METRIC_UNSPECIFIED",
+		1: "ANALYTICS_METRIC_CONVERSATION_COUNT",
+		2: "ANALYTICS_METRIC_MESSAGE_COUNT",
+		3: "ANALYTICS_METRIC_TOKEN_USAGE",
+		4: "ANALYTICS_METRIC_RESPONSE_TIME",
+		5: "ANALYTICS_METRIC_USER_ENGAGEMENT",
+		6: "ANALYTICS_METRIC_TOOL_USAGE",
 	}
-	return 0
-}
-
-func (x *Conversation) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
+	AnalyticsMetric_value = map[string]int32{
+		"ANALYTICS_METRIC_UNSPECIFIED":        0,
+		"ANALYTICS_METRIC_CONVERSATION_COUNT": 1,
+		"ANALYTICS_METRIC_MESSAGE_COUNT":      2,
+		"ANALYTICS_METRIC_TOKEN_USAGE":        3,
+		"ANALYTICS_METRIC_RESPONSE_TIME":      4,
+		"ANALYTICS_METRIC_USER_ENGAGEMENT":    5,
+		"ANALYTICS_METRIC_TOOL_USAGE":         6,
 	}
-	return 0
+)
+
+func (x AnalyticsMetric) Enum() *AnalyticsMetric {
+	p := new(AnalyticsMetric)
+	*p = x
+	return p
 }
 
-func (x *Conversation) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
+func (x AnalyticsMetric) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (x *Conversation) GetModelName() string {
-	if x != nil {
-		return x.ModelName
-	}
-	return ""
+func (AnalyticsMetric) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_ai_v1_ai_proto_enumTypes[1].Descriptor()
 }
 
-func (x *Conversation) GetSystemPrompt() string {
-	if x != nil {
-		return x.SystemPrompt
-	}
-	return ""
+func (AnalyticsMetric) Type() protoreflect.EnumType {
+	return &file_api_ai_v1_ai_proto_enumTypes[1]
 }
 
-func (x *Conversation) GetConfig() map[string]string {
-	if x != nil {
-		return x.Config
-	}
-	return nil
+func (x AnalyticsMetric) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
 }
 
-func (x *Conversation) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-func (x *Conversation) GetCreatedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return nil
-}
-
-func (x *Conversation) GetUpdatedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.UpdatedAt
-	}
-	return nil
-}
-
-// 消息记录
-type Message struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                      // 消息ID
-	ConversationId int64                  `protobuf:"varint,2,opt,name=conversation_id,json=conversationId,proto3" json:"conversation_id,omitempty"`                                        // 对话ID
-	Role           string                 `protobuf:"bytes,3,opt,name=role,proto3" json:"role,omitempty"`                                                                                   // 角色 (user/assistant/system)
-	Content        string                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`                                                                             // 消息内容
-	ToolCalls      []*ToolCall            `protobuf:"bytes,5,rep,name=tool_calls,json=toolCalls,proto3" json:"tool_calls,omitempty"`                                                        // 工具调用记录
-	Metadata       map[string]string      `protobuf:"bytes,6,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 消息元数据
-	CreatedAt      *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                                                        // 创建时间
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *Message) Reset() {
-	*x = Message{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Message) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Message) ProtoMessage() {}
-
-func (x *Message) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Message.ProtoReflect.Descriptor instead.
-func (*Message) Descriptor() ([]byte, []int) {
+// Deprecated: Use AnalyticsMetric.Descriptor instead.
+func (AnalyticsMetric) EnumDescriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Message) GetId() int64 {
-	if x != nil {
-		return x.Id
+// 趋势指标枚举
+type TrendMetric int32
+
+const (
+	TrendMetric_TREND_METRIC_UNSPECIFIED       TrendMetric = 0
+	TrendMetric_TREND_METRIC_ACTIVE_USERS      TrendMetric = 1 // 活跃用户数
+	TrendMetric_TREND_METRIC_NEW_CONVERSATIONS TrendMetric = 2 // 新对话数
+	TrendMetric_TREND_METRIC_MESSAGE_VOLUME    TrendMetric = 3 // 消息量
+	TrendMetric_TREND_METRIC_TOKEN_CONSUMPTION TrendMetric = 4 // Token消耗
+	TrendMetric_TREND_METRIC_COST              TrendMetric = 5 // 成本
+)
+
+// Enum value maps for TrendMetric.
+var (
+	TrendMetric_name = map[int32]string{
+		0: "TREND_METRIC_UNSPECIFIED",
+		1: "TREND_METRIC_ACTIVE_USERS",
+		2: "TREND_METRIC_NEW_CONVERSATIONS",
+		3: "TREND_METRIC_MESSAGE_VOLUME",
+		4: "TREND_METRIC_TOKEN_CONSUMPTION",
+		5: "TREND_METRIC_COST",
 	}
-	return 0
-}
-
-func (x *Message) GetConversationId() int64 {
-	if x != nil {
-		return x.ConversationId
+	TrendMetric_value = map[string]int32{
+		"TREND_METRIC_UNSPECIFIED":       0,
+		"TREND_METRIC_ACTIVE_USERS":      1,
+		"TREND_METRIC_NEW_CONVERSATIONS": 2,
+		"TREND_METRIC_MESSAGE_VOLUME":    3,
+		"TREND_METRIC_TOKEN_CONSUMPTION": 4,
+		"TREND_METRIC_COST":              5,
 	}
-	return 0
+)
+
+func (x TrendMetric) Enum() *TrendMetric {
+	p := new(TrendMetric)
+	*p = x
+	return p
 }
 
-func (x *Message) GetRole() string {
-	if x != nil {
-		return x.Role
-	}
-	return ""
+func (x TrendMetric) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (x *Message) GetContent() string {
-	if x != nil {
-		return x.Content
-	}
-	return ""
+func (TrendMetric) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_ai_v1_ai_proto_enumTypes[2].Descriptor()
 }
 
-func (x *Message) GetToolCalls() []*ToolCall {
-	if x != nil {
-		return x.ToolCalls
-	}
-	return nil
+func (TrendMetric) Type() protoreflect.EnumType {
+	return &file_api_ai_v1_ai_proto_enumTypes[2]
 }
 
-func (x *Message) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
-	}
-	return nil
+func (x TrendMetric) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
 }
 
-func (x *Message) GetCreatedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return nil
-}
-
-// 工具调用记录
-type ToolCall struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                         // 调用ID
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                     // 工具名称
-	Arguments     string                 `protobuf:"bytes,3,opt,name=arguments,proto3" json:"arguments,omitempty"`                           // 调用参数(JSON格式)
-	Result        string                 `protobuf:"bytes,4,opt,name=result,proto3" json:"result,omitempty"`                                 // 执行结果
-	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`                                // 执行状态 (0:成功, 1:失败)
-	ErrorMessage  string                 `protobuf:"bytes,6,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"` // 错误信息
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`          // 执行时间
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ToolCall) Reset() {
-	*x = ToolCall{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ToolCall) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ToolCall) ProtoMessage() {}
-
-func (x *ToolCall) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ToolCall.ProtoReflect.Descriptor instead.
-func (*ToolCall) Descriptor() ([]byte, []int) {
+// Deprecated: Use TrendMetric.Descriptor instead.
+func (TrendMetric) EnumDescriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ToolCall) GetId() string {
-	if x != nil {
-		return x.Id
+// 话题分析方法枚举
+type TopicAnalysisMethod int32
+
+const (
+	TopicAnalysisMethod_TOPIC_ANALYSIS_METHOD_UNSPECIFIED TopicAnalysisMethod = 0
+	TopicAnalysisMethod_TOPIC_ANALYSIS_METHOD_KEYWORD     TopicAnalysisMethod = 1 // 关键词分析
+	TopicAnalysisMethod_TOPIC_ANALYSIS_METHOD_LDA         TopicAnalysisMethod = 2 // LDA主题模型
+	TopicAnalysisMethod_TOPIC_ANALYSIS_METHOD_CLUSTERING  TopicAnalysisMethod = 3 // 聚类分析
+	TopicAnalysisMethod_TOPIC_ANALYSIS_METHOD_SEMANTIC    TopicAnalysisMethod = 4 // 语义分析
+)
+
+// Enum value maps for TopicAnalysisMethod.
+var (
+	TopicAnalysisMethod_name = map[int32]string{
+		0: "TOPIC_ANALYSIS_METHOD_UNSPECIFIED",
+		1: "TOPIC_ANALYSIS_METHOD_KEYWORD",
+		2: "TOPIC_ANALYSIS_METHOD_LDA",
+		3: "TOPIC_ANALYSIS_METHOD_CLUSTERING",
+		4: "TOPIC_ANALYSIS_METHOD_SEMANTIC",
 	}
-	return ""
-}
-
-func (x *ToolCall) GetName() string {
-	if x != nil {
-		return x.Name
+	TopicAnalysisMethod_value = map[string]int32{
+		"TOPIC_ANALYSIS_METHOD_UNSPECIFIED": 0,
+		"TOPIC_ANALYSIS_METHOD_KEYWORD":     1,
+		"TOPIC_ANALYSIS_METHOD_LDA":         2,
+		"TOPIC_ANALYSIS_METHOD_CLUSTERING":  3,
+		"TOPIC_ANALYSIS_METHOD_SEMANTIC":    4,
 	}
-	return ""
+)
+
+func (x TopicAnalysisMethod) Enum() *TopicAnalysisMethod {
+	p := new(TopicAnalysisMethod)
+	*p = x
+	return p
 }
 
-func (x *ToolCall) GetArguments() string {
-	if x != nil {
-		return x.Arguments
-	}
-	return ""
+func (x TopicAnalysisMethod) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (x *ToolCall) GetResult() string {
-	if x != nil {
-		return x.Result
-	}
-	return ""
+func (TopicAnalysisMethod) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_ai_v1_ai_proto_enumTypes[3].Descriptor()
 }
 
-func (x *ToolCall) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
+func (TopicAnalysisMethod) Type() protoreflect.EnumType {
+	return &file_api_ai_v1_ai_proto_enumTypes[3]
 }
 
-func (x *ToolCall) GetErrorMessage() string {
-	if x != nil {
-		return x.ErrorMessage
-	}
-	return ""
+func (x TopicAnalysisMethod) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
 }
 
-func (x *ToolCall) GetCreatedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return nil
-}
-
-// 模型配置
-type ModelConfig struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Name             string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`                                                                                                             // 模型名称
-	Provider         string                 `protobuf:"bytes,2,opt,name=provider,proto3" json:"provider,omitempty"`                                                                                                     // 提供商 (openai/anthropic/local)
-	ApiKey           string                 `protobuf:"bytes,3,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`                                                                                           // API密钥
-	ApiBase          string                 `protobuf:"bytes,4,opt,name=api_base,json=apiBase,proto3" json:"api_base,omitempty"`                                                                                        // API基础URL
-	Temperature      float64                `protobuf:"fixed64,5,opt,name=temperature,proto3" json:"temperature,omitempty"`                                                                                             // 温度参数
-	MaxTokens        int32                  `protobuf:"varint,6,opt,name=max_tokens,json=maxTokens,proto3" json:"max_tokens,omitempty"`                                                                                 // 最大token数
-	TopP             float64                `protobuf:"fixed64,7,opt,name=top_p,json=topP,proto3" json:"top_p,omitempty"`                                                                                               // top_p参数
-	FrequencyPenalty float64                `protobuf:"fixed64,8,opt,name=frequency_penalty,json=frequencyPenalty,proto3" json:"frequency_penalty,omitempty"`                                                           // 频率惩罚
-	PresencePenalty  float64                `protobuf:"fixed64,9,opt,name=presence_penalty,json=presencePenalty,proto3" json:"presence_penalty,omitempty"`                                                              // 存在惩罚
-	StopSequences    []string               `protobuf:"bytes,10,rep,name=stop_sequences,json=stopSequences,proto3" json:"stop_sequences,omitempty"`                                                                     // 停止序列
-	SupportsTools    bool                   `protobuf:"varint,11,opt,name=supports_tools,json=supportsTools,proto3" json:"supports_tools,omitempty"`                                                                    // 是否支持工具调用
-	SupportsVision   bool                   `protobuf:"varint,12,opt,name=supports_vision,json=supportsVision,proto3" json:"supports_vision,omitempty"`                                                                 // 是否支持视觉输入
-	ExtraParams      map[string]string      `protobuf:"bytes,13,rep,name=extra_params,json=extraParams,proto3" json:"extra_params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 额外参数
-	Status           int32                  `protobuf:"varint,14,opt,name=status,proto3" json:"status,omitempty"`                                                                                                       // 状态 (0:可用, 1:不可用)
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
-}
-
-func (x *ModelConfig) Reset() {
-	*x = ModelConfig{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ModelConfig) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ModelConfig) ProtoMessage() {}
-
-func (x *ModelConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ModelConfig.ProtoReflect.Descriptor instead.
-func (*ModelConfig) Descriptor() ([]byte, []int) {
+// Deprecated: Use TopicAnalysisMethod.Descriptor instead.
+func (TopicAnalysisMethod) EnumDescriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ModelConfig) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *ModelConfig) GetProvider() string {
-	if x != nil {
-		return x.Provider
-	}
-	return ""
-}
-
-func (x *ModelConfig) GetApiKey() string {
-	if x != nil {
-		return x.ApiKey
-	}
-	return ""
-}
-
-func (x *ModelConfig) GetApiBase() string {
-	if x != nil {
-		return x.ApiBase
-	}
-	return ""
-}
-
-func (x *ModelConfig) GetTemperature() float64 {
-	if x != nil {
-		return x.Temperature
-	}
-	return 0
-}
-
-func (x *ModelConfig) GetMaxTokens() int32 {
-	if x != nil {
-		return x.MaxTokens
-	}
-	return 0
-}
-
-func (x *ModelConfig) GetTopP() float64 {
-	if x != nil {
-		return x.TopP
-	}
-	return 0
-}
-
-func (x *ModelConfig) GetFrequencyPenalty() float64 {
-	if x != nil {
-		return x.FrequencyPenalty
-	}
-	return 0
-}
-
-func (x *ModelConfig) GetPresencePenalty() float64 {
-	if x != nil {
-		return x.PresencePenalty
-	}
-	return 0
-}
-
-func (x *ModelConfig) GetStopSequences() []string {
-	if x != nil {
-		return x.StopSequences
-	}
-	return nil
-}
-
-func (x *ModelConfig) GetSupportsTools() bool {
-	if x != nil {
-		return x.SupportsTools
-	}
-	return false
-}
-
-func (x *ModelConfig) GetSupportsVision() bool {
-	if x != nil {
-		return x.SupportsVision
-	}
-	return false
-}
-
-func (x *ModelConfig) GetExtraParams() map[string]string {
-	if x != nil {
-		return x.ExtraParams
-	}
-	return nil
-}
-
-func (x *ModelConfig) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-// MCP工具定义
-type Tool struct {
+// 对话统计分析请求
+type GetConversationAnalyticsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`                                                                                   // 工具名称
-	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`                                                                     // 工具描述
-	Schema        string                 `protobuf:"bytes,3,opt,name=schema,proto3" json:"schema,omitempty"`                                                                               // 参数schema(JSON格式)
-	McpServer     string                 `protobuf:"bytes,4,opt,name=mcp_server,json=mcpServer,proto3" json:"mcp_server,omitempty"`                                                        // MCP服务器标识
-	Metadata      map[string]string      `protobuf:"bytes,5,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 工具元数据
-	Enabled       bool                   `protobuf:"varint,6,opt,name=enabled,proto3" json:"enabled,omitempty"`                                                                            // 是否启用
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                              // 用户ID，为空则分析全局数据
+	StartTime     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`                                                      // 开始时间
+	EndTime       *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`                                                            // 结束时间
+	Granularity   AnalyticsGranularity   `protobuf:"varint,4,opt,name=granularity,proto3,enum=api.ai.v1.AnalyticsGranularity" json:"granularity,omitempty"`                              // 时间粒度
+	Metrics       []AnalyticsMetric      `protobuf:"varint,5,rep,packed,name=metrics,proto3,enum=api.ai.v1.AnalyticsMetric" json:"metrics,omitempty"`                                    // 需要的指标
+	Filters       map[string]string      `protobuf:"bytes,6,rep,name=filters,proto3" json:"filters,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 过滤条件
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Tool) Reset() {
-	*x = Tool{}
+func (x *GetConversationAnalyticsRequest) Reset() {
+	*x = GetConversationAnalyticsRequest{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetConversationAnalyticsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetConversationAnalyticsRequest) ProtoMessage() {}
+
+func (x *GetConversationAnalyticsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetConversationAnalyticsRequest.ProtoReflect.Descriptor instead.
+func (*GetConversationAnalyticsRequest) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *GetConversationAnalyticsRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *GetConversationAnalyticsRequest) GetStartTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.StartTime
+	}
+	return nil
+}
+
+func (x *GetConversationAnalyticsRequest) GetEndTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.EndTime
+	}
+	return nil
+}
+
+func (x *GetConversationAnalyticsRequest) GetGranularity() AnalyticsGranularity {
+	if x != nil {
+		return x.Granularity
+	}
+	return AnalyticsGranularity_ANALYTICS_GRANULARITY_UNSPECIFIED
+}
+
+func (x *GetConversationAnalyticsRequest) GetMetrics() []AnalyticsMetric {
+	if x != nil {
+		return x.Metrics
+	}
+	return nil
+}
+
+func (x *GetConversationAnalyticsRequest) GetFilters() map[string]string {
+	if x != nil {
+		return x.Filters
+	}
+	return nil
+}
+
+type GetConversationAnalyticsReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Analytics     *ConversationAnalytics `protobuf:"bytes,1,opt,name=analytics,proto3" json:"analytics,omitempty"` // 分析结果
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetConversationAnalyticsReply) Reset() {
+	*x = GetConversationAnalyticsReply{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetConversationAnalyticsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetConversationAnalyticsReply) ProtoMessage() {}
+
+func (x *GetConversationAnalyticsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetConversationAnalyticsReply.ProtoReflect.Descriptor instead.
+func (*GetConversationAnalyticsReply) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *GetConversationAnalyticsReply) GetAnalytics() *ConversationAnalytics {
+	if x != nil {
+		return x.Analytics
+	}
+	return nil
+}
+
+// 用户使用统计请求
+type GetUserUsageStatsRequest struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	UserId               int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                             // 用户ID
+	StartTime            *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`                                     // 开始时间
+	EndTime              *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`                                           // 结束时间
+	IncludeCostBreakdown bool                   `protobuf:"varint,4,opt,name=include_cost_breakdown,json=includeCostBreakdown,proto3" json:"include_cost_breakdown,omitempty"` // 是否包含成本明细
+	IncludeModelUsage    bool                   `protobuf:"varint,5,opt,name=include_model_usage,json=includeModelUsage,proto3" json:"include_model_usage,omitempty"`          // 是否包含模型使用情况
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *GetUserUsageStatsRequest) Reset() {
+	*x = GetUserUsageStatsRequest{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserUsageStatsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserUsageStatsRequest) ProtoMessage() {}
+
+func (x *GetUserUsageStatsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserUsageStatsRequest.ProtoReflect.Descriptor instead.
+func (*GetUserUsageStatsRequest) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetUserUsageStatsRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *GetUserUsageStatsRequest) GetStartTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.StartTime
+	}
+	return nil
+}
+
+func (x *GetUserUsageStatsRequest) GetEndTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.EndTime
+	}
+	return nil
+}
+
+func (x *GetUserUsageStatsRequest) GetIncludeCostBreakdown() bool {
+	if x != nil {
+		return x.IncludeCostBreakdown
+	}
+	return false
+}
+
+func (x *GetUserUsageStatsRequest) GetIncludeModelUsage() bool {
+	if x != nil {
+		return x.IncludeModelUsage
+	}
+	return false
+}
+
+type GetUserUsageStatsReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UsageStats    *UserUsageStats        `protobuf:"bytes,1,opt,name=usage_stats,json=usageStats,proto3" json:"usage_stats,omitempty"` // 使用统计
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUserUsageStatsReply) Reset() {
+	*x = GetUserUsageStatsReply{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserUsageStatsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserUsageStatsReply) ProtoMessage() {}
+
+func (x *GetUserUsageStatsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserUsageStatsReply.ProtoReflect.Descriptor instead.
+func (*GetUserUsageStatsReply) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetUserUsageStatsReply) GetUsageStats() *UserUsageStats {
+	if x != nil {
+		return x.UsageStats
+	}
+	return nil
+}
+
+// 模型性能统计请求
+type GetModelPerformanceStatsRequest struct {
+	state                   protoimpl.MessageState `protogen:"open.v1"`
+	ModelNames              []string               `protobuf:"bytes,1,rep,name=model_names,json=modelNames,proto3" json:"model_names,omitempty"`                                           // 模型名称列表，为空则分析所有模型
+	StartTime               *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`                                              // 开始时间
+	EndTime                 *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`                                                    // 结束时间
+	IncludeUserSatisfaction bool                   `protobuf:"varint,4,opt,name=include_user_satisfaction,json=includeUserSatisfaction,proto3" json:"include_user_satisfaction,omitempty"` // 是否包含用户满意度
+	IncludeErrorAnalysis    bool                   `protobuf:"varint,5,opt,name=include_error_analysis,json=includeErrorAnalysis,proto3" json:"include_error_analysis,omitempty"`          // 是否包含错误分析
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
+}
+
+func (x *GetModelPerformanceStatsRequest) Reset() {
+	*x = GetModelPerformanceStatsRequest{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Tool) String() string {
+func (x *GetModelPerformanceStatsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Tool) ProtoMessage() {}
+func (*GetModelPerformanceStatsRequest) ProtoMessage() {}
 
-func (x *Tool) ProtoReflect() protoreflect.Message {
+func (x *GetModelPerformanceStatsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -504,80 +542,67 @@ func (x *Tool) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Tool.ProtoReflect.Descriptor instead.
-func (*Tool) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetModelPerformanceStatsRequest.ProtoReflect.Descriptor instead.
+func (*GetModelPerformanceStatsRequest) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *Tool) GetName() string {
+func (x *GetModelPerformanceStatsRequest) GetModelNames() []string {
 	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Tool) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *Tool) GetSchema() string {
-	if x != nil {
-		return x.Schema
-	}
-	return ""
-}
-
-func (x *Tool) GetMcpServer() string {
-	if x != nil {
-		return x.McpServer
-	}
-	return ""
-}
-
-func (x *Tool) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
+		return x.ModelNames
 	}
 	return nil
 }
 
-func (x *Tool) GetEnabled() bool {
+func (x *GetModelPerformanceStatsRequest) GetStartTime() *timestamppb.Timestamp {
 	if x != nil {
-		return x.Enabled
+		return x.StartTime
+	}
+	return nil
+}
+
+func (x *GetModelPerformanceStatsRequest) GetEndTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.EndTime
+	}
+	return nil
+}
+
+func (x *GetModelPerformanceStatsRequest) GetIncludeUserSatisfaction() bool {
+	if x != nil {
+		return x.IncludeUserSatisfaction
 	}
 	return false
 }
 
-// 资源定义
-type Resource struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uri           string                 `protobuf:"bytes,1,opt,name=uri,proto3" json:"uri,omitempty"`                                                                                     // 资源URI
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                                   // 资源名称
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                                                                     // 资源描述
-	MimeType      string                 `protobuf:"bytes,4,opt,name=mime_type,json=mimeType,proto3" json:"mime_type,omitempty"`                                                           // MIME类型
-	McpServer     string                 `protobuf:"bytes,5,opt,name=mcp_server,json=mcpServer,proto3" json:"mcp_server,omitempty"`                                                        // MCP服务器标识
-	Metadata      map[string]string      `protobuf:"bytes,6,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 资源元数据
+func (x *GetModelPerformanceStatsRequest) GetIncludeErrorAnalysis() bool {
+	if x != nil {
+		return x.IncludeErrorAnalysis
+	}
+	return false
+}
+
+type GetModelPerformanceStatsReply struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	ModelStats    []*ModelPerformanceStats `protobuf:"bytes,1,rep,name=model_stats,json=modelStats,proto3" json:"model_stats,omitempty"` // 模型统计列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Resource) Reset() {
-	*x = Resource{}
+func (x *GetModelPerformanceStatsReply) Reset() {
+	*x = GetModelPerformanceStatsReply{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Resource) String() string {
+func (x *GetModelPerformanceStatsReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Resource) ProtoMessage() {}
+func (*GetModelPerformanceStatsReply) ProtoMessage() {}
 
-func (x *Resource) ProtoReflect() protoreflect.Message {
+func (x *GetModelPerformanceStatsReply) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -589,85 +614,167 @@ func (x *Resource) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Resource.ProtoReflect.Descriptor instead.
-func (*Resource) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetModelPerformanceStatsReply.ProtoReflect.Descriptor instead.
+func (*GetModelPerformanceStatsReply) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *Resource) GetUri() string {
+func (x *GetModelPerformanceStatsReply) GetModelStats() []*ModelPerformanceStats {
 	if x != nil {
-		return x.Uri
-	}
-	return ""
-}
-
-func (x *Resource) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Resource) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *Resource) GetMimeType() string {
-	if x != nil {
-		return x.MimeType
-	}
-	return ""
-}
-
-func (x *Resource) GetMcpServer() string {
-	if x != nil {
-		return x.McpServer
-	}
-	return ""
-}
-
-func (x *Resource) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
+		return x.ModelStats
 	}
 	return nil
 }
 
-// 知识库定义
-type KnowledgeBase struct {
+// 对话趋势分析请求
+type GetConversationTrendsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                     // 用户ID，为空则分析全局趋势
+	StartTime     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`                                             // 开始时间
+	EndTime       *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`                                                   // 结束时间
+	Granularity   AnalyticsGranularity   `protobuf:"varint,4,opt,name=granularity,proto3,enum=api.ai.v1.AnalyticsGranularity" json:"granularity,omitempty"`                     // 时间粒度
+	TrendMetrics  []TrendMetric          `protobuf:"varint,5,rep,packed,name=trend_metrics,json=trendMetrics,proto3,enum=api.ai.v1.TrendMetric" json:"trend_metrics,omitempty"` // 趋势指标
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetConversationTrendsRequest) Reset() {
+	*x = GetConversationTrendsRequest{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetConversationTrendsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetConversationTrendsRequest) ProtoMessage() {}
+
+func (x *GetConversationTrendsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetConversationTrendsRequest.ProtoReflect.Descriptor instead.
+func (*GetConversationTrendsRequest) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetConversationTrendsRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *GetConversationTrendsRequest) GetStartTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.StartTime
+	}
+	return nil
+}
+
+func (x *GetConversationTrendsRequest) GetEndTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.EndTime
+	}
+	return nil
+}
+
+func (x *GetConversationTrendsRequest) GetGranularity() AnalyticsGranularity {
+	if x != nil {
+		return x.Granularity
+	}
+	return AnalyticsGranularity_ANALYTICS_GRANULARITY_UNSPECIFIED
+}
+
+func (x *GetConversationTrendsRequest) GetTrendMetrics() []TrendMetric {
+	if x != nil {
+		return x.TrendMetrics
+	}
+	return nil
+}
+
+type GetConversationTrendsReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Trends        []*TrendData           `protobuf:"bytes,1,rep,name=trends,proto3" json:"trends,omitempty"` // 趋势数据
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetConversationTrendsReply) Reset() {
+	*x = GetConversationTrendsReply{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetConversationTrendsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetConversationTrendsReply) ProtoMessage() {}
+
+func (x *GetConversationTrendsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetConversationTrendsReply.ProtoReflect.Descriptor instead.
+func (*GetConversationTrendsReply) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GetConversationTrendsReply) GetTrends() []*TrendData {
+	if x != nil {
+		return x.Trends
+	}
+	return nil
+}
+
+// 话题分析请求
+type GetTopicAnalysisRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                              // 知识库ID
-	UserId         int64                  `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                        // 用户ID
-	Name           string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`                                           // 知识库名称
-	Description    string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`                             // 知识库描述
-	EmbeddingModel string                 `protobuf:"bytes,5,opt,name=embedding_model,json=embeddingModel,proto3" json:"embedding_model,omitempty"` // 向量化模型
-	ChunkSize      int32                  `protobuf:"varint,6,opt,name=chunk_size,json=chunkSize,proto3" json:"chunk_size,omitempty"`               // 文档分块大小
-	ChunkOverlap   int32                  `protobuf:"varint,7,opt,name=chunk_overlap,json=chunkOverlap,proto3" json:"chunk_overlap,omitempty"`      // 分块重叠大小
-	Status         int32                  `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`                                      // 状态 (0:正常, 1:已删除)
-	CreatedAt      *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                // 创建时间
-	UpdatedAt      *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`               // 更新时间
+	UserId         int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                              // 用户ID，为空则分析全局话题
+	StartTime      *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`                                                      // 开始时间
+	EndTime        *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`                                                            // 结束时间
+	TopTopicsCount int32                  `protobuf:"varint,4,opt,name=top_topics_count,json=topTopicsCount,proto3" json:"top_topics_count,omitempty"`                                    // 返回热门话题数量
+	Method         TopicAnalysisMethod    `protobuf:"varint,5,opt,name=method,proto3,enum=api.ai.v1.TopicAnalysisMethod" json:"method,omitempty"`                                         // 分析方法
+	Filters        map[string]string      `protobuf:"bytes,6,rep,name=filters,proto3" json:"filters,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 过滤条件
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *KnowledgeBase) Reset() {
-	*x = KnowledgeBase{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[6]
+func (x *GetTopicAnalysisRequest) Reset() {
+	*x = GetTopicAnalysisRequest{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *KnowledgeBase) String() string {
+func (x *GetTopicAnalysisRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*KnowledgeBase) ProtoMessage() {}
+func (*GetTopicAnalysisRequest) ProtoMessage() {}
 
-func (x *KnowledgeBase) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[6]
+func (x *GetTopicAnalysisRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -678,233 +785,76 @@ func (x *KnowledgeBase) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use KnowledgeBase.ProtoReflect.Descriptor instead.
-func (*KnowledgeBase) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{6}
+// Deprecated: Use GetTopicAnalysisRequest.ProtoReflect.Descriptor instead.
+func (*GetTopicAnalysisRequest) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *KnowledgeBase) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *KnowledgeBase) GetUserId() int64 {
+func (x *GetTopicAnalysisRequest) GetUserId() int64 {
 	if x != nil {
 		return x.UserId
 	}
 	return 0
 }
 
-func (x *KnowledgeBase) GetName() string {
+func (x *GetTopicAnalysisRequest) GetStartTime() *timestamppb.Timestamp {
 	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *KnowledgeBase) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *KnowledgeBase) GetEmbeddingModel() string {
-	if x != nil {
-		return x.EmbeddingModel
-	}
-	return ""
-}
-
-func (x *KnowledgeBase) GetChunkSize() int32 {
-	if x != nil {
-		return x.ChunkSize
-	}
-	return 0
-}
-
-func (x *KnowledgeBase) GetChunkOverlap() int32 {
-	if x != nil {
-		return x.ChunkOverlap
-	}
-	return 0
-}
-
-func (x *KnowledgeBase) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-func (x *KnowledgeBase) GetCreatedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.CreatedAt
+		return x.StartTime
 	}
 	return nil
 }
 
-func (x *KnowledgeBase) GetUpdatedAt() *timestamppb.Timestamp {
+func (x *GetTopicAnalysisRequest) GetEndTime() *timestamppb.Timestamp {
 	if x != nil {
-		return x.UpdatedAt
+		return x.EndTime
 	}
 	return nil
 }
 
-// 文档定义
-type Document struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                    // 文档ID
-	KnowledgeBaseId int64                  `protobuf:"varint,2,opt,name=knowledge_base_id,json=knowledgeBaseId,proto3" json:"knowledge_base_id,omitempty"` // 知识库ID
-	Name            string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`                                                 // 文档名称
-	Content         string                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`                                           // 文档内容
-	FilePath        string                 `protobuf:"bytes,5,opt,name=file_path,json=filePath,proto3" json:"file_path,omitempty"`                         // 文件路径
-	MimeType        string                 `protobuf:"bytes,6,opt,name=mime_type,json=mimeType,proto3" json:"mime_type,omitempty"`                         // 文件类型
-	FileSize        int64                  `protobuf:"varint,7,opt,name=file_size,json=fileSize,proto3" json:"file_size,omitempty"`                        // 文件大小
-	ChunkCount      int32                  `protobuf:"varint,8,opt,name=chunk_count,json=chunkCount,proto3" json:"chunk_count,omitempty"`                  // 分块数量
-	Status          int32                  `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`                                            // 状态 (0:处理中, 1:完成, 2:失败)
-	CreatedAt       *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`                     // 创建时间
-	UpdatedAt       *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                     // 更新时间
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *Document) Reset() {
-	*x = Document{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Document) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Document) ProtoMessage() {}
-
-func (x *Document) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[7]
+func (x *GetTopicAnalysisRequest) GetTopTopicsCount() int32 {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Document.ProtoReflect.Descriptor instead.
-func (*Document) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *Document) GetId() int64 {
-	if x != nil {
-		return x.Id
+		return x.TopTopicsCount
 	}
 	return 0
 }
 
-func (x *Document) GetKnowledgeBaseId() int64 {
+func (x *GetTopicAnalysisRequest) GetMethod() TopicAnalysisMethod {
 	if x != nil {
-		return x.KnowledgeBaseId
+		return x.Method
 	}
-	return 0
+	return TopicAnalysisMethod_TOPIC_ANALYSIS_METHOD_UNSPECIFIED
 }
 
-func (x *Document) GetName() string {
+func (x *GetTopicAnalysisRequest) GetFilters() map[string]string {
 	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Document) GetContent() string {
-	if x != nil {
-		return x.Content
-	}
-	return ""
-}
-
-func (x *Document) GetFilePath() string {
-	if x != nil {
-		return x.FilePath
-	}
-	return ""
-}
-
-func (x *Document) GetMimeType() string {
-	if x != nil {
-		return x.MimeType
-	}
-	return ""
-}
-
-func (x *Document) GetFileSize() int64 {
-	if x != nil {
-		return x.FileSize
-	}
-	return 0
-}
-
-func (x *Document) GetChunkCount() int32 {
-	if x != nil {
-		return x.ChunkCount
-	}
-	return 0
-}
-
-func (x *Document) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-func (x *Document) GetCreatedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.CreatedAt
+		return x.Filters
 	}
 	return nil
 }
 
-func (x *Document) GetUpdatedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.UpdatedAt
-	}
-	return nil
-}
-
-// 创建对话
-type CreateConversationRequest struct {
+type GetTopicAnalysisReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                            // 用户ID
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                                                                             // 对话标题
-	ModelName     string                 `protobuf:"bytes,3,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`                                                    // 使用的模型名称
-	SystemPrompt  string                 `protobuf:"bytes,4,opt,name=system_prompt,json=systemPrompt,proto3" json:"system_prompt,omitempty"`                                           // 系统提示词(可选)
-	Config        map[string]string      `protobuf:"bytes,5,rep,name=config,proto3" json:"config,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 对话配置参数(可选)
+	Topics        []*TopicInsight        `protobuf:"bytes,1,rep,name=topics,proto3" json:"topics,omitempty"`             // 话题洞察
+	Distribution  *TopicDistribution     `protobuf:"bytes,2,opt,name=distribution,proto3" json:"distribution,omitempty"` // 话题分布
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateConversationRequest) Reset() {
-	*x = CreateConversationRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[8]
+func (x *GetTopicAnalysisReply) Reset() {
+	*x = GetTopicAnalysisReply{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateConversationRequest) String() string {
+func (x *GetTopicAnalysisReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateConversationRequest) ProtoMessage() {}
+func (*GetTopicAnalysisReply) ProtoMessage() {}
 
-func (x *CreateConversationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[8]
+func (x *GetTopicAnalysisReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -915,357 +865,514 @@ func (x *CreateConversationRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateConversationRequest.ProtoReflect.Descriptor instead.
-func (*CreateConversationRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{8}
+// Deprecated: Use GetTopicAnalysisReply.ProtoReflect.Descriptor instead.
+func (*GetTopicAnalysisReply) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *CreateConversationRequest) GetUserId() int64 {
+func (x *GetTopicAnalysisReply) GetTopics() []*TopicInsight {
+	if x != nil {
+		return x.Topics
+	}
+	return nil
+}
+
+func (x *GetTopicAnalysisReply) GetDistribution() *TopicDistribution {
+	if x != nil {
+		return x.Distribution
+	}
+	return nil
+}
+
+// 系统总览请求
+type GetSystemOverviewRequest struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	StartTime            *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`                                     // 开始时间
+	EndTime              *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`                                           // 结束时间
+	IncludeHealthMetrics bool                   `protobuf:"varint,3,opt,name=include_health_metrics,json=includeHealthMetrics,proto3" json:"include_health_metrics,omitempty"` // 是否包含健康指标
+	IncludeResourceUsage bool                   `protobuf:"varint,4,opt,name=include_resource_usage,json=includeResourceUsage,proto3" json:"include_resource_usage,omitempty"` // 是否包含资源使用情况
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *GetSystemOverviewRequest) Reset() {
+	*x = GetSystemOverviewRequest{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSystemOverviewRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSystemOverviewRequest) ProtoMessage() {}
+
+func (x *GetSystemOverviewRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSystemOverviewRequest.ProtoReflect.Descriptor instead.
+func (*GetSystemOverviewRequest) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetSystemOverviewRequest) GetStartTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.StartTime
+	}
+	return nil
+}
+
+func (x *GetSystemOverviewRequest) GetEndTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.EndTime
+	}
+	return nil
+}
+
+func (x *GetSystemOverviewRequest) GetIncludeHealthMetrics() bool {
+	if x != nil {
+		return x.IncludeHealthMetrics
+	}
+	return false
+}
+
+func (x *GetSystemOverviewRequest) GetIncludeResourceUsage() bool {
+	if x != nil {
+		return x.IncludeResourceUsage
+	}
+	return false
+}
+
+type GetSystemOverviewReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Overview      *SystemOverviewStats   `protobuf:"bytes,1,opt,name=overview,proto3" json:"overview,omitempty"` // 系统总览
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSystemOverviewReply) Reset() {
+	*x = GetSystemOverviewReply{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSystemOverviewReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSystemOverviewReply) ProtoMessage() {}
+
+func (x *GetSystemOverviewReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSystemOverviewReply.ProtoReflect.Descriptor instead.
+func (*GetSystemOverviewReply) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetSystemOverviewReply) GetOverview() *SystemOverviewStats {
+	if x != nil {
+		return x.Overview
+	}
+	return nil
+}
+
+// 对话分析数据
+type ConversationAnalytics struct {
+	state                     protoimpl.MessageState `protogen:"open.v1"`
+	TotalConversations        int64                  `protobuf:"varint,1,opt,name=total_conversations,json=totalConversations,proto3" json:"total_conversations,omitempty"`                                                                                         // 总对话数
+	ActiveUsers               int64                  `protobuf:"varint,2,opt,name=active_users,json=activeUsers,proto3" json:"active_users,omitempty"`                                                                                                              // 活跃用户数
+	AverageConversationLength float64                `protobuf:"fixed64,3,opt,name=average_conversation_length,json=averageConversationLength,proto3" json:"average_conversation_length,omitempty"`                                                                 // 平均对话长度
+	AverageResponseTime       float64                `protobuf:"fixed64,4,opt,name=average_response_time,json=averageResponseTime,proto3" json:"average_response_time,omitempty"`                                                                                   // 平均响应时间
+	ModelUsageDistribution    map[string]int64       `protobuf:"bytes,5,rep,name=model_usage_distribution,json=modelUsageDistribution,proto3" json:"model_usage_distribution,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 模型使用分布
+	TimeDistribution          map[string]int64       `protobuf:"bytes,6,rep,name=time_distribution,json=timeDistribution,proto3" json:"time_distribution,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`                     // 时间分布
+	TimeSeriesData            []*TimeSeriesPoint     `protobuf:"bytes,7,rep,name=time_series_data,json=timeSeriesData,proto3" json:"time_series_data,omitempty"`                                                                                                    // 时序数据
+	Engagement                *UserEngagementMetrics `protobuf:"bytes,8,opt,name=engagement,proto3" json:"engagement,omitempty"`                                                                                                                                    // 用户参与度指标
+	unknownFields             protoimpl.UnknownFields
+	sizeCache                 protoimpl.SizeCache
+}
+
+func (x *ConversationAnalytics) Reset() {
+	*x = ConversationAnalytics{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConversationAnalytics) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConversationAnalytics) ProtoMessage() {}
+
+func (x *ConversationAnalytics) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConversationAnalytics.ProtoReflect.Descriptor instead.
+func (*ConversationAnalytics) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ConversationAnalytics) GetTotalConversations() int64 {
+	if x != nil {
+		return x.TotalConversations
+	}
+	return 0
+}
+
+func (x *ConversationAnalytics) GetActiveUsers() int64 {
+	if x != nil {
+		return x.ActiveUsers
+	}
+	return 0
+}
+
+func (x *ConversationAnalytics) GetAverageConversationLength() float64 {
+	if x != nil {
+		return x.AverageConversationLength
+	}
+	return 0
+}
+
+func (x *ConversationAnalytics) GetAverageResponseTime() float64 {
+	if x != nil {
+		return x.AverageResponseTime
+	}
+	return 0
+}
+
+func (x *ConversationAnalytics) GetModelUsageDistribution() map[string]int64 {
+	if x != nil {
+		return x.ModelUsageDistribution
+	}
+	return nil
+}
+
+func (x *ConversationAnalytics) GetTimeDistribution() map[string]int64 {
+	if x != nil {
+		return x.TimeDistribution
+	}
+	return nil
+}
+
+func (x *ConversationAnalytics) GetTimeSeriesData() []*TimeSeriesPoint {
+	if x != nil {
+		return x.TimeSeriesData
+	}
+	return nil
+}
+
+func (x *ConversationAnalytics) GetEngagement() *UserEngagementMetrics {
+	if x != nil {
+		return x.Engagement
+	}
+	return nil
+}
+
+// 用户使用统计
+type UserUsageStats struct {
+	state                  protoimpl.MessageState      `protogen:"open.v1"`
+	UserId                 int64                       `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                                                                                                 // 用户ID
+	TotalConversations     int64                       `protobuf:"varint,2,opt,name=total_conversations,json=totalConversations,proto3" json:"total_conversations,omitempty"`                                                             // 总对话数
+	TotalMessages          int64                       `protobuf:"varint,3,opt,name=total_messages,json=totalMessages,proto3" json:"total_messages,omitempty"`                                                                            // 总消息数
+	TotalInputTokens       int64                       `protobuf:"varint,4,opt,name=total_input_tokens,json=totalInputTokens,proto3" json:"total_input_tokens,omitempty"`                                                                 // 总输入Token
+	TotalOutputTokens      int64                       `protobuf:"varint,5,opt,name=total_output_tokens,json=totalOutputTokens,proto3" json:"total_output_tokens,omitempty"`                                                              // 总输出Token
+	TotalCost              float64                     `protobuf:"fixed64,6,opt,name=total_cost,json=totalCost,proto3" json:"total_cost,omitempty"`                                                                                       // 总成本
+	AverageSessionDuration float64                     `protobuf:"fixed64,7,opt,name=average_session_duration,json=averageSessionDuration,proto3" json:"average_session_duration,omitempty"`                                              // 平均会话时长
+	ModelUsage             map[string]*ModelUsageStats `protobuf:"bytes,8,rep,name=model_usage,json=modelUsage,proto3" json:"model_usage,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`            // 各模型使用情况
+	CostBreakdown          map[string]float64          `protobuf:"bytes,9,rep,name=cost_breakdown,json=costBreakdown,proto3" json:"cost_breakdown,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"` // 成本明细
+	UsageTimeline          []*UsageTimePoint           `protobuf:"bytes,10,rep,name=usage_timeline,json=usageTimeline,proto3" json:"usage_timeline,omitempty"`                                                                            // 使用时间线
+	BehaviorProfile        *UserBehaviorProfile        `protobuf:"bytes,11,opt,name=behavior_profile,json=behaviorProfile,proto3" json:"behavior_profile,omitempty"`                                                                      // 用户行为画像
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *UserUsageStats) Reset() {
+	*x = UserUsageStats{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserUsageStats) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserUsageStats) ProtoMessage() {}
+
+func (x *UserUsageStats) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserUsageStats.ProtoReflect.Descriptor instead.
+func (*UserUsageStats) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *UserUsageStats) GetUserId() int64 {
 	if x != nil {
 		return x.UserId
 	}
 	return 0
 }
 
-func (x *CreateConversationRequest) GetTitle() string {
+func (x *UserUsageStats) GetTotalConversations() int64 {
 	if x != nil {
-		return x.Title
+		return x.TotalConversations
 	}
-	return ""
+	return 0
 }
 
-func (x *CreateConversationRequest) GetModelName() string {
+func (x *UserUsageStats) GetTotalMessages() int64 {
+	if x != nil {
+		return x.TotalMessages
+	}
+	return 0
+}
+
+func (x *UserUsageStats) GetTotalInputTokens() int64 {
+	if x != nil {
+		return x.TotalInputTokens
+	}
+	return 0
+}
+
+func (x *UserUsageStats) GetTotalOutputTokens() int64 {
+	if x != nil {
+		return x.TotalOutputTokens
+	}
+	return 0
+}
+
+func (x *UserUsageStats) GetTotalCost() float64 {
+	if x != nil {
+		return x.TotalCost
+	}
+	return 0
+}
+
+func (x *UserUsageStats) GetAverageSessionDuration() float64 {
+	if x != nil {
+		return x.AverageSessionDuration
+	}
+	return 0
+}
+
+func (x *UserUsageStats) GetModelUsage() map[string]*ModelUsageStats {
+	if x != nil {
+		return x.ModelUsage
+	}
+	return nil
+}
+
+func (x *UserUsageStats) GetCostBreakdown() map[string]float64 {
+	if x != nil {
+		return x.CostBreakdown
+	}
+	return nil
+}
+
+func (x *UserUsageStats) GetUsageTimeline() []*UsageTimePoint {
+	if x != nil {
+		return x.UsageTimeline
+	}
+	return nil
+}
+
+func (x *UserUsageStats) GetBehaviorProfile() *UserBehaviorProfile {
+	if x != nil {
+		return x.BehaviorProfile
+	}
+	return nil
+}
+
+// 模型性能统计
+type ModelPerformanceStats struct {
+	state                 protoimpl.MessageState  `protogen:"open.v1"`
+	ModelName             string                  `protobuf:"bytes,1,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`                                                                                                    // 模型名称
+	TotalRequests         int64                   `protobuf:"varint,2,opt,name=total_requests,json=totalRequests,proto3" json:"total_requests,omitempty"`                                                                                       // 总请求数
+	SuccessRate           float64                 `protobuf:"fixed64,3,opt,name=success_rate,json=successRate,proto3" json:"success_rate,omitempty"`                                                                                            // 成功率
+	AverageResponseTime   float64                 `protobuf:"fixed64,4,opt,name=average_response_time,json=averageResponseTime,proto3" json:"average_response_time,omitempty"`                                                                  // 平均响应时间
+	AverageInputTokens    float64                 `protobuf:"fixed64,5,opt,name=average_input_tokens,json=averageInputTokens,proto3" json:"average_input_tokens,omitempty"`                                                                     // 平均输入Token数
+	AverageOutputTokens   float64                 `protobuf:"fixed64,6,opt,name=average_output_tokens,json=averageOutputTokens,proto3" json:"average_output_tokens,omitempty"`                                                                  // 平均输出Token数
+	CostPerRequest        float64                 `protobuf:"fixed64,7,opt,name=cost_per_request,json=costPerRequest,proto3" json:"cost_per_request,omitempty"`                                                                                 // 每请求成本
+	UserSatisfactionScore float64                 `protobuf:"fixed64,8,opt,name=user_satisfaction_score,json=userSatisfactionScore,proto3" json:"user_satisfaction_score,omitempty"`                                                            // 用户满意度评分
+	ErrorDistribution     map[string]int64        `protobuf:"bytes,9,rep,name=error_distribution,json=errorDistribution,proto3" json:"error_distribution,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 错误分布
+	PerformanceTimeline   []*PerformanceTimePoint `protobuf:"bytes,10,rep,name=performance_timeline,json=performanceTimeline,proto3" json:"performance_timeline,omitempty"`                                                                     // 性能时间线
+	Capabilities          *ModelCapabilityMetrics `protobuf:"bytes,11,opt,name=capabilities,proto3" json:"capabilities,omitempty"`                                                                                                              // 能力指标
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *ModelPerformanceStats) Reset() {
+	*x = ModelPerformanceStats{}
+	mi := &file_api_ai_v1_ai_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModelPerformanceStats) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModelPerformanceStats) ProtoMessage() {}
+
+func (x *ModelPerformanceStats) ProtoReflect() protoreflect.Message {
+	mi := &file_api_ai_v1_ai_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModelPerformanceStats.ProtoReflect.Descriptor instead.
+func (*ModelPerformanceStats) Descriptor() ([]byte, []int) {
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *ModelPerformanceStats) GetModelName() string {
 	if x != nil {
 		return x.ModelName
 	}
 	return ""
 }
 
-func (x *CreateConversationRequest) GetSystemPrompt() string {
+func (x *ModelPerformanceStats) GetTotalRequests() int64 {
 	if x != nil {
-		return x.SystemPrompt
-	}
-	return ""
-}
-
-func (x *CreateConversationRequest) GetConfig() map[string]string {
-	if x != nil {
-		return x.Config
-	}
-	return nil
-}
-
-type CreateConversationReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Conversation  *Conversation          `protobuf:"bytes,1,opt,name=conversation,proto3" json:"conversation,omitempty"` // 创建的对话
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateConversationReply) Reset() {
-	*x = CreateConversationReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateConversationReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateConversationReply) ProtoMessage() {}
-
-func (x *CreateConversationReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateConversationReply.ProtoReflect.Descriptor instead.
-func (*CreateConversationReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *CreateConversationReply) GetConversation() *Conversation {
-	if x != nil {
-		return x.Conversation
-	}
-	return nil
-}
-
-// 获取对话
-type GetConversationRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` // 对话ID
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetConversationRequest) Reset() {
-	*x = GetConversationRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetConversationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetConversationRequest) ProtoMessage() {}
-
-func (x *GetConversationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetConversationRequest.ProtoReflect.Descriptor instead.
-func (*GetConversationRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *GetConversationRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
+		return x.TotalRequests
 	}
 	return 0
 }
 
-type GetConversationReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Conversation  *Conversation          `protobuf:"bytes,1,opt,name=conversation,proto3" json:"conversation,omitempty"` // 对话信息
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetConversationReply) Reset() {
-	*x = GetConversationReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetConversationReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetConversationReply) ProtoMessage() {}
-
-func (x *GetConversationReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[11]
+func (x *ModelPerformanceStats) GetSuccessRate() float64 {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetConversationReply.ProtoReflect.Descriptor instead.
-func (*GetConversationReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *GetConversationReply) GetConversation() *Conversation {
-	if x != nil {
-		return x.Conversation
-	}
-	return nil
-}
-
-// 更新对话
-type UpdateConversationRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                  // 对话ID
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                                                                             // 对话标题(可选)
-	SystemPrompt  string                 `protobuf:"bytes,3,opt,name=system_prompt,json=systemPrompt,proto3" json:"system_prompt,omitempty"`                                           // 系统提示词(可选)
-	Config        map[string]string      `protobuf:"bytes,4,rep,name=config,proto3" json:"config,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 对话配置参数(可选)
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateConversationRequest) Reset() {
-	*x = UpdateConversationRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateConversationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateConversationRequest) ProtoMessage() {}
-
-func (x *UpdateConversationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateConversationRequest.ProtoReflect.Descriptor instead.
-func (*UpdateConversationRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *UpdateConversationRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
+		return x.SuccessRate
 	}
 	return 0
 }
 
-func (x *UpdateConversationRequest) GetTitle() string {
+func (x *ModelPerformanceStats) GetAverageResponseTime() float64 {
 	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *UpdateConversationRequest) GetSystemPrompt() string {
-	if x != nil {
-		return x.SystemPrompt
-	}
-	return ""
-}
-
-func (x *UpdateConversationRequest) GetConfig() map[string]string {
-	if x != nil {
-		return x.Config
-	}
-	return nil
-}
-
-type UpdateConversationReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Conversation  *Conversation          `protobuf:"bytes,1,opt,name=conversation,proto3" json:"conversation,omitempty"` // 更新后的对话
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateConversationReply) Reset() {
-	*x = UpdateConversationReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateConversationReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateConversationReply) ProtoMessage() {}
-
-func (x *UpdateConversationReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateConversationReply.ProtoReflect.Descriptor instead.
-func (*UpdateConversationReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *UpdateConversationReply) GetConversation() *Conversation {
-	if x != nil {
-		return x.Conversation
-	}
-	return nil
-}
-
-// 删除对话
-type DeleteConversationRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` // 对话ID
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteConversationRequest) Reset() {
-	*x = DeleteConversationRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteConversationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteConversationRequest) ProtoMessage() {}
-
-func (x *DeleteConversationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteConversationRequest.ProtoReflect.Descriptor instead.
-func (*DeleteConversationRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *DeleteConversationRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
+		return x.AverageResponseTime
 	}
 	return 0
 }
 
-type DeleteConversationReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *ModelPerformanceStats) GetAverageInputTokens() float64 {
+	if x != nil {
+		return x.AverageInputTokens
+	}
+	return 0
 }
 
-func (x *DeleteConversationReply) Reset() {
-	*x = DeleteConversationReply{}
+func (x *ModelPerformanceStats) GetAverageOutputTokens() float64 {
+	if x != nil {
+		return x.AverageOutputTokens
+	}
+	return 0
+}
+
+func (x *ModelPerformanceStats) GetCostPerRequest() float64 {
+	if x != nil {
+		return x.CostPerRequest
+	}
+	return 0
+}
+
+func (x *ModelPerformanceStats) GetUserSatisfactionScore() float64 {
+	if x != nil {
+		return x.UserSatisfactionScore
+	}
+	return 0
+}
+
+func (x *ModelPerformanceStats) GetErrorDistribution() map[string]int64 {
+	if x != nil {
+		return x.ErrorDistribution
+	}
+	return nil
+}
+
+func (x *ModelPerformanceStats) GetPerformanceTimeline() []*PerformanceTimePoint {
+	if x != nil {
+		return x.PerformanceTimeline
+	}
+	return nil
+}
+
+func (x *ModelPerformanceStats) GetCapabilities() *ModelCapabilityMetrics {
+	if x != nil {
+		return x.Capabilities
+	}
+	return nil
+}
+
+// 趋势数据
+type TrendData struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Metric         TrendMetric            `protobuf:"varint,1,opt,name=metric,proto3,enum=api.ai.v1.TrendMetric" json:"metric,omitempty"`           // 指标类型
+	DataPoints     []*TimeSeriesPoint     `protobuf:"bytes,2,rep,name=data_points,json=dataPoints,proto3" json:"data_points,omitempty"`             // 数据点
+	GrowthRate     float64                `protobuf:"fixed64,3,opt,name=growth_rate,json=growthRate,proto3" json:"growth_rate,omitempty"`           // 增长率
+	TrendDirection string                 `protobuf:"bytes,4,opt,name=trend_direction,json=trendDirection,proto3" json:"trend_direction,omitempty"` // 趋势方向: up/down/stable
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *TrendData) Reset() {
+	*x = TrendData{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteConversationReply) String() string {
+func (x *TrendData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteConversationReply) ProtoMessage() {}
+func (*TrendData) ProtoMessage() {}
 
-func (x *DeleteConversationReply) ProtoReflect() protoreflect.Message {
+func (x *TrendData) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1277,36 +1384,68 @@ func (x *DeleteConversationReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteConversationReply.ProtoReflect.Descriptor instead.
-func (*DeleteConversationReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use TrendData.ProtoReflect.Descriptor instead.
+func (*TrendData) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{15}
 }
 
-// 列出对话
-type ListConversationsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`       // 用户ID
-	Page          int32                  `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`                         // 页码
-	PageSize      int32                  `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"` // 页面大小
-	Keyword       string                 `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`                    // 搜索关键词(可选)
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *TrendData) GetMetric() TrendMetric {
+	if x != nil {
+		return x.Metric
+	}
+	return TrendMetric_TREND_METRIC_UNSPECIFIED
 }
 
-func (x *ListConversationsRequest) Reset() {
-	*x = ListConversationsRequest{}
+func (x *TrendData) GetDataPoints() []*TimeSeriesPoint {
+	if x != nil {
+		return x.DataPoints
+	}
+	return nil
+}
+
+func (x *TrendData) GetGrowthRate() float64 {
+	if x != nil {
+		return x.GrowthRate
+	}
+	return 0
+}
+
+func (x *TrendData) GetTrendDirection() string {
+	if x != nil {
+		return x.TrendDirection
+	}
+	return ""
+}
+
+// 话题洞察
+type TopicInsight struct {
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	TopicName              string                 `protobuf:"bytes,1,opt,name=topic_name,json=topicName,proto3" json:"topic_name,omitempty"`                                        // 话题名称
+	Keywords               []string               `protobuf:"bytes,2,rep,name=keywords,proto3" json:"keywords,omitempty"`                                                           // 关键词
+	MessageCount           int64                  `protobuf:"varint,3,opt,name=message_count,json=messageCount,proto3" json:"message_count,omitempty"`                              // 消息数量
+	RelevanceScore         float64                `protobuf:"fixed64,4,opt,name=relevance_score,json=relevanceScore,proto3" json:"relevance_score,omitempty"`                       // 相关度分数
+	SentimentScore         float64                `protobuf:"fixed64,5,opt,name=sentiment_score,json=sentimentScore,proto3" json:"sentiment_score,omitempty"`                       // 情感分数
+	RepresentativeMessages []string               `protobuf:"bytes,6,rep,name=representative_messages,json=representativeMessages,proto3" json:"representative_messages,omitempty"` // 代表性消息
+	FirstSeen              *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=first_seen,json=firstSeen,proto3" json:"first_seen,omitempty"`                                        // 首次出现时间
+	LastSeen               *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=last_seen,json=lastSeen,proto3" json:"last_seen,omitempty"`                                           // 最后出现时间
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *TopicInsight) Reset() {
+	*x = TopicInsight{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListConversationsRequest) String() string {
+func (x *TopicInsight) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListConversationsRequest) ProtoMessage() {}
+func (*TopicInsight) ProtoMessage() {}
 
-func (x *ListConversationsRequest) ProtoReflect() protoreflect.Message {
+func (x *TopicInsight) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1318,63 +1457,91 @@ func (x *ListConversationsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListConversationsRequest.ProtoReflect.Descriptor instead.
-func (*ListConversationsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use TopicInsight.ProtoReflect.Descriptor instead.
+func (*TopicInsight) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *ListConversationsRequest) GetUserId() int64 {
+func (x *TopicInsight) GetTopicName() string {
 	if x != nil {
-		return x.UserId
-	}
-	return 0
-}
-
-func (x *ListConversationsRequest) GetPage() int32 {
-	if x != nil {
-		return x.Page
-	}
-	return 0
-}
-
-func (x *ListConversationsRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *ListConversationsRequest) GetKeyword() string {
-	if x != nil {
-		return x.Keyword
+		return x.TopicName
 	}
 	return ""
 }
 
-type ListConversationsReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Conversations []*Conversation        `protobuf:"bytes,1,rep,name=conversations,proto3" json:"conversations,omitempty"`        // 对话列表
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`                       // 总数
-	Page          int32                  `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`                         // 当前页
-	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"` // 页面大小
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *TopicInsight) GetKeywords() []string {
+	if x != nil {
+		return x.Keywords
+	}
+	return nil
 }
 
-func (x *ListConversationsReply) Reset() {
-	*x = ListConversationsReply{}
+func (x *TopicInsight) GetMessageCount() int64 {
+	if x != nil {
+		return x.MessageCount
+	}
+	return 0
+}
+
+func (x *TopicInsight) GetRelevanceScore() float64 {
+	if x != nil {
+		return x.RelevanceScore
+	}
+	return 0
+}
+
+func (x *TopicInsight) GetSentimentScore() float64 {
+	if x != nil {
+		return x.SentimentScore
+	}
+	return 0
+}
+
+func (x *TopicInsight) GetRepresentativeMessages() []string {
+	if x != nil {
+		return x.RepresentativeMessages
+	}
+	return nil
+}
+
+func (x *TopicInsight) GetFirstSeen() *timestamppb.Timestamp {
+	if x != nil {
+		return x.FirstSeen
+	}
+	return nil
+}
+
+func (x *TopicInsight) GetLastSeen() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LastSeen
+	}
+	return nil
+}
+
+// 话题分布
+type TopicDistribution struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	TopicPercentages    map[string]float64     `protobuf:"bytes,1,rep,name=topic_percentages,json=topicPercentages,proto3" json:"topic_percentages,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"` // 话题百分比分布
+	TopicDiversityIndex float64                `protobuf:"fixed64,2,opt,name=topic_diversity_index,json=topicDiversityIndex,proto3" json:"topic_diversity_index,omitempty"`                                                                // 话题多样性指数
+	TotalTopicsDetected int32                  `protobuf:"varint,3,opt,name=total_topics_detected,json=totalTopicsDetected,proto3" json:"total_topics_detected,omitempty"`                                                                 // 检测到的总话题数
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *TopicDistribution) Reset() {
+	*x = TopicDistribution{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListConversationsReply) String() string {
+func (x *TopicDistribution) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListConversationsReply) ProtoMessage() {}
+func (*TopicDistribution) ProtoMessage() {}
 
-func (x *ListConversationsReply) ProtoReflect() protoreflect.Message {
+func (x *TopicDistribution) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1386,66 +1553,62 @@ func (x *ListConversationsReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListConversationsReply.ProtoReflect.Descriptor instead.
-func (*ListConversationsReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use TopicDistribution.ProtoReflect.Descriptor instead.
+func (*TopicDistribution) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *ListConversationsReply) GetConversations() []*Conversation {
+func (x *TopicDistribution) GetTopicPercentages() map[string]float64 {
 	if x != nil {
-		return x.Conversations
+		return x.TopicPercentages
 	}
 	return nil
 }
 
-func (x *ListConversationsReply) GetTotal() int64 {
+func (x *TopicDistribution) GetTopicDiversityIndex() float64 {
 	if x != nil {
-		return x.Total
+		return x.TopicDiversityIndex
 	}
 	return 0
 }
 
-func (x *ListConversationsReply) GetPage() int32 {
+func (x *TopicDistribution) GetTotalTopicsDetected() int32 {
 	if x != nil {
-		return x.Page
+		return x.TotalTopicsDetected
 	}
 	return 0
 }
 
-func (x *ListConversationsReply) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
+// 系统总览统计
+type SystemOverviewStats struct {
+	state                protoimpl.MessageState   `protogen:"open.v1"`
+	TotalUsers           int64                    `protobuf:"varint,1,opt,name=total_users,json=totalUsers,proto3" json:"total_users,omitempty"`                                                                                // 总用户数
+	ActiveUsersToday     int64                    `protobuf:"varint,2,opt,name=active_users_today,json=activeUsersToday,proto3" json:"active_users_today,omitempty"`                                                            // 今日活跃用户
+	TotalConversations   int64                    `protobuf:"varint,3,opt,name=total_conversations,json=totalConversations,proto3" json:"total_conversations,omitempty"`                                                        // 总对话数
+	TotalMessages        int64                    `protobuf:"varint,4,opt,name=total_messages,json=totalMessages,proto3" json:"total_messages,omitempty"`                                                                       // 总消息数
+	TotalTokensProcessed int64                    `protobuf:"varint,5,opt,name=total_tokens_processed,json=totalTokensProcessed,proto3" json:"total_tokens_processed,omitempty"`                                                // 总处理Token数
+	TotalCost            float64                  `protobuf:"fixed64,6,opt,name=total_cost,json=totalCost,proto3" json:"total_cost,omitempty"`                                                                                  // 总成本
+	Health               *SystemHealthMetrics     `protobuf:"bytes,7,opt,name=health,proto3" json:"health,omitempty"`                                                                                                           // 系统健康指标
+	ResourceUsage        *ResourceUsageStats      `protobuf:"bytes,8,opt,name=resource_usage,json=resourceUsage,proto3" json:"resource_usage,omitempty"`                                                                        // 资源使用统计
+	ServiceStats         map[string]*ServiceStats `protobuf:"bytes,9,rep,name=service_stats,json=serviceStats,proto3" json:"service_stats,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 各服务统计
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
-// 发送消息
-type SendMessageRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	ConversationId int64                  `protobuf:"varint,1,opt,name=conversation_id,json=conversationId,proto3" json:"conversation_id,omitempty"`                                      // 对话ID
-	Content        string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`                                                                           // 消息内容
-	Attachments    []string               `protobuf:"bytes,3,rep,name=attachments,proto3" json:"attachments,omitempty"`                                                                   // 附件列表(文件路径或URL)
-	EnableTools    bool                   `protobuf:"varint,4,opt,name=enable_tools,json=enableTools,proto3" json:"enable_tools,omitempty"`                                               // 是否启用工具调用
-	AllowedTools   []string               `protobuf:"bytes,5,rep,name=allowed_tools,json=allowedTools,proto3" json:"allowed_tools,omitempty"`                                             // 允许使用的工具列表(空表示所有)
-	Options        map[string]string      `protobuf:"bytes,6,rep,name=options,proto3" json:"options,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 额外选项
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *SendMessageRequest) Reset() {
-	*x = SendMessageRequest{}
+func (x *SystemOverviewStats) Reset() {
+	*x = SystemOverviewStats{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SendMessageRequest) String() string {
+func (x *SystemOverviewStats) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SendMessageRequest) ProtoMessage() {}
+func (*SystemOverviewStats) ProtoMessage() {}
 
-func (x *SendMessageRequest) ProtoReflect() protoreflect.Message {
+func (x *SystemOverviewStats) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1457,75 +1620,99 @@ func (x *SendMessageRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SendMessageRequest.ProtoReflect.Descriptor instead.
-func (*SendMessageRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use SystemOverviewStats.ProtoReflect.Descriptor instead.
+func (*SystemOverviewStats) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{18}
 }
 
-func (x *SendMessageRequest) GetConversationId() int64 {
+func (x *SystemOverviewStats) GetTotalUsers() int64 {
 	if x != nil {
-		return x.ConversationId
+		return x.TotalUsers
 	}
 	return 0
 }
 
-func (x *SendMessageRequest) GetContent() string {
+func (x *SystemOverviewStats) GetActiveUsersToday() int64 {
 	if x != nil {
-		return x.Content
+		return x.ActiveUsersToday
 	}
-	return ""
+	return 0
 }
 
-func (x *SendMessageRequest) GetAttachments() []string {
+func (x *SystemOverviewStats) GetTotalConversations() int64 {
 	if x != nil {
-		return x.Attachments
+		return x.TotalConversations
+	}
+	return 0
+}
+
+func (x *SystemOverviewStats) GetTotalMessages() int64 {
+	if x != nil {
+		return x.TotalMessages
+	}
+	return 0
+}
+
+func (x *SystemOverviewStats) GetTotalTokensProcessed() int64 {
+	if x != nil {
+		return x.TotalTokensProcessed
+	}
+	return 0
+}
+
+func (x *SystemOverviewStats) GetTotalCost() float64 {
+	if x != nil {
+		return x.TotalCost
+	}
+	return 0
+}
+
+func (x *SystemOverviewStats) GetHealth() *SystemHealthMetrics {
+	if x != nil {
+		return x.Health
 	}
 	return nil
 }
 
-func (x *SendMessageRequest) GetEnableTools() bool {
+func (x *SystemOverviewStats) GetResourceUsage() *ResourceUsageStats {
 	if x != nil {
-		return x.EnableTools
-	}
-	return false
-}
-
-func (x *SendMessageRequest) GetAllowedTools() []string {
-	if x != nil {
-		return x.AllowedTools
+		return x.ResourceUsage
 	}
 	return nil
 }
 
-func (x *SendMessageRequest) GetOptions() map[string]string {
+func (x *SystemOverviewStats) GetServiceStats() map[string]*ServiceStats {
 	if x != nil {
-		return x.Options
+		return x.ServiceStats
 	}
 	return nil
 }
 
-type SendMessageReply struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	UserMessage      *Message               `protobuf:"bytes,1,opt,name=user_message,json=userMessage,proto3" json:"user_message,omitempty"`                // 用户消息
-	AssistantMessage *Message               `protobuf:"bytes,2,opt,name=assistant_message,json=assistantMessage,proto3" json:"assistant_message,omitempty"` // AI助手回复
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+// 时序数据点
+type TimeSeriesPoint struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                                                                               // 时间戳
+	Value         float64                `protobuf:"fixed64,2,opt,name=value,proto3" json:"value,omitempty"`                                                                                     // 数值
+	Label         string                 `protobuf:"bytes,3,opt,name=label,proto3" json:"label,omitempty"`                                                                                       // 标签
+	Dimensions    map[string]float64     `protobuf:"bytes,4,rep,name=dimensions,proto3" json:"dimensions,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"` // 多维数据
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SendMessageReply) Reset() {
-	*x = SendMessageReply{}
+func (x *TimeSeriesPoint) Reset() {
+	*x = TimeSeriesPoint{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SendMessageReply) String() string {
+func (x *TimeSeriesPoint) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SendMessageReply) ProtoMessage() {}
+func (*TimeSeriesPoint) ProtoMessage() {}
 
-func (x *SendMessageReply) ProtoReflect() protoreflect.Message {
+func (x *TimeSeriesPoint) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1537,50 +1724,64 @@ func (x *SendMessageReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SendMessageReply.ProtoReflect.Descriptor instead.
-func (*SendMessageReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use TimeSeriesPoint.ProtoReflect.Descriptor instead.
+func (*TimeSeriesPoint) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *SendMessageReply) GetUserMessage() *Message {
+func (x *TimeSeriesPoint) GetTimestamp() *timestamppb.Timestamp {
 	if x != nil {
-		return x.UserMessage
+		return x.Timestamp
 	}
 	return nil
 }
 
-func (x *SendMessageReply) GetAssistantMessage() *Message {
+func (x *TimeSeriesPoint) GetValue() float64 {
 	if x != nil {
-		return x.AssistantMessage
+		return x.Value
+	}
+	return 0
+}
+
+func (x *TimeSeriesPoint) GetLabel() string {
+	if x != nil {
+		return x.Label
+	}
+	return ""
+}
+
+func (x *TimeSeriesPoint) GetDimensions() map[string]float64 {
+	if x != nil {
+		return x.Dimensions
 	}
 	return nil
 }
 
-// 获取消息列表
-type GetMessagesRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	ConversationId   int64                  `protobuf:"varint,1,opt,name=conversation_id,json=conversationId,proto3" json:"conversation_id,omitempty"`         // 对话ID
-	Page             int32                  `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`                                                   // 页码
-	PageSize         int32                  `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`                           // 页面大小
-	IncludeToolCalls bool                   `protobuf:"varint,4,opt,name=include_tool_calls,json=includeToolCalls,proto3" json:"include_tool_calls,omitempty"` // 是否包含工具调用详情
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+// 用户参与度指标
+type UserEngagementMetrics struct {
+	state                          protoimpl.MessageState `protogen:"open.v1"`
+	AverageMessagesPerConversation float64                `protobuf:"fixed64,1,opt,name=average_messages_per_conversation,json=averageMessagesPerConversation,proto3" json:"average_messages_per_conversation,omitempty"` // 每对话平均消息数
+	ConversationCompletionRate     float64                `protobuf:"fixed64,2,opt,name=conversation_completion_rate,json=conversationCompletionRate,proto3" json:"conversation_completion_rate,omitempty"`               // 对话完成率
+	UserRetentionRate              float64                `protobuf:"fixed64,3,opt,name=user_retention_rate,json=userRetentionRate,proto3" json:"user_retention_rate,omitempty"`                                          // 用户留存率
+	FeatureAdoptionRate            float64                `protobuf:"fixed64,4,opt,name=feature_adoption_rate,json=featureAdoptionRate,proto3" json:"feature_adoption_rate,omitempty"`                                    // 功能采用率
+	unknownFields                  protoimpl.UnknownFields
+	sizeCache                      protoimpl.SizeCache
 }
 
-func (x *GetMessagesRequest) Reset() {
-	*x = GetMessagesRequest{}
+func (x *UserEngagementMetrics) Reset() {
+	*x = UserEngagementMetrics{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMessagesRequest) String() string {
+func (x *UserEngagementMetrics) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMessagesRequest) ProtoMessage() {}
+func (*UserEngagementMetrics) ProtoMessage() {}
 
-func (x *GetMessagesRequest) ProtoReflect() protoreflect.Message {
+func (x *UserEngagementMetrics) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1592,63 +1793,66 @@ func (x *GetMessagesRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMessagesRequest.ProtoReflect.Descriptor instead.
-func (*GetMessagesRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UserEngagementMetrics.ProtoReflect.Descriptor instead.
+func (*UserEngagementMetrics) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *GetMessagesRequest) GetConversationId() int64 {
+func (x *UserEngagementMetrics) GetAverageMessagesPerConversation() float64 {
 	if x != nil {
-		return x.ConversationId
+		return x.AverageMessagesPerConversation
 	}
 	return 0
 }
 
-func (x *GetMessagesRequest) GetPage() int32 {
+func (x *UserEngagementMetrics) GetConversationCompletionRate() float64 {
 	if x != nil {
-		return x.Page
+		return x.ConversationCompletionRate
 	}
 	return 0
 }
 
-func (x *GetMessagesRequest) GetPageSize() int32 {
+func (x *UserEngagementMetrics) GetUserRetentionRate() float64 {
 	if x != nil {
-		return x.PageSize
+		return x.UserRetentionRate
 	}
 	return 0
 }
 
-func (x *GetMessagesRequest) GetIncludeToolCalls() bool {
+func (x *UserEngagementMetrics) GetFeatureAdoptionRate() float64 {
 	if x != nil {
-		return x.IncludeToolCalls
+		return x.FeatureAdoptionRate
 	}
-	return false
+	return 0
 }
 
-type GetMessagesReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Messages      []*Message             `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`                  // 消息列表
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`                       // 总数
-	Page          int32                  `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`                         // 当前页
-	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"` // 页面大小
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+// 模型使用统计
+type ModelUsageStats struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	ModelName           string                 `protobuf:"bytes,1,opt,name=model_name,json=modelName,proto3" json:"model_name,omitempty"`                                   // 模型名称
+	RequestCount        int64                  `protobuf:"varint,2,opt,name=request_count,json=requestCount,proto3" json:"request_count,omitempty"`                         // 请求数
+	InputTokens         int64                  `protobuf:"varint,3,opt,name=input_tokens,json=inputTokens,proto3" json:"input_tokens,omitempty"`                            // 输入Token数
+	OutputTokens        int64                  `protobuf:"varint,4,opt,name=output_tokens,json=outputTokens,proto3" json:"output_tokens,omitempty"`                         // 输出Token数
+	Cost                float64                `protobuf:"fixed64,5,opt,name=cost,proto3" json:"cost,omitempty"`                                                            // 成本
+	AverageResponseTime float64                `protobuf:"fixed64,6,opt,name=average_response_time,json=averageResponseTime,proto3" json:"average_response_time,omitempty"` // 平均响应时间
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
-func (x *GetMessagesReply) Reset() {
-	*x = GetMessagesReply{}
+func (x *ModelUsageStats) Reset() {
+	*x = ModelUsageStats{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetMessagesReply) String() string {
+func (x *ModelUsageStats) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetMessagesReply) ProtoMessage() {}
+func (*ModelUsageStats) ProtoMessage() {}
 
-func (x *GetMessagesReply) ProtoReflect() protoreflect.Message {
+func (x *ModelUsageStats) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1660,62 +1864,78 @@ func (x *GetMessagesReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetMessagesReply.ProtoReflect.Descriptor instead.
-func (*GetMessagesReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use ModelUsageStats.ProtoReflect.Descriptor instead.
+func (*ModelUsageStats) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *GetMessagesReply) GetMessages() []*Message {
+func (x *ModelUsageStats) GetModelName() string {
 	if x != nil {
-		return x.Messages
+		return x.ModelName
 	}
-	return nil
+	return ""
 }
 
-func (x *GetMessagesReply) GetTotal() int64 {
+func (x *ModelUsageStats) GetRequestCount() int64 {
 	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *GetMessagesReply) GetPage() int32 {
-	if x != nil {
-		return x.Page
+		return x.RequestCount
 	}
 	return 0
 }
 
-func (x *GetMessagesReply) GetPageSize() int32 {
+func (x *ModelUsageStats) GetInputTokens() int64 {
 	if x != nil {
-		return x.PageSize
+		return x.InputTokens
 	}
 	return 0
 }
 
-// 列出可用工具
-type ListToolsRequest struct {
+func (x *ModelUsageStats) GetOutputTokens() int64 {
+	if x != nil {
+		return x.OutputTokens
+	}
+	return 0
+}
+
+func (x *ModelUsageStats) GetCost() float64 {
+	if x != nil {
+		return x.Cost
+	}
+	return 0
+}
+
+func (x *ModelUsageStats) GetAverageResponseTime() float64 {
+	if x != nil {
+		return x.AverageResponseTime
+	}
+	return 0
+}
+
+// 使用时间点
+type UsageTimePoint struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	McpServer     string                 `protobuf:"bytes,1,opt,name=mcp_server,json=mcpServer,proto3" json:"mcp_server,omitempty"`        // MCP服务器过滤(可选)
-	OnlyEnabled   bool                   `protobuf:"varint,2,opt,name=only_enabled,json=onlyEnabled,proto3" json:"only_enabled,omitempty"` // 只显示启用的工具
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                            // 时间戳
+	MessageCount  int32                  `protobuf:"varint,2,opt,name=message_count,json=messageCount,proto3" json:"message_count,omitempty"` // 消息数
+	TokenCount    int32                  `protobuf:"varint,3,opt,name=token_count,json=tokenCount,proto3" json:"token_count,omitempty"`       // Token数
+	Cost          float64                `protobuf:"fixed64,4,opt,name=cost,proto3" json:"cost,omitempty"`                                    // 成本
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListToolsRequest) Reset() {
-	*x = ListToolsRequest{}
+func (x *UsageTimePoint) Reset() {
+	*x = UsageTimePoint{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListToolsRequest) String() string {
+func (x *UsageTimePoint) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListToolsRequest) ProtoMessage() {}
+func (*UsageTimePoint) ProtoMessage() {}
 
-func (x *ListToolsRequest) ProtoReflect() protoreflect.Message {
+func (x *UsageTimePoint) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1727,46 +1947,65 @@ func (x *ListToolsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListToolsRequest.ProtoReflect.Descriptor instead.
-func (*ListToolsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UsageTimePoint.ProtoReflect.Descriptor instead.
+func (*UsageTimePoint) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *ListToolsRequest) GetMcpServer() string {
+func (x *UsageTimePoint) GetTimestamp() *timestamppb.Timestamp {
 	if x != nil {
-		return x.McpServer
+		return x.Timestamp
 	}
-	return ""
+	return nil
 }
 
-func (x *ListToolsRequest) GetOnlyEnabled() bool {
+func (x *UsageTimePoint) GetMessageCount() int32 {
 	if x != nil {
-		return x.OnlyEnabled
+		return x.MessageCount
 	}
-	return false
+	return 0
 }
 
-type ListToolsReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Tools         []*Tool                `protobuf:"bytes,1,rep,name=tools,proto3" json:"tools,omitempty"` // 工具列表
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *UsageTimePoint) GetTokenCount() int32 {
+	if x != nil {
+		return x.TokenCount
+	}
+	return 0
 }
 
-func (x *ListToolsReply) Reset() {
-	*x = ListToolsReply{}
+func (x *UsageTimePoint) GetCost() float64 {
+	if x != nil {
+		return x.Cost
+	}
+	return 0
+}
+
+// 用户行为画像
+type UserBehaviorProfile struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	PreferredModels      []string               `protobuf:"bytes,1,rep,name=preferred_models,json=preferredModels,proto3" json:"preferred_models,omitempty"`                                                                    // 偏好模型
+	FrequentTopics       []string               `protobuf:"bytes,2,rep,name=frequent_topics,json=frequentTopics,proto3" json:"frequent_topics,omitempty"`                                                                       // 常用话题
+	MostActiveTime       string                 `protobuf:"bytes,3,opt,name=most_active_time,json=mostActiveTime,proto3" json:"most_active_time,omitempty"`                                                                     // 最活跃时间段
+	ComplexityPreference float64                `protobuf:"fixed64,4,opt,name=complexity_preference,json=complexityPreference,proto3" json:"complexity_preference,omitempty"`                                                   // 复杂度偏好
+	FeatureUsage         map[string]float64     `protobuf:"bytes,5,rep,name=feature_usage,json=featureUsage,proto3" json:"feature_usage,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"` // 功能使用情况
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *UserBehaviorProfile) Reset() {
+	*x = UserBehaviorProfile{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListToolsReply) String() string {
+func (x *UserBehaviorProfile) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListToolsReply) ProtoMessage() {}
+func (*UserBehaviorProfile) ProtoMessage() {}
 
-func (x *ListToolsReply) ProtoReflect() protoreflect.Message {
+func (x *UserBehaviorProfile) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1778,42 +2017,71 @@ func (x *ListToolsReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListToolsReply.ProtoReflect.Descriptor instead.
-func (*ListToolsReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use UserBehaviorProfile.ProtoReflect.Descriptor instead.
+func (*UserBehaviorProfile) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *ListToolsReply) GetTools() []*Tool {
+func (x *UserBehaviorProfile) GetPreferredModels() []string {
 	if x != nil {
-		return x.Tools
+		return x.PreferredModels
 	}
 	return nil
 }
 
-// 调用工具
-type CallToolRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`                                            // 工具名称
-	Arguments      string                 `protobuf:"bytes,2,opt,name=arguments,proto3" json:"arguments,omitempty"`                                  // 参数(JSON格式)
-	ConversationId int64                  `protobuf:"varint,3,opt,name=conversation_id,json=conversationId,proto3" json:"conversation_id,omitempty"` // 对话ID(可选，用于上下文)
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+func (x *UserBehaviorProfile) GetFrequentTopics() []string {
+	if x != nil {
+		return x.FrequentTopics
+	}
+	return nil
 }
 
-func (x *CallToolRequest) Reset() {
-	*x = CallToolRequest{}
+func (x *UserBehaviorProfile) GetMostActiveTime() string {
+	if x != nil {
+		return x.MostActiveTime
+	}
+	return ""
+}
+
+func (x *UserBehaviorProfile) GetComplexityPreference() float64 {
+	if x != nil {
+		return x.ComplexityPreference
+	}
+	return 0
+}
+
+func (x *UserBehaviorProfile) GetFeatureUsage() map[string]float64 {
+	if x != nil {
+		return x.FeatureUsage
+	}
+	return nil
+}
+
+// 性能时间点
+type PerformanceTimePoint struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`                             // 时间戳
+	ResponseTime  float64                `protobuf:"fixed64,2,opt,name=response_time,json=responseTime,proto3" json:"response_time,omitempty"` // 响应时间
+	SuccessRate   float64                `protobuf:"fixed64,3,opt,name=success_rate,json=successRate,proto3" json:"success_rate,omitempty"`    // 成功率
+	Throughput    float64                `protobuf:"fixed64,4,opt,name=throughput,proto3" json:"throughput,omitempty"`                         // 吞吐量
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PerformanceTimePoint) Reset() {
+	*x = PerformanceTimePoint{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CallToolRequest) String() string {
+func (x *PerformanceTimePoint) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CallToolRequest) ProtoMessage() {}
+func (*PerformanceTimePoint) ProtoMessage() {}
 
-func (x *CallToolRequest) ProtoReflect() protoreflect.Message {
+func (x *PerformanceTimePoint) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1825,56 +2093,65 @@ func (x *CallToolRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CallToolRequest.ProtoReflect.Descriptor instead.
-func (*CallToolRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use PerformanceTimePoint.ProtoReflect.Descriptor instead.
+func (*PerformanceTimePoint) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{24}
 }
 
-func (x *CallToolRequest) GetName() string {
+func (x *PerformanceTimePoint) GetTimestamp() *timestamppb.Timestamp {
 	if x != nil {
-		return x.Name
+		return x.Timestamp
 	}
-	return ""
+	return nil
 }
 
-func (x *CallToolRequest) GetArguments() string {
+func (x *PerformanceTimePoint) GetResponseTime() float64 {
 	if x != nil {
-		return x.Arguments
-	}
-	return ""
-}
-
-func (x *CallToolRequest) GetConversationId() int64 {
-	if x != nil {
-		return x.ConversationId
+		return x.ResponseTime
 	}
 	return 0
 }
 
-type CallToolResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Result        string                 `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`                                                                               // 执行结果
-	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`                                                                              // 状态码 (0:成功, 非0:失败)
-	ErrorMessage  string                 `protobuf:"bytes,3,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`                                               // 错误信息(如果失败)
-	Metadata      map[string]string      `protobuf:"bytes,4,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 执行元数据
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *PerformanceTimePoint) GetSuccessRate() float64 {
+	if x != nil {
+		return x.SuccessRate
+	}
+	return 0
 }
 
-func (x *CallToolResponse) Reset() {
-	*x = CallToolResponse{}
+func (x *PerformanceTimePoint) GetThroughput() float64 {
+	if x != nil {
+		return x.Throughput
+	}
+	return 0
+}
+
+// 模型能力指标
+type ModelCapabilityMetrics struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	ReasoningScore     float64                `protobuf:"fixed64,1,opt,name=reasoning_score,json=reasoningScore,proto3" json:"reasoning_score,omitempty"`                                                                                         // 推理能力分数
+	CreativityScore    float64                `protobuf:"fixed64,2,opt,name=creativity_score,json=creativityScore,proto3" json:"creativity_score,omitempty"`                                                                                      // 创造力分数
+	AccuracyScore      float64                `protobuf:"fixed64,3,opt,name=accuracy_score,json=accuracyScore,proto3" json:"accuracy_score,omitempty"`                                                                                            // 准确性分数
+	SafetyScore        float64                `protobuf:"fixed64,4,opt,name=safety_score,json=safetyScore,proto3" json:"safety_score,omitempty"`                                                                                                  // 安全性分数
+	TaskSpecificScores map[string]float64     `protobuf:"bytes,5,rep,name=task_specific_scores,json=taskSpecificScores,proto3" json:"task_specific_scores,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"fixed64,2,opt,name=value"` // 任务特定分数
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *ModelCapabilityMetrics) Reset() {
+	*x = ModelCapabilityMetrics{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CallToolResponse) String() string {
+func (x *ModelCapabilityMetrics) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CallToolResponse) ProtoMessage() {}
+func (*ModelCapabilityMetrics) ProtoMessage() {}
 
-func (x *CallToolResponse) ProtoReflect() protoreflect.Message {
+func (x *ModelCapabilityMetrics) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1886,61 +2163,72 @@ func (x *CallToolResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CallToolResponse.ProtoReflect.Descriptor instead.
-func (*CallToolResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ModelCapabilityMetrics.ProtoReflect.Descriptor instead.
+func (*ModelCapabilityMetrics) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *CallToolResponse) GetResult() string {
+func (x *ModelCapabilityMetrics) GetReasoningScore() float64 {
 	if x != nil {
-		return x.Result
-	}
-	return ""
-}
-
-func (x *CallToolResponse) GetStatus() int32 {
-	if x != nil {
-		return x.Status
+		return x.ReasoningScore
 	}
 	return 0
 }
 
-func (x *CallToolResponse) GetErrorMessage() string {
+func (x *ModelCapabilityMetrics) GetCreativityScore() float64 {
 	if x != nil {
-		return x.ErrorMessage
+		return x.CreativityScore
 	}
-	return ""
+	return 0
 }
 
-func (x *CallToolResponse) GetMetadata() map[string]string {
+func (x *ModelCapabilityMetrics) GetAccuracyScore() float64 {
 	if x != nil {
-		return x.Metadata
+		return x.AccuracyScore
+	}
+	return 0
+}
+
+func (x *ModelCapabilityMetrics) GetSafetyScore() float64 {
+	if x != nil {
+		return x.SafetyScore
+	}
+	return 0
+}
+
+func (x *ModelCapabilityMetrics) GetTaskSpecificScores() map[string]float64 {
+	if x != nil {
+		return x.TaskSpecificScores
 	}
 	return nil
 }
 
-// 获取工具Schema
-type GetToolSchemaRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // 工具名称
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+// 系统健康指标
+type SystemHealthMetrics struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	OverallHealthScore  float64                `protobuf:"fixed64,1,opt,name=overall_health_score,json=overallHealthScore,proto3" json:"overall_health_score,omitempty"`    // 总体健康分数
+	ServiceAvailability float64                `protobuf:"fixed64,2,opt,name=service_availability,json=serviceAvailability,proto3" json:"service_availability,omitempty"`   // 服务可用性
+	AverageResponseTime float64                `protobuf:"fixed64,3,opt,name=average_response_time,json=averageResponseTime,proto3" json:"average_response_time,omitempty"` // 平均响应时间
+	ErrorRate           float64                `protobuf:"fixed64,4,opt,name=error_rate,json=errorRate,proto3" json:"error_rate,omitempty"`                                 // 错误率
+	ActiveConnections   int64                  `protobuf:"varint,5,opt,name=active_connections,json=activeConnections,proto3" json:"active_connections,omitempty"`          // 活跃连接数
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
-func (x *GetToolSchemaRequest) Reset() {
-	*x = GetToolSchemaRequest{}
+func (x *SystemHealthMetrics) Reset() {
+	*x = SystemHealthMetrics{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetToolSchemaRequest) String() string {
+func (x *SystemHealthMetrics) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetToolSchemaRequest) ProtoMessage() {}
+func (*SystemHealthMetrics) ProtoMessage() {}
 
-func (x *GetToolSchemaRequest) ProtoReflect() protoreflect.Message {
+func (x *SystemHealthMetrics) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1952,39 +2240,72 @@ func (x *GetToolSchemaRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetToolSchemaRequest.ProtoReflect.Descriptor instead.
-func (*GetToolSchemaRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use SystemHealthMetrics.ProtoReflect.Descriptor instead.
+func (*SystemHealthMetrics) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{26}
 }
 
-func (x *GetToolSchemaRequest) GetName() string {
+func (x *SystemHealthMetrics) GetOverallHealthScore() float64 {
 	if x != nil {
-		return x.Name
+		return x.OverallHealthScore
 	}
-	return ""
+	return 0
 }
 
-type GetToolSchemaReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Tool          *Tool                  `protobuf:"bytes,1,opt,name=tool,proto3" json:"tool,omitempty"` // 工具信息和Schema
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *SystemHealthMetrics) GetServiceAvailability() float64 {
+	if x != nil {
+		return x.ServiceAvailability
+	}
+	return 0
 }
 
-func (x *GetToolSchemaReply) Reset() {
-	*x = GetToolSchemaReply{}
+func (x *SystemHealthMetrics) GetAverageResponseTime() float64 {
+	if x != nil {
+		return x.AverageResponseTime
+	}
+	return 0
+}
+
+func (x *SystemHealthMetrics) GetErrorRate() float64 {
+	if x != nil {
+		return x.ErrorRate
+	}
+	return 0
+}
+
+func (x *SystemHealthMetrics) GetActiveConnections() int64 {
+	if x != nil {
+		return x.ActiveConnections
+	}
+	return 0
+}
+
+// 资源使用统计
+type ResourceUsageStats struct {
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	CpuUsagePercentage    float64                `protobuf:"fixed64,1,opt,name=cpu_usage_percentage,json=cpuUsagePercentage,proto3" json:"cpu_usage_percentage,omitempty"`          // CPU使用率
+	MemoryUsagePercentage float64                `protobuf:"fixed64,2,opt,name=memory_usage_percentage,json=memoryUsagePercentage,proto3" json:"memory_usage_percentage,omitempty"` // 内存使用率
+	StorageUsageGb        float64                `protobuf:"fixed64,3,opt,name=storage_usage_gb,json=storageUsageGb,proto3" json:"storage_usage_gb,omitempty"`                      // 存储使用量(GB)
+	NetworkBandwidthMbps  float64                `protobuf:"fixed64,4,opt,name=network_bandwidth_mbps,json=networkBandwidthMbps,proto3" json:"network_bandwidth_mbps,omitempty"`    // 网络带宽(Mbps)
+	DatabaseConnections   int64                  `protobuf:"varint,5,opt,name=database_connections,json=databaseConnections,proto3" json:"database_connections,omitempty"`          // 数据库连接数
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *ResourceUsageStats) Reset() {
+	*x = ResourceUsageStats{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetToolSchemaReply) String() string {
+func (x *ResourceUsageStats) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetToolSchemaReply) ProtoMessage() {}
+func (*ResourceUsageStats) ProtoMessage() {}
 
-func (x *GetToolSchemaReply) ProtoReflect() protoreflect.Message {
+func (x *ResourceUsageStats) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1996,41 +2317,72 @@ func (x *GetToolSchemaReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetToolSchemaReply.ProtoReflect.Descriptor instead.
-func (*GetToolSchemaReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use ResourceUsageStats.ProtoReflect.Descriptor instead.
+func (*ResourceUsageStats) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *GetToolSchemaReply) GetTool() *Tool {
+func (x *ResourceUsageStats) GetCpuUsagePercentage() float64 {
 	if x != nil {
-		return x.Tool
+		return x.CpuUsagePercentage
 	}
-	return nil
+	return 0
 }
 
-// 列出资源
-type ListResourcesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	McpServer     string                 `protobuf:"bytes,1,opt,name=mcp_server,json=mcpServer,proto3" json:"mcp_server,omitempty"` // MCP服务器过滤(可选)
-	MimeType      string                 `protobuf:"bytes,2,opt,name=mime_type,json=mimeType,proto3" json:"mime_type,omitempty"`    // MIME类型过滤(可选)
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *ResourceUsageStats) GetMemoryUsagePercentage() float64 {
+	if x != nil {
+		return x.MemoryUsagePercentage
+	}
+	return 0
 }
 
-func (x *ListResourcesRequest) Reset() {
-	*x = ListResourcesRequest{}
+func (x *ResourceUsageStats) GetStorageUsageGb() float64 {
+	if x != nil {
+		return x.StorageUsageGb
+	}
+	return 0
+}
+
+func (x *ResourceUsageStats) GetNetworkBandwidthMbps() float64 {
+	if x != nil {
+		return x.NetworkBandwidthMbps
+	}
+	return 0
+}
+
+func (x *ResourceUsageStats) GetDatabaseConnections() int64 {
+	if x != nil {
+		return x.DatabaseConnections
+	}
+	return 0
+}
+
+// 服务统计
+type ServiceStats struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	ServiceName         string                 `protobuf:"bytes,1,opt,name=service_name,json=serviceName,proto3" json:"service_name,omitempty"`                             // 服务名称
+	UptimePercentage    float64                `protobuf:"fixed64,2,opt,name=uptime_percentage,json=uptimePercentage,proto3" json:"uptime_percentage,omitempty"`            // 运行时间百分比
+	RequestCount        int64                  `protobuf:"varint,3,opt,name=request_count,json=requestCount,proto3" json:"request_count,omitempty"`                         // 请求数
+	AverageResponseTime float64                `protobuf:"fixed64,4,opt,name=average_response_time,json=averageResponseTime,proto3" json:"average_response_time,omitempty"` // 平均响应时间
+	ErrorRate           float64                `protobuf:"fixed64,5,opt,name=error_rate,json=errorRate,proto3" json:"error_rate,omitempty"`                                 // 错误率
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *ServiceStats) Reset() {
+	*x = ServiceStats{}
 	mi := &file_api_ai_v1_ai_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListResourcesRequest) String() string {
+func (x *ServiceStats) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListResourcesRequest) ProtoMessage() {}
+func (*ServiceStats) ProtoMessage() {}
 
-func (x *ListResourcesRequest) ProtoReflect() protoreflect.Message {
+func (x *ServiceStats) ProtoReflect() protoreflect.Message {
 	mi := &file_api_ai_v1_ai_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2042,1244 +2394,319 @@ func (x *ListResourcesRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListResourcesRequest.ProtoReflect.Descriptor instead.
-func (*ListResourcesRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ServiceStats.ProtoReflect.Descriptor instead.
+func (*ServiceStats) Descriptor() ([]byte, []int) {
 	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{28}
 }
 
-func (x *ListResourcesRequest) GetMcpServer() string {
+func (x *ServiceStats) GetServiceName() string {
 	if x != nil {
-		return x.McpServer
+		return x.ServiceName
 	}
 	return ""
 }
 
-func (x *ListResourcesRequest) GetMimeType() string {
+func (x *ServiceStats) GetUptimePercentage() float64 {
 	if x != nil {
-		return x.MimeType
-	}
-	return ""
-}
-
-type ListResourcesReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resources     []*Resource            `protobuf:"bytes,1,rep,name=resources,proto3" json:"resources,omitempty"` // 资源列表
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListResourcesReply) Reset() {
-	*x = ListResourcesReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[29]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListResourcesReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListResourcesReply) ProtoMessage() {}
-
-func (x *ListResourcesReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[29]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListResourcesReply.ProtoReflect.Descriptor instead.
-func (*ListResourcesReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{29}
-}
-
-func (x *ListResourcesReply) GetResources() []*Resource {
-	if x != nil {
-		return x.Resources
-	}
-	return nil
-}
-
-// 获取资源
-type GetResourceRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uri           string                 `protobuf:"bytes,1,opt,name=uri,proto3" json:"uri,omitempty"` // 资源URI
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetResourceRequest) Reset() {
-	*x = GetResourceRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[30]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetResourceRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetResourceRequest) ProtoMessage() {}
-
-func (x *GetResourceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[30]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetResourceRequest.ProtoReflect.Descriptor instead.
-func (*GetResourceRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{30}
-}
-
-func (x *GetResourceRequest) GetUri() string {
-	if x != nil {
-		return x.Uri
-	}
-	return ""
-}
-
-type GetResourceReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       string                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`                                                                             // 资源内容
-	MimeType      string                 `protobuf:"bytes,2,opt,name=mime_type,json=mimeType,proto3" json:"mime_type,omitempty"`                                                           // MIME类型
-	Metadata      map[string]string      `protobuf:"bytes,3,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 资源元数据
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetResourceReply) Reset() {
-	*x = GetResourceReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[31]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetResourceReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetResourceReply) ProtoMessage() {}
-
-func (x *GetResourceReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[31]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetResourceReply.ProtoReflect.Descriptor instead.
-func (*GetResourceReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{31}
-}
-
-func (x *GetResourceReply) GetContent() string {
-	if x != nil {
-		return x.Content
-	}
-	return ""
-}
-
-func (x *GetResourceReply) GetMimeType() string {
-	if x != nil {
-		return x.MimeType
-	}
-	return ""
-}
-
-func (x *GetResourceReply) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
-	}
-	return nil
-}
-
-// 创建知识库
-type CreateKnowledgeBaseRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	UserId         int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                        // 用户ID
-	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                           // 知识库名称
-	Description    string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                             // 知识库描述
-	EmbeddingModel string                 `protobuf:"bytes,4,opt,name=embedding_model,json=embeddingModel,proto3" json:"embedding_model,omitempty"` // 向量化模型(可选)
-	ChunkSize      int32                  `protobuf:"varint,5,opt,name=chunk_size,json=chunkSize,proto3" json:"chunk_size,omitempty"`               // 文档分块大小(可选)
-	ChunkOverlap   int32                  `protobuf:"varint,6,opt,name=chunk_overlap,json=chunkOverlap,proto3" json:"chunk_overlap,omitempty"`      // 分块重叠大小(可选)
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *CreateKnowledgeBaseRequest) Reset() {
-	*x = CreateKnowledgeBaseRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[32]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateKnowledgeBaseRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateKnowledgeBaseRequest) ProtoMessage() {}
-
-func (x *CreateKnowledgeBaseRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[32]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateKnowledgeBaseRequest.ProtoReflect.Descriptor instead.
-func (*CreateKnowledgeBaseRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{32}
-}
-
-func (x *CreateKnowledgeBaseRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
+		return x.UptimePercentage
 	}
 	return 0
 }
 
-func (x *CreateKnowledgeBaseRequest) GetName() string {
+func (x *ServiceStats) GetRequestCount() int64 {
 	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *CreateKnowledgeBaseRequest) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *CreateKnowledgeBaseRequest) GetEmbeddingModel() string {
-	if x != nil {
-		return x.EmbeddingModel
-	}
-	return ""
-}
-
-func (x *CreateKnowledgeBaseRequest) GetChunkSize() int32 {
-	if x != nil {
-		return x.ChunkSize
+		return x.RequestCount
 	}
 	return 0
 }
 
-func (x *CreateKnowledgeBaseRequest) GetChunkOverlap() int32 {
+func (x *ServiceStats) GetAverageResponseTime() float64 {
 	if x != nil {
-		return x.ChunkOverlap
+		return x.AverageResponseTime
 	}
 	return 0
 }
 
-type CreateKnowledgeBaseReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	KnowledgeBase *KnowledgeBase         `protobuf:"bytes,1,opt,name=knowledge_base,json=knowledgeBase,proto3" json:"knowledge_base,omitempty"` // 创建的知识库
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateKnowledgeBaseReply) Reset() {
-	*x = CreateKnowledgeBaseReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[33]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateKnowledgeBaseReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateKnowledgeBaseReply) ProtoMessage() {}
-
-func (x *CreateKnowledgeBaseReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[33]
+func (x *ServiceStats) GetErrorRate() float64 {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateKnowledgeBaseReply.ProtoReflect.Descriptor instead.
-func (*CreateKnowledgeBaseReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{33}
-}
-
-func (x *CreateKnowledgeBaseReply) GetKnowledgeBase() *KnowledgeBase {
-	if x != nil {
-		return x.KnowledgeBase
-	}
-	return nil
-}
-
-// 更新知识库
-type UpdateKnowledgeBaseRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                              // 知识库ID
-	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                           // 知识库名称(可选)
-	Description    string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                             // 知识库描述(可选)
-	EmbeddingModel string                 `protobuf:"bytes,4,opt,name=embedding_model,json=embeddingModel,proto3" json:"embedding_model,omitempty"` // 向量化模型(可选)
-	ChunkSize      int32                  `protobuf:"varint,5,opt,name=chunk_size,json=chunkSize,proto3" json:"chunk_size,omitempty"`               // 文档分块大小(可选)
-	ChunkOverlap   int32                  `protobuf:"varint,6,opt,name=chunk_overlap,json=chunkOverlap,proto3" json:"chunk_overlap,omitempty"`      // 分块重叠大小(可选)
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *UpdateKnowledgeBaseRequest) Reset() {
-	*x = UpdateKnowledgeBaseRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[34]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateKnowledgeBaseRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateKnowledgeBaseRequest) ProtoMessage() {}
-
-func (x *UpdateKnowledgeBaseRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[34]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateKnowledgeBaseRequest.ProtoReflect.Descriptor instead.
-func (*UpdateKnowledgeBaseRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{34}
-}
-
-func (x *UpdateKnowledgeBaseRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
+		return x.ErrorRate
 	}
 	return 0
-}
-
-func (x *UpdateKnowledgeBaseRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *UpdateKnowledgeBaseRequest) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *UpdateKnowledgeBaseRequest) GetEmbeddingModel() string {
-	if x != nil {
-		return x.EmbeddingModel
-	}
-	return ""
-}
-
-func (x *UpdateKnowledgeBaseRequest) GetChunkSize() int32 {
-	if x != nil {
-		return x.ChunkSize
-	}
-	return 0
-}
-
-func (x *UpdateKnowledgeBaseRequest) GetChunkOverlap() int32 {
-	if x != nil {
-		return x.ChunkOverlap
-	}
-	return 0
-}
-
-type UpdateKnowledgeBaseReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	KnowledgeBase *KnowledgeBase         `protobuf:"bytes,1,opt,name=knowledge_base,json=knowledgeBase,proto3" json:"knowledge_base,omitempty"` // 更新后的知识库
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateKnowledgeBaseReply) Reset() {
-	*x = UpdateKnowledgeBaseReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[35]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateKnowledgeBaseReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateKnowledgeBaseReply) ProtoMessage() {}
-
-func (x *UpdateKnowledgeBaseReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[35]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateKnowledgeBaseReply.ProtoReflect.Descriptor instead.
-func (*UpdateKnowledgeBaseReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{35}
-}
-
-func (x *UpdateKnowledgeBaseReply) GetKnowledgeBase() *KnowledgeBase {
-	if x != nil {
-		return x.KnowledgeBase
-	}
-	return nil
-}
-
-// 删除知识库
-type DeleteKnowledgeBaseRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` // 知识库ID
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteKnowledgeBaseRequest) Reset() {
-	*x = DeleteKnowledgeBaseRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[36]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteKnowledgeBaseRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteKnowledgeBaseRequest) ProtoMessage() {}
-
-func (x *DeleteKnowledgeBaseRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[36]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteKnowledgeBaseRequest.ProtoReflect.Descriptor instead.
-func (*DeleteKnowledgeBaseRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{36}
-}
-
-func (x *DeleteKnowledgeBaseRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-type DeleteKnowledgeBaseReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteKnowledgeBaseReply) Reset() {
-	*x = DeleteKnowledgeBaseReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[37]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteKnowledgeBaseReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteKnowledgeBaseReply) ProtoMessage() {}
-
-func (x *DeleteKnowledgeBaseReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[37]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteKnowledgeBaseReply.ProtoReflect.Descriptor instead.
-func (*DeleteKnowledgeBaseReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{37}
-}
-
-// 列出知识库
-type ListKnowledgeBasesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`       // 用户ID
-	Page          int32                  `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`                         // 页码
-	PageSize      int32                  `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"` // 页面大小
-	Keyword       string                 `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`                    // 搜索关键词(可选)
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListKnowledgeBasesRequest) Reset() {
-	*x = ListKnowledgeBasesRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[38]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListKnowledgeBasesRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListKnowledgeBasesRequest) ProtoMessage() {}
-
-func (x *ListKnowledgeBasesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[38]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListKnowledgeBasesRequest.ProtoReflect.Descriptor instead.
-func (*ListKnowledgeBasesRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{38}
-}
-
-func (x *ListKnowledgeBasesRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
-}
-
-func (x *ListKnowledgeBasesRequest) GetPage() int32 {
-	if x != nil {
-		return x.Page
-	}
-	return 0
-}
-
-func (x *ListKnowledgeBasesRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *ListKnowledgeBasesRequest) GetKeyword() string {
-	if x != nil {
-		return x.Keyword
-	}
-	return ""
-}
-
-type ListKnowledgeBasesReply struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	KnowledgeBases []*KnowledgeBase       `protobuf:"bytes,1,rep,name=knowledge_bases,json=knowledgeBases,proto3" json:"knowledge_bases,omitempty"` // 知识库列表
-	Total          int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`                                        // 总数
-	Page           int32                  `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`                                          // 当前页
-	PageSize       int32                  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`                  // 页面大小
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *ListKnowledgeBasesReply) Reset() {
-	*x = ListKnowledgeBasesReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[39]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListKnowledgeBasesReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListKnowledgeBasesReply) ProtoMessage() {}
-
-func (x *ListKnowledgeBasesReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[39]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListKnowledgeBasesReply.ProtoReflect.Descriptor instead.
-func (*ListKnowledgeBasesReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{39}
-}
-
-func (x *ListKnowledgeBasesReply) GetKnowledgeBases() []*KnowledgeBase {
-	if x != nil {
-		return x.KnowledgeBases
-	}
-	return nil
-}
-
-func (x *ListKnowledgeBasesReply) GetTotal() int64 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *ListKnowledgeBasesReply) GetPage() int32 {
-	if x != nil {
-		return x.Page
-	}
-	return 0
-}
-
-func (x *ListKnowledgeBasesReply) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-// 上传文档
-type UploadDocumentRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	KnowledgeBaseId int64                  `protobuf:"varint,1,opt,name=knowledge_base_id,json=knowledgeBaseId,proto3" json:"knowledge_base_id,omitempty"` // 知识库ID
-	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                 // 文档名称
-	Content         []byte                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`                                           // 文档内容
-	MimeType        string                 `protobuf:"bytes,4,opt,name=mime_type,json=mimeType,proto3" json:"mime_type,omitempty"`                         // 文件类型
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *UploadDocumentRequest) Reset() {
-	*x = UploadDocumentRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[40]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UploadDocumentRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UploadDocumentRequest) ProtoMessage() {}
-
-func (x *UploadDocumentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[40]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UploadDocumentRequest.ProtoReflect.Descriptor instead.
-func (*UploadDocumentRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{40}
-}
-
-func (x *UploadDocumentRequest) GetKnowledgeBaseId() int64 {
-	if x != nil {
-		return x.KnowledgeBaseId
-	}
-	return 0
-}
-
-func (x *UploadDocumentRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *UploadDocumentRequest) GetContent() []byte {
-	if x != nil {
-		return x.Content
-	}
-	return nil
-}
-
-func (x *UploadDocumentRequest) GetMimeType() string {
-	if x != nil {
-		return x.MimeType
-	}
-	return ""
-}
-
-type UploadDocumentReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Document      *Document              `protobuf:"bytes,1,opt,name=document,proto3" json:"document,omitempty"` // 上传的文档
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UploadDocumentReply) Reset() {
-	*x = UploadDocumentReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[41]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UploadDocumentReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UploadDocumentReply) ProtoMessage() {}
-
-func (x *UploadDocumentReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[41]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UploadDocumentReply.ProtoReflect.Descriptor instead.
-func (*UploadDocumentReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{41}
-}
-
-func (x *UploadDocumentReply) GetDocument() *Document {
-	if x != nil {
-		return x.Document
-	}
-	return nil
-}
-
-// 搜索知识
-type SearchKnowledgeRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	KnowledgeBaseId int64                  `protobuf:"varint,1,opt,name=knowledge_base_id,json=knowledgeBaseId,proto3" json:"knowledge_base_id,omitempty"` // 知识库ID
-	Query           string                 `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`                                               // 搜索查询
-	Limit           int32                  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`                                              // 返回结果数量限制
-	Threshold       float64                `protobuf:"fixed64,4,opt,name=threshold,proto3" json:"threshold,omitempty"`                                     // 相似度阈值
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *SearchKnowledgeRequest) Reset() {
-	*x = SearchKnowledgeRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[42]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SearchKnowledgeRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SearchKnowledgeRequest) ProtoMessage() {}
-
-func (x *SearchKnowledgeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[42]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SearchKnowledgeRequest.ProtoReflect.Descriptor instead.
-func (*SearchKnowledgeRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{42}
-}
-
-func (x *SearchKnowledgeRequest) GetKnowledgeBaseId() int64 {
-	if x != nil {
-		return x.KnowledgeBaseId
-	}
-	return 0
-}
-
-func (x *SearchKnowledgeRequest) GetQuery() string {
-	if x != nil {
-		return x.Query
-	}
-	return ""
-}
-
-func (x *SearchKnowledgeRequest) GetLimit() int32 {
-	if x != nil {
-		return x.Limit
-	}
-	return 0
-}
-
-func (x *SearchKnowledgeRequest) GetThreshold() float64 {
-	if x != nil {
-		return x.Threshold
-	}
-	return 0
-}
-
-type SearchKnowledgeReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Chunks        []*KnowledgeChunk      `protobuf:"bytes,1,rep,name=chunks,proto3" json:"chunks,omitempty"` // 搜索结果
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SearchKnowledgeReply) Reset() {
-	*x = SearchKnowledgeReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[43]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SearchKnowledgeReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SearchKnowledgeReply) ProtoMessage() {}
-
-func (x *SearchKnowledgeReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[43]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SearchKnowledgeReply.ProtoReflect.Descriptor instead.
-func (*SearchKnowledgeReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{43}
-}
-
-func (x *SearchKnowledgeReply) GetChunks() []*KnowledgeChunk {
-	if x != nil {
-		return x.Chunks
-	}
-	return nil
-}
-
-// 知识库块
-type KnowledgeChunk struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                                      // 块ID
-	DocumentId    int64                  `protobuf:"varint,2,opt,name=document_id,json=documentId,proto3" json:"document_id,omitempty"`                                                    // 文档ID
-	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`                                                                             // 块内容
-	Score         float64                `protobuf:"fixed64,4,opt,name=score,proto3" json:"score,omitempty"`                                                                               // 相似度分数
-	Metadata      map[string]string      `protobuf:"bytes,5,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 块元数据
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *KnowledgeChunk) Reset() {
-	*x = KnowledgeChunk{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[44]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *KnowledgeChunk) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KnowledgeChunk) ProtoMessage() {}
-
-func (x *KnowledgeChunk) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[44]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KnowledgeChunk.ProtoReflect.Descriptor instead.
-func (*KnowledgeChunk) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{44}
-}
-
-func (x *KnowledgeChunk) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *KnowledgeChunk) GetDocumentId() int64 {
-	if x != nil {
-		return x.DocumentId
-	}
-	return 0
-}
-
-func (x *KnowledgeChunk) GetContent() string {
-	if x != nil {
-		return x.Content
-	}
-	return ""
-}
-
-func (x *KnowledgeChunk) GetScore() float64 {
-	if x != nil {
-		return x.Score
-	}
-	return 0
-}
-
-func (x *KnowledgeChunk) GetMetadata() map[string]string {
-	if x != nil {
-		return x.Metadata
-	}
-	return nil
 }
 
 var File_api_ai_v1_ai_proto protoreflect.FileDescriptor
 
 const file_api_ai_v1_ai_proto_rawDesc = "" +
 	"\n" +
-	"\x12api/ai/v1/ai.proto\x12\tapi.ai.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x97\x03\n" +
-	"\fConversation\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x03R\x06userId\x12\x14\n" +
-	"\x05title\x18\x03 \x01(\tR\x05title\x12\x1d\n" +
+	"\x12api/ai/v1/ai.proto\x12\tapi.ai.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb4\x03\n" +
+	"\x1fGetConversationAnalyticsRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
-	"model_name\x18\x04 \x01(\tR\tmodelName\x12#\n" +
-	"\rsystem_prompt\x18\x05 \x01(\tR\fsystemPrompt\x12;\n" +
-	"\x06config\x18\x06 \x03(\v2#.api.ai.v1.Conversation.ConfigEntryR\x06config\x12\x16\n" +
-	"\x06status\x18\a \x01(\x05R\x06status\x129\n" +
-	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
-	"\n" +
-	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x1a9\n" +
-	"\vConfigEntry\x12\x10\n" +
+	"start_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
+	"\bend_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aendTime\x12A\n" +
+	"\vgranularity\x18\x04 \x01(\x0e2\x1f.api.ai.v1.AnalyticsGranularityR\vgranularity\x124\n" +
+	"\ametrics\x18\x05 \x03(\x0e2\x1a.api.ai.v1.AnalyticsMetricR\ametrics\x12Q\n" +
+	"\afilters\x18\x06 \x03(\v27.api.ai.v1.GetConversationAnalyticsRequest.FiltersEntryR\afilters\x1a:\n" +
+	"\fFiltersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xda\x02\n" +
-	"\aMessage\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12'\n" +
-	"\x0fconversation_id\x18\x02 \x01(\x03R\x0econversationId\x12\x12\n" +
-	"\x04role\x18\x03 \x01(\tR\x04role\x12\x18\n" +
-	"\acontent\x18\x04 \x01(\tR\acontent\x122\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"_\n" +
+	"\x1dGetConversationAnalyticsReply\x12>\n" +
+	"\tanalytics\x18\x01 \x01(\v2 .api.ai.v1.ConversationAnalyticsR\tanalytics\"\x8b\x02\n" +
+	"\x18GetUserUsageStatsRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
-	"tool_calls\x18\x05 \x03(\v2\x13.api.ai.v1.ToolCallR\ttoolCalls\x12<\n" +
-	"\bmetadata\x18\x06 \x03(\v2 .api.ai.v1.Message.MetadataEntryR\bmetadata\x129\n" +
+	"start_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
+	"\bend_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aendTime\x124\n" +
+	"\x16include_cost_breakdown\x18\x04 \x01(\bR\x14includeCostBreakdown\x12.\n" +
+	"\x13include_model_usage\x18\x05 \x01(\bR\x11includeModelUsage\"T\n" +
+	"\x16GetUserUsageStatsReply\x12:\n" +
+	"\vusage_stats\x18\x01 \x01(\v2\x19.api.ai.v1.UserUsageStatsR\n" +
+	"usageStats\"\xa6\x02\n" +
+	"\x1fGetModelPerformanceStatsRequest\x12\x1f\n" +
+	"\vmodel_names\x18\x01 \x03(\tR\n" +
+	"modelNames\x129\n" +
 	"\n" +
-	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xdc\x01\n" +
-	"\bToolCall\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1c\n" +
-	"\targuments\x18\x03 \x01(\tR\targuments\x12\x16\n" +
-	"\x06result\x18\x04 \x01(\tR\x06result\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\x05R\x06status\x12#\n" +
-	"\rerror_message\x18\x06 \x01(\tR\ferrorMessage\x129\n" +
+	"start_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
+	"\bend_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aendTime\x12:\n" +
+	"\x19include_user_satisfaction\x18\x04 \x01(\bR\x17includeUserSatisfaction\x124\n" +
+	"\x16include_error_analysis\x18\x05 \x01(\bR\x14includeErrorAnalysis\"b\n" +
+	"\x1dGetModelPerformanceStatsReply\x12A\n" +
+	"\vmodel_stats\x18\x01 \x03(\v2 .api.ai.v1.ModelPerformanceStatsR\n" +
+	"modelStats\"\xa9\x02\n" +
+	"\x1cGetConversationTrendsRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
-	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xba\x04\n" +
-	"\vModelConfig\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
-	"\bprovider\x18\x02 \x01(\tR\bprovider\x12\x17\n" +
-	"\aapi_key\x18\x03 \x01(\tR\x06apiKey\x12\x19\n" +
-	"\bapi_base\x18\x04 \x01(\tR\aapiBase\x12 \n" +
-	"\vtemperature\x18\x05 \x01(\x01R\vtemperature\x12\x1d\n" +
+	"start_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
+	"\bend_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aendTime\x12A\n" +
+	"\vgranularity\x18\x04 \x01(\x0e2\x1f.api.ai.v1.AnalyticsGranularityR\vgranularity\x12;\n" +
+	"\rtrend_metrics\x18\x05 \x03(\x0e2\x16.api.ai.v1.TrendMetricR\ftrendMetrics\"J\n" +
+	"\x1aGetConversationTrendsReply\x12,\n" +
+	"\x06trends\x18\x01 \x03(\v2\x14.api.ai.v1.TrendDataR\x06trends\"\x8d\x03\n" +
+	"\x17GetTopicAnalysisRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x129\n" +
 	"\n" +
-	"max_tokens\x18\x06 \x01(\x05R\tmaxTokens\x12\x13\n" +
-	"\x05top_p\x18\a \x01(\x01R\x04topP\x12+\n" +
-	"\x11frequency_penalty\x18\b \x01(\x01R\x10frequencyPenalty\x12)\n" +
-	"\x10presence_penalty\x18\t \x01(\x01R\x0fpresencePenalty\x12%\n" +
-	"\x0estop_sequences\x18\n" +
-	" \x03(\tR\rstopSequences\x12%\n" +
-	"\x0esupports_tools\x18\v \x01(\bR\rsupportsTools\x12'\n" +
-	"\x0fsupports_vision\x18\f \x01(\bR\x0esupportsVision\x12J\n" +
-	"\fextra_params\x18\r \x03(\v2'.api.ai.v1.ModelConfig.ExtraParamsEntryR\vextraParams\x12\x16\n" +
-	"\x06status\x18\x0e \x01(\x05R\x06status\x1a>\n" +
-	"\x10ExtraParamsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x85\x02\n" +
-	"\x04Tool\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x16\n" +
-	"\x06schema\x18\x03 \x01(\tR\x06schema\x12\x1d\n" +
-	"\n" +
-	"mcp_server\x18\x04 \x01(\tR\tmcpServer\x129\n" +
-	"\bmetadata\x18\x05 \x03(\v2\x1d.api.ai.v1.Tool.MetadataEntryR\bmetadata\x12\x18\n" +
-	"\aenabled\x18\x06 \x01(\bR\aenabled\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x8a\x02\n" +
-	"\bResource\x12\x10\n" +
-	"\x03uri\x18\x01 \x01(\tR\x03uri\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1b\n" +
-	"\tmime_type\x18\x04 \x01(\tR\bmimeType\x12\x1d\n" +
-	"\n" +
-	"mcp_server\x18\x05 \x01(\tR\tmcpServer\x12=\n" +
-	"\bmetadata\x18\x06 \x03(\v2!.api.ai.v1.Resource.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xe9\x02\n" +
-	"\rKnowledgeBase\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x03R\x06userId\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12'\n" +
-	"\x0fembedding_model\x18\x05 \x01(\tR\x0eembeddingModel\x12\x1d\n" +
-	"\n" +
-	"chunk_size\x18\x06 \x01(\x05R\tchunkSize\x12#\n" +
-	"\rchunk_overlap\x18\a \x01(\x05R\fchunkOverlap\x12\x16\n" +
-	"\x06status\x18\b \x01(\x05R\x06status\x129\n" +
-	"\n" +
-	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
-	"\n" +
-	"updated_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xfa\x02\n" +
-	"\bDocument\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12*\n" +
-	"\x11knowledge_base_id\x18\x02 \x01(\x03R\x0fknowledgeBaseId\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12\x18\n" +
-	"\acontent\x18\x04 \x01(\tR\acontent\x12\x1b\n" +
-	"\tfile_path\x18\x05 \x01(\tR\bfilePath\x12\x1b\n" +
-	"\tmime_type\x18\x06 \x01(\tR\bmimeType\x12\x1b\n" +
-	"\tfile_size\x18\a \x01(\x03R\bfileSize\x12\x1f\n" +
-	"\vchunk_count\x18\b \x01(\x05R\n" +
-	"chunkCount\x12\x16\n" +
-	"\x06status\x18\t \x01(\x05R\x06status\x129\n" +
-	"\n" +
-	"created_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
-	"\n" +
-	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\x93\x02\n" +
-	"\x19CreateConversationRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x14\n" +
-	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1d\n" +
-	"\n" +
-	"model_name\x18\x03 \x01(\tR\tmodelName\x12#\n" +
-	"\rsystem_prompt\x18\x04 \x01(\tR\fsystemPrompt\x12H\n" +
-	"\x06config\x18\x05 \x03(\v20.api.ai.v1.CreateConversationRequest.ConfigEntryR\x06config\x1a9\n" +
-	"\vConfigEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"V\n" +
-	"\x17CreateConversationReply\x12;\n" +
-	"\fconversation\x18\x01 \x01(\v2\x17.api.ai.v1.ConversationR\fconversation\"(\n" +
-	"\x16GetConversationRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"S\n" +
-	"\x14GetConversationReply\x12;\n" +
-	"\fconversation\x18\x01 \x01(\v2\x17.api.ai.v1.ConversationR\fconversation\"\xeb\x01\n" +
-	"\x19UpdateConversationRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
-	"\x05title\x18\x02 \x01(\tR\x05title\x12#\n" +
-	"\rsystem_prompt\x18\x03 \x01(\tR\fsystemPrompt\x12H\n" +
-	"\x06config\x18\x04 \x03(\v20.api.ai.v1.UpdateConversationRequest.ConfigEntryR\x06config\x1a9\n" +
-	"\vConfigEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"V\n" +
-	"\x17UpdateConversationReply\x12;\n" +
-	"\fconversation\x18\x01 \x01(\v2\x17.api.ai.v1.ConversationR\fconversation\"+\n" +
-	"\x19DeleteConversationRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\x19\n" +
-	"\x17DeleteConversationReply\"~\n" +
-	"\x18ListConversationsRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x12\n" +
-	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\bpageSize\x12\x18\n" +
-	"\akeyword\x18\x04 \x01(\tR\akeyword\"\x9e\x01\n" +
-	"\x16ListConversationsReply\x12=\n" +
-	"\rconversations\x18\x01 \x03(\v2\x17.api.ai.v1.ConversationR\rconversations\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x12\n" +
-	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"\xc3\x02\n" +
-	"\x12SendMessageRequest\x12'\n" +
-	"\x0fconversation_id\x18\x01 \x01(\x03R\x0econversationId\x12\x18\n" +
-	"\acontent\x18\x02 \x01(\tR\acontent\x12 \n" +
-	"\vattachments\x18\x03 \x03(\tR\vattachments\x12!\n" +
-	"\fenable_tools\x18\x04 \x01(\bR\venableTools\x12#\n" +
-	"\rallowed_tools\x18\x05 \x03(\tR\fallowedTools\x12D\n" +
-	"\aoptions\x18\x06 \x03(\v2*.api.ai.v1.SendMessageRequest.OptionsEntryR\aoptions\x1a:\n" +
-	"\fOptionsEntry\x12\x10\n" +
+	"start_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
+	"\bend_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\aendTime\x12(\n" +
+	"\x10top_topics_count\x18\x04 \x01(\x05R\x0etopTopicsCount\x126\n" +
+	"\x06method\x18\x05 \x01(\x0e2\x1e.api.ai.v1.TopicAnalysisMethodR\x06method\x12I\n" +
+	"\afilters\x18\x06 \x03(\v2/.api.ai.v1.GetTopicAnalysisRequest.FiltersEntryR\afilters\x1a:\n" +
+	"\fFiltersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x8a\x01\n" +
-	"\x10SendMessageReply\x125\n" +
-	"\fuser_message\x18\x01 \x01(\v2\x12.api.ai.v1.MessageR\vuserMessage\x12?\n" +
-	"\x11assistant_message\x18\x02 \x01(\v2\x12.api.ai.v1.MessageR\x10assistantMessage\"\x9c\x01\n" +
-	"\x12GetMessagesRequest\x12'\n" +
-	"\x0fconversation_id\x18\x01 \x01(\x03R\x0econversationId\x12\x12\n" +
-	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\bpageSize\x12,\n" +
-	"\x12include_tool_calls\x18\x04 \x01(\bR\x10includeToolCalls\"\x89\x01\n" +
-	"\x10GetMessagesReply\x12.\n" +
-	"\bmessages\x18\x01 \x03(\v2\x12.api.ai.v1.MessageR\bmessages\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x12\n" +
-	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"T\n" +
-	"\x10ListToolsRequest\x12\x1d\n" +
+	"\x15GetTopicAnalysisReply\x12/\n" +
+	"\x06topics\x18\x01 \x03(\v2\x17.api.ai.v1.TopicInsightR\x06topics\x12@\n" +
+	"\fdistribution\x18\x02 \x01(\v2\x1c.api.ai.v1.TopicDistributionR\fdistribution\"\xf8\x01\n" +
+	"\x18GetSystemOverviewRequest\x129\n" +
 	"\n" +
-	"mcp_server\x18\x01 \x01(\tR\tmcpServer\x12!\n" +
-	"\fonly_enabled\x18\x02 \x01(\bR\vonlyEnabled\"7\n" +
-	"\x0eListToolsReply\x12%\n" +
-	"\x05tools\x18\x01 \x03(\v2\x0f.api.ai.v1.ToolR\x05tools\"l\n" +
-	"\x0fCallToolRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1c\n" +
-	"\targuments\x18\x02 \x01(\tR\targuments\x12'\n" +
-	"\x0fconversation_id\x18\x03 \x01(\x03R\x0econversationId\"\xeb\x01\n" +
-	"\x10CallToolResponse\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\tR\x06result\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\x05R\x06status\x12#\n" +
-	"\rerror_message\x18\x03 \x01(\tR\ferrorMessage\x12E\n" +
-	"\bmetadata\x18\x04 \x03(\v2).api.ai.v1.CallToolResponse.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
+	"start_time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tstartTime\x125\n" +
+	"\bend_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\aendTime\x124\n" +
+	"\x16include_health_metrics\x18\x03 \x01(\bR\x14includeHealthMetrics\x124\n" +
+	"\x16include_resource_usage\x18\x04 \x01(\bR\x14includeResourceUsage\"T\n" +
+	"\x16GetSystemOverviewReply\x12:\n" +
+	"\boverview\x18\x01 \x01(\v2\x1e.api.ai.v1.SystemOverviewStatsR\boverview\"\xd4\x05\n" +
+	"\x15ConversationAnalytics\x12/\n" +
+	"\x13total_conversations\x18\x01 \x01(\x03R\x12totalConversations\x12!\n" +
+	"\factive_users\x18\x02 \x01(\x03R\vactiveUsers\x12>\n" +
+	"\x1baverage_conversation_length\x18\x03 \x01(\x01R\x19averageConversationLength\x122\n" +
+	"\x15average_response_time\x18\x04 \x01(\x01R\x13averageResponseTime\x12v\n" +
+	"\x18model_usage_distribution\x18\x05 \x03(\v2<.api.ai.v1.ConversationAnalytics.ModelUsageDistributionEntryR\x16modelUsageDistribution\x12c\n" +
+	"\x11time_distribution\x18\x06 \x03(\v26.api.ai.v1.ConversationAnalytics.TimeDistributionEntryR\x10timeDistribution\x12D\n" +
+	"\x10time_series_data\x18\a \x03(\v2\x1a.api.ai.v1.TimeSeriesPointR\x0etimeSeriesData\x12@\n" +
+	"\n" +
+	"engagement\x18\b \x01(\v2 .api.ai.v1.UserEngagementMetricsR\n" +
+	"engagement\x1aI\n" +
+	"\x1bModelUsageDistributionEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"*\n" +
-	"\x14GetToolSchemaRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"9\n" +
-	"\x12GetToolSchemaReply\x12#\n" +
-	"\x04tool\x18\x01 \x01(\v2\x0f.api.ai.v1.ToolR\x04tool\"R\n" +
-	"\x14ListResourcesRequest\x12\x1d\n" +
-	"\n" +
-	"mcp_server\x18\x01 \x01(\tR\tmcpServer\x12\x1b\n" +
-	"\tmime_type\x18\x02 \x01(\tR\bmimeType\"G\n" +
-	"\x12ListResourcesReply\x121\n" +
-	"\tresources\x18\x01 \x03(\v2\x13.api.ai.v1.ResourceR\tresources\"&\n" +
-	"\x12GetResourceRequest\x12\x10\n" +
-	"\x03uri\x18\x01 \x01(\tR\x03uri\"\xcd\x01\n" +
-	"\x10GetResourceReply\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent\x12\x1b\n" +
-	"\tmime_type\x18\x02 \x01(\tR\bmimeType\x12E\n" +
-	"\bmetadata\x18\x03 \x03(\v2).api.ai.v1.GetResourceReply.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\x1aC\n" +
+	"\x15TimeDistributionEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd8\x01\n" +
-	"\x1aCreateKnowledgeBaseRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12'\n" +
-	"\x0fembedding_model\x18\x04 \x01(\tR\x0eembeddingModel\x12\x1d\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"\x83\x06\n" +
+	"\x0eUserUsageStats\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12/\n" +
+	"\x13total_conversations\x18\x02 \x01(\x03R\x12totalConversations\x12%\n" +
+	"\x0etotal_messages\x18\x03 \x01(\x03R\rtotalMessages\x12,\n" +
+	"\x12total_input_tokens\x18\x04 \x01(\x03R\x10totalInputTokens\x12.\n" +
+	"\x13total_output_tokens\x18\x05 \x01(\x03R\x11totalOutputTokens\x12\x1d\n" +
 	"\n" +
-	"chunk_size\x18\x05 \x01(\x05R\tchunkSize\x12#\n" +
-	"\rchunk_overlap\x18\x06 \x01(\x05R\fchunkOverlap\"[\n" +
-	"\x18CreateKnowledgeBaseReply\x12?\n" +
-	"\x0eknowledge_base\x18\x01 \x01(\v2\x18.api.ai.v1.KnowledgeBaseR\rknowledgeBase\"\xcf\x01\n" +
-	"\x1aUpdateKnowledgeBaseRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12'\n" +
-	"\x0fembedding_model\x18\x04 \x01(\tR\x0eembeddingModel\x12\x1d\n" +
-	"\n" +
-	"chunk_size\x18\x05 \x01(\x05R\tchunkSize\x12#\n" +
-	"\rchunk_overlap\x18\x06 \x01(\x05R\fchunkOverlap\"[\n" +
-	"\x18UpdateKnowledgeBaseReply\x12?\n" +
-	"\x0eknowledge_base\x18\x01 \x01(\v2\x18.api.ai.v1.KnowledgeBaseR\rknowledgeBase\",\n" +
-	"\x1aDeleteKnowledgeBaseRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\x1a\n" +
-	"\x18DeleteKnowledgeBaseReply\"\x7f\n" +
-	"\x19ListKnowledgeBasesRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x12\n" +
-	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\bpageSize\x12\x18\n" +
-	"\akeyword\x18\x04 \x01(\tR\akeyword\"\xa3\x01\n" +
-	"\x17ListKnowledgeBasesReply\x12A\n" +
-	"\x0fknowledge_bases\x18\x01 \x03(\v2\x18.api.ai.v1.KnowledgeBaseR\x0eknowledgeBases\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x12\n" +
-	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"\x8e\x01\n" +
-	"\x15UploadDocumentRequest\x12*\n" +
-	"\x11knowledge_base_id\x18\x01 \x01(\x03R\x0fknowledgeBaseId\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\fR\acontent\x12\x1b\n" +
-	"\tmime_type\x18\x04 \x01(\tR\bmimeType\"F\n" +
-	"\x13UploadDocumentReply\x12/\n" +
-	"\bdocument\x18\x01 \x01(\v2\x13.api.ai.v1.DocumentR\bdocument\"\x8e\x01\n" +
-	"\x16SearchKnowledgeRequest\x12*\n" +
-	"\x11knowledge_base_id\x18\x01 \x01(\x03R\x0fknowledgeBaseId\x12\x14\n" +
-	"\x05query\x18\x02 \x01(\tR\x05query\x12\x14\n" +
-	"\x05limit\x18\x03 \x01(\x05R\x05limit\x12\x1c\n" +
-	"\tthreshold\x18\x04 \x01(\x01R\tthreshold\"I\n" +
-	"\x14SearchKnowledgeReply\x121\n" +
-	"\x06chunks\x18\x01 \x03(\v2\x19.api.ai.v1.KnowledgeChunkR\x06chunks\"\xf3\x01\n" +
-	"\x0eKnowledgeChunk\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1f\n" +
-	"\vdocument_id\x18\x02 \x01(\x03R\n" +
-	"documentId\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\tR\acontent\x12\x14\n" +
-	"\x05score\x18\x04 \x01(\x01R\x05score\x12C\n" +
-	"\bmetadata\x18\x05 \x03(\v2'.api.ai.v1.KnowledgeChunk.MetadataEntryR\bmetadata\x1a;\n" +
-	"\rMetadataEntry\x12\x10\n" +
+	"total_cost\x18\x06 \x01(\x01R\ttotalCost\x128\n" +
+	"\x18average_session_duration\x18\a \x01(\x01R\x16averageSessionDuration\x12J\n" +
+	"\vmodel_usage\x18\b \x03(\v2).api.ai.v1.UserUsageStats.ModelUsageEntryR\n" +
+	"modelUsage\x12S\n" +
+	"\x0ecost_breakdown\x18\t \x03(\v2,.api.ai.v1.UserUsageStats.CostBreakdownEntryR\rcostBreakdown\x12@\n" +
+	"\x0eusage_timeline\x18\n" +
+	" \x03(\v2\x19.api.ai.v1.UsageTimePointR\rusageTimeline\x12I\n" +
+	"\x10behavior_profile\x18\v \x01(\v2\x1e.api.ai.v1.UserBehaviorProfileR\x0fbehaviorProfile\x1aY\n" +
+	"\x0fModelUsageEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x120\n" +
+	"\x05value\x18\x02 \x01(\v2\x1a.api.ai.v1.ModelUsageStatsR\x05value:\x028\x01\x1a@\n" +
+	"\x12CostBreakdownEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x012\x99\f\n" +
-	"\x02Ai\x12^\n" +
-	"\x12CreateConversation\x12$.api.ai.v1.CreateConversationRequest\x1a\".api.ai.v1.CreateConversationReply\x12U\n" +
-	"\x0fGetConversation\x12!.api.ai.v1.GetConversationRequest\x1a\x1f.api.ai.v1.GetConversationReply\x12^\n" +
-	"\x12UpdateConversation\x12$.api.ai.v1.UpdateConversationRequest\x1a\".api.ai.v1.UpdateConversationReply\x12^\n" +
-	"\x12DeleteConversation\x12$.api.ai.v1.DeleteConversationRequest\x1a\".api.ai.v1.DeleteConversationReply\x12[\n" +
-	"\x11ListConversations\x12#.api.ai.v1.ListConversationsRequest\x1a!.api.ai.v1.ListConversationsReply\x12I\n" +
-	"\vSendMessage\x12\x1d.api.ai.v1.SendMessageRequest\x1a\x1b.api.ai.v1.SendMessageReply\x12I\n" +
-	"\vGetMessages\x12\x1d.api.ai.v1.GetMessagesRequest\x1a\x1b.api.ai.v1.GetMessagesReply\x12C\n" +
-	"\tListTools\x12\x1b.api.ai.v1.ListToolsRequest\x1a\x19.api.ai.v1.ListToolsReply\x12C\n" +
-	"\bCallTool\x12\x1a.api.ai.v1.CallToolRequest\x1a\x1b.api.ai.v1.CallToolResponse\x12O\n" +
-	"\rGetToolSchema\x12\x1f.api.ai.v1.GetToolSchemaRequest\x1a\x1d.api.ai.v1.GetToolSchemaReply\x12O\n" +
-	"\rListResources\x12\x1f.api.ai.v1.ListResourcesRequest\x1a\x1d.api.ai.v1.ListResourcesReply\x12I\n" +
-	"\vGetResource\x12\x1d.api.ai.v1.GetResourceRequest\x1a\x1b.api.ai.v1.GetResourceReply\x12a\n" +
-	"\x13CreateKnowledgeBase\x12%.api.ai.v1.CreateKnowledgeBaseRequest\x1a#.api.ai.v1.CreateKnowledgeBaseReply\x12a\n" +
-	"\x13UpdateKnowledgeBase\x12%.api.ai.v1.UpdateKnowledgeBaseRequest\x1a#.api.ai.v1.UpdateKnowledgeBaseReply\x12a\n" +
-	"\x13DeleteKnowledgeBase\x12%.api.ai.v1.DeleteKnowledgeBaseRequest\x1a#.api.ai.v1.DeleteKnowledgeBaseReply\x12^\n" +
-	"\x12ListKnowledgeBases\x12$.api.ai.v1.ListKnowledgeBasesRequest\x1a\".api.ai.v1.ListKnowledgeBasesReply\x12R\n" +
-	"\x0eUploadDocument\x12 .api.ai.v1.UploadDocumentRequest\x1a\x1e.api.ai.v1.UploadDocumentReply\x12U\n" +
-	"\x0fSearchKnowledge\x12!.api.ai.v1.SearchKnowledgeRequest\x1a\x1f.api.ai.v1.SearchKnowledgeReplyBE\n" +
+	"\x05value\x18\x02 \x01(\x01R\x05value:\x028\x01\"\xc5\x05\n" +
+	"\x15ModelPerformanceStats\x12\x1d\n" +
+	"\n" +
+	"model_name\x18\x01 \x01(\tR\tmodelName\x12%\n" +
+	"\x0etotal_requests\x18\x02 \x01(\x03R\rtotalRequests\x12!\n" +
+	"\fsuccess_rate\x18\x03 \x01(\x01R\vsuccessRate\x122\n" +
+	"\x15average_response_time\x18\x04 \x01(\x01R\x13averageResponseTime\x120\n" +
+	"\x14average_input_tokens\x18\x05 \x01(\x01R\x12averageInputTokens\x122\n" +
+	"\x15average_output_tokens\x18\x06 \x01(\x01R\x13averageOutputTokens\x12(\n" +
+	"\x10cost_per_request\x18\a \x01(\x01R\x0ecostPerRequest\x126\n" +
+	"\x17user_satisfaction_score\x18\b \x01(\x01R\x15userSatisfactionScore\x12f\n" +
+	"\x12error_distribution\x18\t \x03(\v27.api.ai.v1.ModelPerformanceStats.ErrorDistributionEntryR\x11errorDistribution\x12R\n" +
+	"\x14performance_timeline\x18\n" +
+	" \x03(\v2\x1f.api.ai.v1.PerformanceTimePointR\x13performanceTimeline\x12E\n" +
+	"\fcapabilities\x18\v \x01(\v2!.api.ai.v1.ModelCapabilityMetricsR\fcapabilities\x1aD\n" +
+	"\x16ErrorDistributionEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"\xc2\x01\n" +
+	"\tTrendData\x12.\n" +
+	"\x06metric\x18\x01 \x01(\x0e2\x16.api.ai.v1.TrendMetricR\x06metric\x12;\n" +
+	"\vdata_points\x18\x02 \x03(\v2\x1a.api.ai.v1.TimeSeriesPointR\n" +
+	"dataPoints\x12\x1f\n" +
+	"\vgrowth_rate\x18\x03 \x01(\x01R\n" +
+	"growthRate\x12'\n" +
+	"\x0ftrend_direction\x18\x04 \x01(\tR\x0etrendDirection\"\xed\x02\n" +
+	"\fTopicInsight\x12\x1d\n" +
+	"\n" +
+	"topic_name\x18\x01 \x01(\tR\ttopicName\x12\x1a\n" +
+	"\bkeywords\x18\x02 \x03(\tR\bkeywords\x12#\n" +
+	"\rmessage_count\x18\x03 \x01(\x03R\fmessageCount\x12'\n" +
+	"\x0frelevance_score\x18\x04 \x01(\x01R\x0erelevanceScore\x12'\n" +
+	"\x0fsentiment_score\x18\x05 \x01(\x01R\x0esentimentScore\x127\n" +
+	"\x17representative_messages\x18\x06 \x03(\tR\x16representativeMessages\x129\n" +
+	"\n" +
+	"first_seen\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tfirstSeen\x127\n" +
+	"\tlast_seen\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\blastSeen\"\xa1\x02\n" +
+	"\x11TopicDistribution\x12_\n" +
+	"\x11topic_percentages\x18\x01 \x03(\v22.api.ai.v1.TopicDistribution.TopicPercentagesEntryR\x10topicPercentages\x122\n" +
+	"\x15topic_diversity_index\x18\x02 \x01(\x01R\x13topicDiversityIndex\x122\n" +
+	"\x15total_topics_detected\x18\x03 \x01(\x05R\x13totalTopicsDetected\x1aC\n" +
+	"\x15TopicPercentagesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x01R\x05value:\x028\x01\"\xc0\x04\n" +
+	"\x13SystemOverviewStats\x12\x1f\n" +
+	"\vtotal_users\x18\x01 \x01(\x03R\n" +
+	"totalUsers\x12,\n" +
+	"\x12active_users_today\x18\x02 \x01(\x03R\x10activeUsersToday\x12/\n" +
+	"\x13total_conversations\x18\x03 \x01(\x03R\x12totalConversations\x12%\n" +
+	"\x0etotal_messages\x18\x04 \x01(\x03R\rtotalMessages\x124\n" +
+	"\x16total_tokens_processed\x18\x05 \x01(\x03R\x14totalTokensProcessed\x12\x1d\n" +
+	"\n" +
+	"total_cost\x18\x06 \x01(\x01R\ttotalCost\x126\n" +
+	"\x06health\x18\a \x01(\v2\x1e.api.ai.v1.SystemHealthMetricsR\x06health\x12D\n" +
+	"\x0eresource_usage\x18\b \x01(\v2\x1d.api.ai.v1.ResourceUsageStatsR\rresourceUsage\x12U\n" +
+	"\rservice_stats\x18\t \x03(\v20.api.ai.v1.SystemOverviewStats.ServiceStatsEntryR\fserviceStats\x1aX\n" +
+	"\x11ServiceStatsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12-\n" +
+	"\x05value\x18\x02 \x01(\v2\x17.api.ai.v1.ServiceStatsR\x05value:\x028\x01\"\x82\x02\n" +
+	"\x0fTimeSeriesPoint\x128\n" +
+	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x01R\x05value\x12\x14\n" +
+	"\x05label\x18\x03 \x01(\tR\x05label\x12J\n" +
+	"\n" +
+	"dimensions\x18\x04 \x03(\v2*.api.ai.v1.TimeSeriesPoint.DimensionsEntryR\n" +
+	"dimensions\x1a=\n" +
+	"\x0fDimensionsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x01R\x05value:\x028\x01\"\x88\x02\n" +
+	"\x15UserEngagementMetrics\x12I\n" +
+	"!average_messages_per_conversation\x18\x01 \x01(\x01R\x1eaverageMessagesPerConversation\x12@\n" +
+	"\x1cconversation_completion_rate\x18\x02 \x01(\x01R\x1aconversationCompletionRate\x12.\n" +
+	"\x13user_retention_rate\x18\x03 \x01(\x01R\x11userRetentionRate\x122\n" +
+	"\x15feature_adoption_rate\x18\x04 \x01(\x01R\x13featureAdoptionRate\"\xe5\x01\n" +
+	"\x0fModelUsageStats\x12\x1d\n" +
+	"\n" +
+	"model_name\x18\x01 \x01(\tR\tmodelName\x12#\n" +
+	"\rrequest_count\x18\x02 \x01(\x03R\frequestCount\x12!\n" +
+	"\finput_tokens\x18\x03 \x01(\x03R\vinputTokens\x12#\n" +
+	"\routput_tokens\x18\x04 \x01(\x03R\foutputTokens\x12\x12\n" +
+	"\x04cost\x18\x05 \x01(\x01R\x04cost\x122\n" +
+	"\x15average_response_time\x18\x06 \x01(\x01R\x13averageResponseTime\"\xa4\x01\n" +
+	"\x0eUsageTimePoint\x128\n" +
+	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12#\n" +
+	"\rmessage_count\x18\x02 \x01(\x05R\fmessageCount\x12\x1f\n" +
+	"\vtoken_count\x18\x03 \x01(\x05R\n" +
+	"tokenCount\x12\x12\n" +
+	"\x04cost\x18\x04 \x01(\x01R\x04cost\"\xe0\x02\n" +
+	"\x13UserBehaviorProfile\x12)\n" +
+	"\x10preferred_models\x18\x01 \x03(\tR\x0fpreferredModels\x12'\n" +
+	"\x0ffrequent_topics\x18\x02 \x03(\tR\x0efrequentTopics\x12(\n" +
+	"\x10most_active_time\x18\x03 \x01(\tR\x0emostActiveTime\x123\n" +
+	"\x15complexity_preference\x18\x04 \x01(\x01R\x14complexityPreference\x12U\n" +
+	"\rfeature_usage\x18\x05 \x03(\v20.api.ai.v1.UserBehaviorProfile.FeatureUsageEntryR\ffeatureUsage\x1a?\n" +
+	"\x11FeatureUsageEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x01R\x05value:\x028\x01\"\xb8\x01\n" +
+	"\x14PerformanceTimePoint\x128\n" +
+	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12#\n" +
+	"\rresponse_time\x18\x02 \x01(\x01R\fresponseTime\x12!\n" +
+	"\fsuccess_rate\x18\x03 \x01(\x01R\vsuccessRate\x12\x1e\n" +
+	"\n" +
+	"throughput\x18\x04 \x01(\x01R\n" +
+	"throughput\"\xea\x02\n" +
+	"\x16ModelCapabilityMetrics\x12'\n" +
+	"\x0freasoning_score\x18\x01 \x01(\x01R\x0ereasoningScore\x12)\n" +
+	"\x10creativity_score\x18\x02 \x01(\x01R\x0fcreativityScore\x12%\n" +
+	"\x0eaccuracy_score\x18\x03 \x01(\x01R\raccuracyScore\x12!\n" +
+	"\fsafety_score\x18\x04 \x01(\x01R\vsafetyScore\x12k\n" +
+	"\x14task_specific_scores\x18\x05 \x03(\v29.api.ai.v1.ModelCapabilityMetrics.TaskSpecificScoresEntryR\x12taskSpecificScores\x1aE\n" +
+	"\x17TaskSpecificScoresEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x01R\x05value:\x028\x01\"\xfc\x01\n" +
+	"\x13SystemHealthMetrics\x120\n" +
+	"\x14overall_health_score\x18\x01 \x01(\x01R\x12overallHealthScore\x121\n" +
+	"\x14service_availability\x18\x02 \x01(\x01R\x13serviceAvailability\x122\n" +
+	"\x15average_response_time\x18\x03 \x01(\x01R\x13averageResponseTime\x12\x1d\n" +
+	"\n" +
+	"error_rate\x18\x04 \x01(\x01R\terrorRate\x12-\n" +
+	"\x12active_connections\x18\x05 \x01(\x03R\x11activeConnections\"\x91\x02\n" +
+	"\x12ResourceUsageStats\x120\n" +
+	"\x14cpu_usage_percentage\x18\x01 \x01(\x01R\x12cpuUsagePercentage\x126\n" +
+	"\x17memory_usage_percentage\x18\x02 \x01(\x01R\x15memoryUsagePercentage\x12(\n" +
+	"\x10storage_usage_gb\x18\x03 \x01(\x01R\x0estorageUsageGb\x124\n" +
+	"\x16network_bandwidth_mbps\x18\x04 \x01(\x01R\x14networkBandwidthMbps\x121\n" +
+	"\x14database_connections\x18\x05 \x01(\x03R\x13databaseConnections\"\xd6\x01\n" +
+	"\fServiceStats\x12!\n" +
+	"\fservice_name\x18\x01 \x01(\tR\vserviceName\x12+\n" +
+	"\x11uptime_percentage\x18\x02 \x01(\x01R\x10uptimePercentage\x12#\n" +
+	"\rrequest_count\x18\x03 \x01(\x03R\frequestCount\x122\n" +
+	"\x15average_response_time\x18\x04 \x01(\x01R\x13averageResponseTime\x12\x1d\n" +
+	"\n" +
+	"error_rate\x18\x05 \x01(\x01R\terrorRate*\xbd\x01\n" +
+	"\x14AnalyticsGranularity\x12%\n" +
+	"!ANALYTICS_GRANULARITY_UNSPECIFIED\x10\x00\x12\x1e\n" +
+	"\x1aANALYTICS_GRANULARITY_HOUR\x10\x01\x12\x1d\n" +
+	"\x19ANALYTICS_GRANULARITY_DAY\x10\x02\x12\x1e\n" +
+	"\x1aANALYTICS_GRANULARITY_WEEK\x10\x03\x12\x1f\n" +
+	"\x1bANALYTICS_GRANULARITY_MONTH\x10\x04*\x8d\x02\n" +
+	"\x0fAnalyticsMetric\x12 \n" +
+	"\x1cANALYTICS_METRIC_UNSPECIFIED\x10\x00\x12'\n" +
+	"#ANALYTICS_METRIC_CONVERSATION_COUNT\x10\x01\x12\"\n" +
+	"\x1eANALYTICS_METRIC_MESSAGE_COUNT\x10\x02\x12 \n" +
+	"\x1cANALYTICS_METRIC_TOKEN_USAGE\x10\x03\x12\"\n" +
+	"\x1eANALYTICS_METRIC_RESPONSE_TIME\x10\x04\x12$\n" +
+	" ANALYTICS_METRIC_USER_ENGAGEMENT\x10\x05\x12\x1f\n" +
+	"\x1bANALYTICS_METRIC_TOOL_USAGE\x10\x06*\xca\x01\n" +
+	"\vTrendMetric\x12\x1c\n" +
+	"\x18TREND_METRIC_UNSPECIFIED\x10\x00\x12\x1d\n" +
+	"\x19TREND_METRIC_ACTIVE_USERS\x10\x01\x12\"\n" +
+	"\x1eTREND_METRIC_NEW_CONVERSATIONS\x10\x02\x12\x1f\n" +
+	"\x1bTREND_METRIC_MESSAGE_VOLUME\x10\x03\x12\"\n" +
+	"\x1eTREND_METRIC_TOKEN_CONSUMPTION\x10\x04\x12\x15\n" +
+	"\x11TREND_METRIC_COST\x10\x05*\xc8\x01\n" +
+	"\x13TopicAnalysisMethod\x12%\n" +
+	"!TOPIC_ANALYSIS_METHOD_UNSPECIFIED\x10\x00\x12!\n" +
+	"\x1dTOPIC_ANALYSIS_METHOD_KEYWORD\x10\x01\x12\x1d\n" +
+	"\x19TOPIC_ANALYSIS_METHOD_LDA\x10\x02\x12$\n" +
+	" TOPIC_ANALYSIS_METHOD_CLUSTERING\x10\x03\x12\"\n" +
+	"\x1eTOPIC_ANALYSIS_METHOD_SEMANTIC\x10\x042\xe5\x04\n" +
+	"\x02Ai\x12p\n" +
+	"\x18GetConversationAnalytics\x12*.api.ai.v1.GetConversationAnalyticsRequest\x1a(.api.ai.v1.GetConversationAnalyticsReply\x12[\n" +
+	"\x11GetUserUsageStats\x12#.api.ai.v1.GetUserUsageStatsRequest\x1a!.api.ai.v1.GetUserUsageStatsReply\x12p\n" +
+	"\x18GetModelPerformanceStats\x12*.api.ai.v1.GetModelPerformanceStatsRequest\x1a(.api.ai.v1.GetModelPerformanceStatsReply\x12g\n" +
+	"\x15GetConversationTrends\x12'.api.ai.v1.GetConversationTrendsRequest\x1a%.api.ai.v1.GetConversationTrendsReply\x12X\n" +
+	"\x10GetTopicAnalysis\x12\".api.ai.v1.GetTopicAnalysisRequest\x1a .api.ai.v1.GetTopicAnalysisReply\x12[\n" +
+	"\x11GetSystemOverview\x12#.api.ai.v1.GetSystemOverviewRequest\x1a!.api.ai.v1.GetSystemOverviewReplyBE\n" +
 	"\x1ecom.oldwei.universal.api.ai.v1B\tAiProtoV1P\x01Z\x16universal/api/ai/v1;v1b\x06proto3"
 
 var (
@@ -3294,143 +2721,127 @@ func file_api_ai_v1_ai_proto_rawDescGZIP() []byte {
 	return file_api_ai_v1_ai_proto_rawDescData
 }
 
-var file_api_ai_v1_ai_proto_msgTypes = make([]protoimpl.MessageInfo, 56)
+var file_api_ai_v1_ai_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_api_ai_v1_ai_proto_msgTypes = make([]protoimpl.MessageInfo, 41)
 var file_api_ai_v1_ai_proto_goTypes = []any{
-	(*Conversation)(nil),               // 0: api.ai.v1.Conversation
-	(*Message)(nil),                    // 1: api.ai.v1.Message
-	(*ToolCall)(nil),                   // 2: api.ai.v1.ToolCall
-	(*ModelConfig)(nil),                // 3: api.ai.v1.ModelConfig
-	(*Tool)(nil),                       // 4: api.ai.v1.Tool
-	(*Resource)(nil),                   // 5: api.ai.v1.Resource
-	(*KnowledgeBase)(nil),              // 6: api.ai.v1.KnowledgeBase
-	(*Document)(nil),                   // 7: api.ai.v1.Document
-	(*CreateConversationRequest)(nil),  // 8: api.ai.v1.CreateConversationRequest
-	(*CreateConversationReply)(nil),    // 9: api.ai.v1.CreateConversationReply
-	(*GetConversationRequest)(nil),     // 10: api.ai.v1.GetConversationRequest
-	(*GetConversationReply)(nil),       // 11: api.ai.v1.GetConversationReply
-	(*UpdateConversationRequest)(nil),  // 12: api.ai.v1.UpdateConversationRequest
-	(*UpdateConversationReply)(nil),    // 13: api.ai.v1.UpdateConversationReply
-	(*DeleteConversationRequest)(nil),  // 14: api.ai.v1.DeleteConversationRequest
-	(*DeleteConversationReply)(nil),    // 15: api.ai.v1.DeleteConversationReply
-	(*ListConversationsRequest)(nil),   // 16: api.ai.v1.ListConversationsRequest
-	(*ListConversationsReply)(nil),     // 17: api.ai.v1.ListConversationsReply
-	(*SendMessageRequest)(nil),         // 18: api.ai.v1.SendMessageRequest
-	(*SendMessageReply)(nil),           // 19: api.ai.v1.SendMessageReply
-	(*GetMessagesRequest)(nil),         // 20: api.ai.v1.GetMessagesRequest
-	(*GetMessagesReply)(nil),           // 21: api.ai.v1.GetMessagesReply
-	(*ListToolsRequest)(nil),           // 22: api.ai.v1.ListToolsRequest
-	(*ListToolsReply)(nil),             // 23: api.ai.v1.ListToolsReply
-	(*CallToolRequest)(nil),            // 24: api.ai.v1.CallToolRequest
-	(*CallToolResponse)(nil),           // 25: api.ai.v1.CallToolResponse
-	(*GetToolSchemaRequest)(nil),       // 26: api.ai.v1.GetToolSchemaRequest
-	(*GetToolSchemaReply)(nil),         // 27: api.ai.v1.GetToolSchemaReply
-	(*ListResourcesRequest)(nil),       // 28: api.ai.v1.ListResourcesRequest
-	(*ListResourcesReply)(nil),         // 29: api.ai.v1.ListResourcesReply
-	(*GetResourceRequest)(nil),         // 30: api.ai.v1.GetResourceRequest
-	(*GetResourceReply)(nil),           // 31: api.ai.v1.GetResourceReply
-	(*CreateKnowledgeBaseRequest)(nil), // 32: api.ai.v1.CreateKnowledgeBaseRequest
-	(*CreateKnowledgeBaseReply)(nil),   // 33: api.ai.v1.CreateKnowledgeBaseReply
-	(*UpdateKnowledgeBaseRequest)(nil), // 34: api.ai.v1.UpdateKnowledgeBaseRequest
-	(*UpdateKnowledgeBaseReply)(nil),   // 35: api.ai.v1.UpdateKnowledgeBaseReply
-	(*DeleteKnowledgeBaseRequest)(nil), // 36: api.ai.v1.DeleteKnowledgeBaseRequest
-	(*DeleteKnowledgeBaseReply)(nil),   // 37: api.ai.v1.DeleteKnowledgeBaseReply
-	(*ListKnowledgeBasesRequest)(nil),  // 38: api.ai.v1.ListKnowledgeBasesRequest
-	(*ListKnowledgeBasesReply)(nil),    // 39: api.ai.v1.ListKnowledgeBasesReply
-	(*UploadDocumentRequest)(nil),      // 40: api.ai.v1.UploadDocumentRequest
-	(*UploadDocumentReply)(nil),        // 41: api.ai.v1.UploadDocumentReply
-	(*SearchKnowledgeRequest)(nil),     // 42: api.ai.v1.SearchKnowledgeRequest
-	(*SearchKnowledgeReply)(nil),       // 43: api.ai.v1.SearchKnowledgeReply
-	(*KnowledgeChunk)(nil),             // 44: api.ai.v1.KnowledgeChunk
-	nil,                                // 45: api.ai.v1.Conversation.ConfigEntry
-	nil,                                // 46: api.ai.v1.Message.MetadataEntry
-	nil,                                // 47: api.ai.v1.ModelConfig.ExtraParamsEntry
-	nil,                                // 48: api.ai.v1.Tool.MetadataEntry
-	nil,                                // 49: api.ai.v1.Resource.MetadataEntry
-	nil,                                // 50: api.ai.v1.CreateConversationRequest.ConfigEntry
-	nil,                                // 51: api.ai.v1.UpdateConversationRequest.ConfigEntry
-	nil,                                // 52: api.ai.v1.SendMessageRequest.OptionsEntry
-	nil,                                // 53: api.ai.v1.CallToolResponse.MetadataEntry
-	nil,                                // 54: api.ai.v1.GetResourceReply.MetadataEntry
-	nil,                                // 55: api.ai.v1.KnowledgeChunk.MetadataEntry
-	(*timestamppb.Timestamp)(nil),      // 56: google.protobuf.Timestamp
+	(AnalyticsGranularity)(0),               // 0: api.ai.v1.AnalyticsGranularity
+	(AnalyticsMetric)(0),                    // 1: api.ai.v1.AnalyticsMetric
+	(TrendMetric)(0),                        // 2: api.ai.v1.TrendMetric
+	(TopicAnalysisMethod)(0),                // 3: api.ai.v1.TopicAnalysisMethod
+	(*GetConversationAnalyticsRequest)(nil), // 4: api.ai.v1.GetConversationAnalyticsRequest
+	(*GetConversationAnalyticsReply)(nil),   // 5: api.ai.v1.GetConversationAnalyticsReply
+	(*GetUserUsageStatsRequest)(nil),        // 6: api.ai.v1.GetUserUsageStatsRequest
+	(*GetUserUsageStatsReply)(nil),          // 7: api.ai.v1.GetUserUsageStatsReply
+	(*GetModelPerformanceStatsRequest)(nil), // 8: api.ai.v1.GetModelPerformanceStatsRequest
+	(*GetModelPerformanceStatsReply)(nil),   // 9: api.ai.v1.GetModelPerformanceStatsReply
+	(*GetConversationTrendsRequest)(nil),    // 10: api.ai.v1.GetConversationTrendsRequest
+	(*GetConversationTrendsReply)(nil),      // 11: api.ai.v1.GetConversationTrendsReply
+	(*GetTopicAnalysisRequest)(nil),         // 12: api.ai.v1.GetTopicAnalysisRequest
+	(*GetTopicAnalysisReply)(nil),           // 13: api.ai.v1.GetTopicAnalysisReply
+	(*GetSystemOverviewRequest)(nil),        // 14: api.ai.v1.GetSystemOverviewRequest
+	(*GetSystemOverviewReply)(nil),          // 15: api.ai.v1.GetSystemOverviewReply
+	(*ConversationAnalytics)(nil),           // 16: api.ai.v1.ConversationAnalytics
+	(*UserUsageStats)(nil),                  // 17: api.ai.v1.UserUsageStats
+	(*ModelPerformanceStats)(nil),           // 18: api.ai.v1.ModelPerformanceStats
+	(*TrendData)(nil),                       // 19: api.ai.v1.TrendData
+	(*TopicInsight)(nil),                    // 20: api.ai.v1.TopicInsight
+	(*TopicDistribution)(nil),               // 21: api.ai.v1.TopicDistribution
+	(*SystemOverviewStats)(nil),             // 22: api.ai.v1.SystemOverviewStats
+	(*TimeSeriesPoint)(nil),                 // 23: api.ai.v1.TimeSeriesPoint
+	(*UserEngagementMetrics)(nil),           // 24: api.ai.v1.UserEngagementMetrics
+	(*ModelUsageStats)(nil),                 // 25: api.ai.v1.ModelUsageStats
+	(*UsageTimePoint)(nil),                  // 26: api.ai.v1.UsageTimePoint
+	(*UserBehaviorProfile)(nil),             // 27: api.ai.v1.UserBehaviorProfile
+	(*PerformanceTimePoint)(nil),            // 28: api.ai.v1.PerformanceTimePoint
+	(*ModelCapabilityMetrics)(nil),          // 29: api.ai.v1.ModelCapabilityMetrics
+	(*SystemHealthMetrics)(nil),             // 30: api.ai.v1.SystemHealthMetrics
+	(*ResourceUsageStats)(nil),              // 31: api.ai.v1.ResourceUsageStats
+	(*ServiceStats)(nil),                    // 32: api.ai.v1.ServiceStats
+	nil,                                     // 33: api.ai.v1.GetConversationAnalyticsRequest.FiltersEntry
+	nil,                                     // 34: api.ai.v1.GetTopicAnalysisRequest.FiltersEntry
+	nil,                                     // 35: api.ai.v1.ConversationAnalytics.ModelUsageDistributionEntry
+	nil,                                     // 36: api.ai.v1.ConversationAnalytics.TimeDistributionEntry
+	nil,                                     // 37: api.ai.v1.UserUsageStats.ModelUsageEntry
+	nil,                                     // 38: api.ai.v1.UserUsageStats.CostBreakdownEntry
+	nil,                                     // 39: api.ai.v1.ModelPerformanceStats.ErrorDistributionEntry
+	nil,                                     // 40: api.ai.v1.TopicDistribution.TopicPercentagesEntry
+	nil,                                     // 41: api.ai.v1.SystemOverviewStats.ServiceStatsEntry
+	nil,                                     // 42: api.ai.v1.TimeSeriesPoint.DimensionsEntry
+	nil,                                     // 43: api.ai.v1.UserBehaviorProfile.FeatureUsageEntry
+	nil,                                     // 44: api.ai.v1.ModelCapabilityMetrics.TaskSpecificScoresEntry
+	(*timestamppb.Timestamp)(nil),           // 45: google.protobuf.Timestamp
 }
 var file_api_ai_v1_ai_proto_depIdxs = []int32{
-	45, // 0: api.ai.v1.Conversation.config:type_name -> api.ai.v1.Conversation.ConfigEntry
-	56, // 1: api.ai.v1.Conversation.created_at:type_name -> google.protobuf.Timestamp
-	56, // 2: api.ai.v1.Conversation.updated_at:type_name -> google.protobuf.Timestamp
-	2,  // 3: api.ai.v1.Message.tool_calls:type_name -> api.ai.v1.ToolCall
-	46, // 4: api.ai.v1.Message.metadata:type_name -> api.ai.v1.Message.MetadataEntry
-	56, // 5: api.ai.v1.Message.created_at:type_name -> google.protobuf.Timestamp
-	56, // 6: api.ai.v1.ToolCall.created_at:type_name -> google.protobuf.Timestamp
-	47, // 7: api.ai.v1.ModelConfig.extra_params:type_name -> api.ai.v1.ModelConfig.ExtraParamsEntry
-	48, // 8: api.ai.v1.Tool.metadata:type_name -> api.ai.v1.Tool.MetadataEntry
-	49, // 9: api.ai.v1.Resource.metadata:type_name -> api.ai.v1.Resource.MetadataEntry
-	56, // 10: api.ai.v1.KnowledgeBase.created_at:type_name -> google.protobuf.Timestamp
-	56, // 11: api.ai.v1.KnowledgeBase.updated_at:type_name -> google.protobuf.Timestamp
-	56, // 12: api.ai.v1.Document.created_at:type_name -> google.protobuf.Timestamp
-	56, // 13: api.ai.v1.Document.updated_at:type_name -> google.protobuf.Timestamp
-	50, // 14: api.ai.v1.CreateConversationRequest.config:type_name -> api.ai.v1.CreateConversationRequest.ConfigEntry
-	0,  // 15: api.ai.v1.CreateConversationReply.conversation:type_name -> api.ai.v1.Conversation
-	0,  // 16: api.ai.v1.GetConversationReply.conversation:type_name -> api.ai.v1.Conversation
-	51, // 17: api.ai.v1.UpdateConversationRequest.config:type_name -> api.ai.v1.UpdateConversationRequest.ConfigEntry
-	0,  // 18: api.ai.v1.UpdateConversationReply.conversation:type_name -> api.ai.v1.Conversation
-	0,  // 19: api.ai.v1.ListConversationsReply.conversations:type_name -> api.ai.v1.Conversation
-	52, // 20: api.ai.v1.SendMessageRequest.options:type_name -> api.ai.v1.SendMessageRequest.OptionsEntry
-	1,  // 21: api.ai.v1.SendMessageReply.user_message:type_name -> api.ai.v1.Message
-	1,  // 22: api.ai.v1.SendMessageReply.assistant_message:type_name -> api.ai.v1.Message
-	1,  // 23: api.ai.v1.GetMessagesReply.messages:type_name -> api.ai.v1.Message
-	4,  // 24: api.ai.v1.ListToolsReply.tools:type_name -> api.ai.v1.Tool
-	53, // 25: api.ai.v1.CallToolResponse.metadata:type_name -> api.ai.v1.CallToolResponse.MetadataEntry
-	4,  // 26: api.ai.v1.GetToolSchemaReply.tool:type_name -> api.ai.v1.Tool
-	5,  // 27: api.ai.v1.ListResourcesReply.resources:type_name -> api.ai.v1.Resource
-	54, // 28: api.ai.v1.GetResourceReply.metadata:type_name -> api.ai.v1.GetResourceReply.MetadataEntry
-	6,  // 29: api.ai.v1.CreateKnowledgeBaseReply.knowledge_base:type_name -> api.ai.v1.KnowledgeBase
-	6,  // 30: api.ai.v1.UpdateKnowledgeBaseReply.knowledge_base:type_name -> api.ai.v1.KnowledgeBase
-	6,  // 31: api.ai.v1.ListKnowledgeBasesReply.knowledge_bases:type_name -> api.ai.v1.KnowledgeBase
-	7,  // 32: api.ai.v1.UploadDocumentReply.document:type_name -> api.ai.v1.Document
-	44, // 33: api.ai.v1.SearchKnowledgeReply.chunks:type_name -> api.ai.v1.KnowledgeChunk
-	55, // 34: api.ai.v1.KnowledgeChunk.metadata:type_name -> api.ai.v1.KnowledgeChunk.MetadataEntry
-	8,  // 35: api.ai.v1.Ai.CreateConversation:input_type -> api.ai.v1.CreateConversationRequest
-	10, // 36: api.ai.v1.Ai.GetConversation:input_type -> api.ai.v1.GetConversationRequest
-	12, // 37: api.ai.v1.Ai.UpdateConversation:input_type -> api.ai.v1.UpdateConversationRequest
-	14, // 38: api.ai.v1.Ai.DeleteConversation:input_type -> api.ai.v1.DeleteConversationRequest
-	16, // 39: api.ai.v1.Ai.ListConversations:input_type -> api.ai.v1.ListConversationsRequest
-	18, // 40: api.ai.v1.Ai.SendMessage:input_type -> api.ai.v1.SendMessageRequest
-	20, // 41: api.ai.v1.Ai.GetMessages:input_type -> api.ai.v1.GetMessagesRequest
-	22, // 42: api.ai.v1.Ai.ListTools:input_type -> api.ai.v1.ListToolsRequest
-	24, // 43: api.ai.v1.Ai.CallTool:input_type -> api.ai.v1.CallToolRequest
-	26, // 44: api.ai.v1.Ai.GetToolSchema:input_type -> api.ai.v1.GetToolSchemaRequest
-	28, // 45: api.ai.v1.Ai.ListResources:input_type -> api.ai.v1.ListResourcesRequest
-	30, // 46: api.ai.v1.Ai.GetResource:input_type -> api.ai.v1.GetResourceRequest
-	32, // 47: api.ai.v1.Ai.CreateKnowledgeBase:input_type -> api.ai.v1.CreateKnowledgeBaseRequest
-	34, // 48: api.ai.v1.Ai.UpdateKnowledgeBase:input_type -> api.ai.v1.UpdateKnowledgeBaseRequest
-	36, // 49: api.ai.v1.Ai.DeleteKnowledgeBase:input_type -> api.ai.v1.DeleteKnowledgeBaseRequest
-	38, // 50: api.ai.v1.Ai.ListKnowledgeBases:input_type -> api.ai.v1.ListKnowledgeBasesRequest
-	40, // 51: api.ai.v1.Ai.UploadDocument:input_type -> api.ai.v1.UploadDocumentRequest
-	42, // 52: api.ai.v1.Ai.SearchKnowledge:input_type -> api.ai.v1.SearchKnowledgeRequest
-	9,  // 53: api.ai.v1.Ai.CreateConversation:output_type -> api.ai.v1.CreateConversationReply
-	11, // 54: api.ai.v1.Ai.GetConversation:output_type -> api.ai.v1.GetConversationReply
-	13, // 55: api.ai.v1.Ai.UpdateConversation:output_type -> api.ai.v1.UpdateConversationReply
-	15, // 56: api.ai.v1.Ai.DeleteConversation:output_type -> api.ai.v1.DeleteConversationReply
-	17, // 57: api.ai.v1.Ai.ListConversations:output_type -> api.ai.v1.ListConversationsReply
-	19, // 58: api.ai.v1.Ai.SendMessage:output_type -> api.ai.v1.SendMessageReply
-	21, // 59: api.ai.v1.Ai.GetMessages:output_type -> api.ai.v1.GetMessagesReply
-	23, // 60: api.ai.v1.Ai.ListTools:output_type -> api.ai.v1.ListToolsReply
-	25, // 61: api.ai.v1.Ai.CallTool:output_type -> api.ai.v1.CallToolResponse
-	27, // 62: api.ai.v1.Ai.GetToolSchema:output_type -> api.ai.v1.GetToolSchemaReply
-	29, // 63: api.ai.v1.Ai.ListResources:output_type -> api.ai.v1.ListResourcesReply
-	31, // 64: api.ai.v1.Ai.GetResource:output_type -> api.ai.v1.GetResourceReply
-	33, // 65: api.ai.v1.Ai.CreateKnowledgeBase:output_type -> api.ai.v1.CreateKnowledgeBaseReply
-	35, // 66: api.ai.v1.Ai.UpdateKnowledgeBase:output_type -> api.ai.v1.UpdateKnowledgeBaseReply
-	37, // 67: api.ai.v1.Ai.DeleteKnowledgeBase:output_type -> api.ai.v1.DeleteKnowledgeBaseReply
-	39, // 68: api.ai.v1.Ai.ListKnowledgeBases:output_type -> api.ai.v1.ListKnowledgeBasesReply
-	41, // 69: api.ai.v1.Ai.UploadDocument:output_type -> api.ai.v1.UploadDocumentReply
-	43, // 70: api.ai.v1.Ai.SearchKnowledge:output_type -> api.ai.v1.SearchKnowledgeReply
-	53, // [53:71] is the sub-list for method output_type
-	35, // [35:53] is the sub-list for method input_type
-	35, // [35:35] is the sub-list for extension type_name
-	35, // [35:35] is the sub-list for extension extendee
-	0,  // [0:35] is the sub-list for field type_name
+	45, // 0: api.ai.v1.GetConversationAnalyticsRequest.start_time:type_name -> google.protobuf.Timestamp
+	45, // 1: api.ai.v1.GetConversationAnalyticsRequest.end_time:type_name -> google.protobuf.Timestamp
+	0,  // 2: api.ai.v1.GetConversationAnalyticsRequest.granularity:type_name -> api.ai.v1.AnalyticsGranularity
+	1,  // 3: api.ai.v1.GetConversationAnalyticsRequest.metrics:type_name -> api.ai.v1.AnalyticsMetric
+	33, // 4: api.ai.v1.GetConversationAnalyticsRequest.filters:type_name -> api.ai.v1.GetConversationAnalyticsRequest.FiltersEntry
+	16, // 5: api.ai.v1.GetConversationAnalyticsReply.analytics:type_name -> api.ai.v1.ConversationAnalytics
+	45, // 6: api.ai.v1.GetUserUsageStatsRequest.start_time:type_name -> google.protobuf.Timestamp
+	45, // 7: api.ai.v1.GetUserUsageStatsRequest.end_time:type_name -> google.protobuf.Timestamp
+	17, // 8: api.ai.v1.GetUserUsageStatsReply.usage_stats:type_name -> api.ai.v1.UserUsageStats
+	45, // 9: api.ai.v1.GetModelPerformanceStatsRequest.start_time:type_name -> google.protobuf.Timestamp
+	45, // 10: api.ai.v1.GetModelPerformanceStatsRequest.end_time:type_name -> google.protobuf.Timestamp
+	18, // 11: api.ai.v1.GetModelPerformanceStatsReply.model_stats:type_name -> api.ai.v1.ModelPerformanceStats
+	45, // 12: api.ai.v1.GetConversationTrendsRequest.start_time:type_name -> google.protobuf.Timestamp
+	45, // 13: api.ai.v1.GetConversationTrendsRequest.end_time:type_name -> google.protobuf.Timestamp
+	0,  // 14: api.ai.v1.GetConversationTrendsRequest.granularity:type_name -> api.ai.v1.AnalyticsGranularity
+	2,  // 15: api.ai.v1.GetConversationTrendsRequest.trend_metrics:type_name -> api.ai.v1.TrendMetric
+	19, // 16: api.ai.v1.GetConversationTrendsReply.trends:type_name -> api.ai.v1.TrendData
+	45, // 17: api.ai.v1.GetTopicAnalysisRequest.start_time:type_name -> google.protobuf.Timestamp
+	45, // 18: api.ai.v1.GetTopicAnalysisRequest.end_time:type_name -> google.protobuf.Timestamp
+	3,  // 19: api.ai.v1.GetTopicAnalysisRequest.method:type_name -> api.ai.v1.TopicAnalysisMethod
+	34, // 20: api.ai.v1.GetTopicAnalysisRequest.filters:type_name -> api.ai.v1.GetTopicAnalysisRequest.FiltersEntry
+	20, // 21: api.ai.v1.GetTopicAnalysisReply.topics:type_name -> api.ai.v1.TopicInsight
+	21, // 22: api.ai.v1.GetTopicAnalysisReply.distribution:type_name -> api.ai.v1.TopicDistribution
+	45, // 23: api.ai.v1.GetSystemOverviewRequest.start_time:type_name -> google.protobuf.Timestamp
+	45, // 24: api.ai.v1.GetSystemOverviewRequest.end_time:type_name -> google.protobuf.Timestamp
+	22, // 25: api.ai.v1.GetSystemOverviewReply.overview:type_name -> api.ai.v1.SystemOverviewStats
+	35, // 26: api.ai.v1.ConversationAnalytics.model_usage_distribution:type_name -> api.ai.v1.ConversationAnalytics.ModelUsageDistributionEntry
+	36, // 27: api.ai.v1.ConversationAnalytics.time_distribution:type_name -> api.ai.v1.ConversationAnalytics.TimeDistributionEntry
+	23, // 28: api.ai.v1.ConversationAnalytics.time_series_data:type_name -> api.ai.v1.TimeSeriesPoint
+	24, // 29: api.ai.v1.ConversationAnalytics.engagement:type_name -> api.ai.v1.UserEngagementMetrics
+	37, // 30: api.ai.v1.UserUsageStats.model_usage:type_name -> api.ai.v1.UserUsageStats.ModelUsageEntry
+	38, // 31: api.ai.v1.UserUsageStats.cost_breakdown:type_name -> api.ai.v1.UserUsageStats.CostBreakdownEntry
+	26, // 32: api.ai.v1.UserUsageStats.usage_timeline:type_name -> api.ai.v1.UsageTimePoint
+	27, // 33: api.ai.v1.UserUsageStats.behavior_profile:type_name -> api.ai.v1.UserBehaviorProfile
+	39, // 34: api.ai.v1.ModelPerformanceStats.error_distribution:type_name -> api.ai.v1.ModelPerformanceStats.ErrorDistributionEntry
+	28, // 35: api.ai.v1.ModelPerformanceStats.performance_timeline:type_name -> api.ai.v1.PerformanceTimePoint
+	29, // 36: api.ai.v1.ModelPerformanceStats.capabilities:type_name -> api.ai.v1.ModelCapabilityMetrics
+	2,  // 37: api.ai.v1.TrendData.metric:type_name -> api.ai.v1.TrendMetric
+	23, // 38: api.ai.v1.TrendData.data_points:type_name -> api.ai.v1.TimeSeriesPoint
+	45, // 39: api.ai.v1.TopicInsight.first_seen:type_name -> google.protobuf.Timestamp
+	45, // 40: api.ai.v1.TopicInsight.last_seen:type_name -> google.protobuf.Timestamp
+	40, // 41: api.ai.v1.TopicDistribution.topic_percentages:type_name -> api.ai.v1.TopicDistribution.TopicPercentagesEntry
+	30, // 42: api.ai.v1.SystemOverviewStats.health:type_name -> api.ai.v1.SystemHealthMetrics
+	31, // 43: api.ai.v1.SystemOverviewStats.resource_usage:type_name -> api.ai.v1.ResourceUsageStats
+	41, // 44: api.ai.v1.SystemOverviewStats.service_stats:type_name -> api.ai.v1.SystemOverviewStats.ServiceStatsEntry
+	45, // 45: api.ai.v1.TimeSeriesPoint.timestamp:type_name -> google.protobuf.Timestamp
+	42, // 46: api.ai.v1.TimeSeriesPoint.dimensions:type_name -> api.ai.v1.TimeSeriesPoint.DimensionsEntry
+	45, // 47: api.ai.v1.UsageTimePoint.timestamp:type_name -> google.protobuf.Timestamp
+	43, // 48: api.ai.v1.UserBehaviorProfile.feature_usage:type_name -> api.ai.v1.UserBehaviorProfile.FeatureUsageEntry
+	45, // 49: api.ai.v1.PerformanceTimePoint.timestamp:type_name -> google.protobuf.Timestamp
+	44, // 50: api.ai.v1.ModelCapabilityMetrics.task_specific_scores:type_name -> api.ai.v1.ModelCapabilityMetrics.TaskSpecificScoresEntry
+	25, // 51: api.ai.v1.UserUsageStats.ModelUsageEntry.value:type_name -> api.ai.v1.ModelUsageStats
+	32, // 52: api.ai.v1.SystemOverviewStats.ServiceStatsEntry.value:type_name -> api.ai.v1.ServiceStats
+	4,  // 53: api.ai.v1.Ai.GetConversationAnalytics:input_type -> api.ai.v1.GetConversationAnalyticsRequest
+	6,  // 54: api.ai.v1.Ai.GetUserUsageStats:input_type -> api.ai.v1.GetUserUsageStatsRequest
+	8,  // 55: api.ai.v1.Ai.GetModelPerformanceStats:input_type -> api.ai.v1.GetModelPerformanceStatsRequest
+	10, // 56: api.ai.v1.Ai.GetConversationTrends:input_type -> api.ai.v1.GetConversationTrendsRequest
+	12, // 57: api.ai.v1.Ai.GetTopicAnalysis:input_type -> api.ai.v1.GetTopicAnalysisRequest
+	14, // 58: api.ai.v1.Ai.GetSystemOverview:input_type -> api.ai.v1.GetSystemOverviewRequest
+	5,  // 59: api.ai.v1.Ai.GetConversationAnalytics:output_type -> api.ai.v1.GetConversationAnalyticsReply
+	7,  // 60: api.ai.v1.Ai.GetUserUsageStats:output_type -> api.ai.v1.GetUserUsageStatsReply
+	9,  // 61: api.ai.v1.Ai.GetModelPerformanceStats:output_type -> api.ai.v1.GetModelPerformanceStatsReply
+	11, // 62: api.ai.v1.Ai.GetConversationTrends:output_type -> api.ai.v1.GetConversationTrendsReply
+	13, // 63: api.ai.v1.Ai.GetTopicAnalysis:output_type -> api.ai.v1.GetTopicAnalysisReply
+	15, // 64: api.ai.v1.Ai.GetSystemOverview:output_type -> api.ai.v1.GetSystemOverviewReply
+	59, // [59:65] is the sub-list for method output_type
+	53, // [53:59] is the sub-list for method input_type
+	53, // [53:53] is the sub-list for extension type_name
+	53, // [53:53] is the sub-list for extension extendee
+	0,  // [0:53] is the sub-list for field type_name
 }
 
 func init() { file_api_ai_v1_ai_proto_init() }
@@ -3443,13 +2854,14 @@ func file_api_ai_v1_ai_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_ai_v1_ai_proto_rawDesc), len(file_api_ai_v1_ai_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   56,
+			NumEnums:      4,
+			NumMessages:   41,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_api_ai_v1_ai_proto_goTypes,
 		DependencyIndexes: file_api_ai_v1_ai_proto_depIdxs,
+		EnumInfos:         file_api_ai_v1_ai_proto_enumTypes,
 		MessageInfos:      file_api_ai_v1_ai_proto_msgTypes,
 	}.Build()
 	File_api_ai_v1_ai_proto = out.File

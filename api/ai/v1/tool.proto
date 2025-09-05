@@ -12,7 +12,7 @@ option java_package = "com.oldwei.universal.api.ai.v1";
 option java_outer_classname = "ToolProtoV1";
 
 // MCP工具和资源管理服务
-service ToolService {
+service Tool {
   // === MCP工具管理 ===
   
   // ListTools 获取可用的MCP工具列表
@@ -119,7 +119,7 @@ service ToolService {
 // === 核心数据模型 ===
 
 // MCP工具定义 - 增强版
-message Tool {
+message ToolInfo {
   string name = 1;                               // 工具名称
   string description = 2;                        // 工具描述
   string schema = 3;                             // 参数schema(JSON格式)
@@ -438,7 +438,7 @@ message ListToolsRequest {
 }
 
 message ListToolsReply {
-  repeated Tool tools = 1;                       // 工具列表
+  repeated ToolInfo tools = 1;                       // 工具列表
   int64 total = 2;                               // 总数
   int32 page = 3;                                // 当前页
   int32 page_size = 4;                           // 页面大小
@@ -452,7 +452,7 @@ message GetToolRequest {
 }
 
 message GetToolReply {
-  Tool tool = 1;                                 // 工具信息
+  ToolInfo tool = 1;                                 // 工具信息
 }
 
 // 调用工具
@@ -492,7 +492,7 @@ message GetToolSchemaRequest {
 }
 
 message GetToolSchemaReply {
-  Tool tool = 1;                                 // 工具信息和Schema
+  ToolInfo tool = 1;                                 // 工具信息和Schema
 }
 
 // 验证工具参数

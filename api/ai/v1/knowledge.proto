@@ -3,7 +3,6 @@ syntax = "proto3";
 package api.ai.v1;
 
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/duration.proto";
 
 option go_package = "universal/api/ai/v1;v1";
 option java_multiple_files = true;
@@ -11,7 +10,7 @@ option java_package = "com.oldwei.universal.api.ai.v1";
 option java_outer_classname = "KnowledgeProtoV1";
 
 // 知识库管理服务
-service KnowledgeService {
+service Knowledge {
   // === 知识库管理 ===
   
   // CreateKnowledgeBase 创建新的知识库

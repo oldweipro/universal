@@ -19,24 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Ai_CreateConversation_FullMethodName  = "/api.ai.v1.Ai/CreateConversation"
-	Ai_GetConversation_FullMethodName     = "/api.ai.v1.Ai/GetConversation"
-	Ai_UpdateConversation_FullMethodName  = "/api.ai.v1.Ai/UpdateConversation"
-	Ai_DeleteConversation_FullMethodName  = "/api.ai.v1.Ai/DeleteConversation"
-	Ai_ListConversations_FullMethodName   = "/api.ai.v1.Ai/ListConversations"
-	Ai_SendMessage_FullMethodName         = "/api.ai.v1.Ai/SendMessage"
-	Ai_GetMessages_FullMethodName         = "/api.ai.v1.Ai/GetMessages"
-	Ai_ListTools_FullMethodName           = "/api.ai.v1.Ai/ListTools"
-	Ai_CallTool_FullMethodName            = "/api.ai.v1.Ai/CallTool"
-	Ai_GetToolSchema_FullMethodName       = "/api.ai.v1.Ai/GetToolSchema"
-	Ai_ListResources_FullMethodName       = "/api.ai.v1.Ai/ListResources"
-	Ai_GetResource_FullMethodName         = "/api.ai.v1.Ai/GetResource"
-	Ai_CreateKnowledgeBase_FullMethodName = "/api.ai.v1.Ai/CreateKnowledgeBase"
-	Ai_UpdateKnowledgeBase_FullMethodName = "/api.ai.v1.Ai/UpdateKnowledgeBase"
-	Ai_DeleteKnowledgeBase_FullMethodName = "/api.ai.v1.Ai/DeleteKnowledgeBase"
-	Ai_ListKnowledgeBases_FullMethodName  = "/api.ai.v1.Ai/ListKnowledgeBases"
-	Ai_UploadDocument_FullMethodName      = "/api.ai.v1.Ai/UploadDocument"
-	Ai_SearchKnowledge_FullMethodName     = "/api.ai.v1.Ai/SearchKnowledge"
+	Ai_GetConversationAnalytics_FullMethodName = "/api.ai.v1.Ai/GetConversationAnalytics"
+	Ai_GetUserUsageStats_FullMethodName        = "/api.ai.v1.Ai/GetUserUsageStats"
+	Ai_GetModelPerformanceStats_FullMethodName = "/api.ai.v1.Ai/GetModelPerformanceStats"
+	Ai_GetConversationTrends_FullMethodName    = "/api.ai.v1.Ai/GetConversationTrends"
+	Ai_GetTopicAnalysis_FullMethodName         = "/api.ai.v1.Ai/GetTopicAnalysis"
+	Ai_GetSystemOverview_FullMethodName        = "/api.ai.v1.Ai/GetSystemOverview"
 )
 
 // AiClient is the client API for Ai service.
@@ -45,60 +33,24 @@ const (
 //
 // AI服务接口定义
 type AiClient interface {
-	// CreateConversation 创建新的对话会话
-	// 为指定用户创建一个新的对话，可以指定模型、系统提示词等配置
-	CreateConversation(ctx context.Context, in *CreateConversationRequest, opts ...grpc.CallOption) (*CreateConversationReply, error)
-	// GetConversation 获取指定对话的详细信息
-	// 根据对话ID获取对话的基本信息，包括标题、模型、配置等
-	GetConversation(ctx context.Context, in *GetConversationRequest, opts ...grpc.CallOption) (*GetConversationReply, error)
-	// UpdateConversation 更新对话的配置信息
-	// 可以修改对话的标题、系统提示词、模型配置等
-	UpdateConversation(ctx context.Context, in *UpdateConversationRequest, opts ...grpc.CallOption) (*UpdateConversationReply, error)
-	// DeleteConversation 删除指定的对话
-	// 软删除对话，同时会删除该对话下的所有消息记录
-	DeleteConversation(ctx context.Context, in *DeleteConversationRequest, opts ...grpc.CallOption) (*DeleteConversationReply, error)
-	// ListConversations 获取用户的对话列表
-	// 支持分页查询和关键词搜索，返回用户的所有对话
-	ListConversations(ctx context.Context, in *ListConversationsRequest, opts ...grpc.CallOption) (*ListConversationsReply, error)
-	// SendMessage 向指定对话发送消息并获取AI回复
-	// 支持文件附件、工具调用、模型参数配置等高级功能
-	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageReply, error)
-	// GetMessages 获取对话的消息历史
-	// 支持分页查询，可选择是否包含工具调用详情
-	GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (*GetMessagesReply, error)
-	// ListTools 获取可用的MCP工具列表
-	// 支持按MCP服务器过滤，可选择只显示启用的工具
-	ListTools(ctx context.Context, in *ListToolsRequest, opts ...grpc.CallOption) (*ListToolsReply, error)
-	// CallTool 调用指定的MCP工具
-	// 执行工具调用并返回结果，支持传入对话上下文
-	CallTool(ctx context.Context, in *CallToolRequest, opts ...grpc.CallOption) (*CallToolResponse, error)
-	// GetToolSchema 获取工具的参数Schema
-	// 返回工具的详细信息和参数定义，用于动态表单生成
-	GetToolSchema(ctx context.Context, in *GetToolSchemaRequest, opts ...grpc.CallOption) (*GetToolSchemaReply, error)
-	// ListResources 获取可用的MCP资源列表
-	// 支持按MCP服务器和MIME类型过滤
-	ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesReply, error)
-	// GetResource 获取指定资源的内容
-	// 根据资源URI获取资源内容和元数据
-	GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceReply, error)
-	// CreateKnowledgeBase 创建新的知识库
-	// 为用户创建知识库，可以指定向量化模型和分块策略
-	CreateKnowledgeBase(ctx context.Context, in *CreateKnowledgeBaseRequest, opts ...grpc.CallOption) (*CreateKnowledgeBaseReply, error)
-	// UpdateKnowledgeBase 更新知识库配置
-	// 修改知识库的名称、描述、向量化模型等配置
-	UpdateKnowledgeBase(ctx context.Context, in *UpdateKnowledgeBaseRequest, opts ...grpc.CallOption) (*UpdateKnowledgeBaseReply, error)
-	// DeleteKnowledgeBase 删除知识库
-	// 软删除知识库及其所有文档和向量数据
-	DeleteKnowledgeBase(ctx context.Context, in *DeleteKnowledgeBaseRequest, opts ...grpc.CallOption) (*DeleteKnowledgeBaseReply, error)
-	// ListKnowledgeBases 获取用户的知识库列表
-	// 支持分页查询和关键词搜索
-	ListKnowledgeBases(ctx context.Context, in *ListKnowledgeBasesRequest, opts ...grpc.CallOption) (*ListKnowledgeBasesReply, error)
-	// UploadDocument 向知识库上传文档
-	// 上传文档到指定知识库，自动进行向量化处理
-	UploadDocument(ctx context.Context, in *UploadDocumentRequest, opts ...grpc.CallOption) (*UploadDocumentReply, error)
-	// SearchKnowledge 在知识库中搜索相关内容
-	// 基于语义相似度搜索知识库内容，支持相似度阈值过滤
-	SearchKnowledge(ctx context.Context, in *SearchKnowledgeRequest, opts ...grpc.CallOption) (*SearchKnowledgeReply, error)
+	// GetConversationAnalytics 获取对话统计分析数据
+	// 提供用户对话行为的统计分析，包括使用频率、模型偏好、话题分布等
+	GetConversationAnalytics(ctx context.Context, in *GetConversationAnalyticsRequest, opts ...grpc.CallOption) (*GetConversationAnalyticsReply, error)
+	// GetUserUsageStats 获取用户使用统计
+	// 分析用户的AI使用情况，包括token消耗、成本统计、时间分布等
+	GetUserUsageStats(ctx context.Context, in *GetUserUsageStatsRequest, opts ...grpc.CallOption) (*GetUserUsageStatsReply, error)
+	// GetModelPerformanceStats 获取模型性能统计
+	// 分析不同模型的使用情况和性能指标
+	GetModelPerformanceStats(ctx context.Context, in *GetModelPerformanceStatsRequest, opts ...grpc.CallOption) (*GetModelPerformanceStatsReply, error)
+	// GetConversationTrends 获取对话趋势分析
+	// 提供时间序列的对话趋势分析数据
+	GetConversationTrends(ctx context.Context, in *GetConversationTrendsRequest, opts ...grpc.CallOption) (*GetConversationTrendsReply, error)
+	// GetTopicAnalysis 获取话题分析
+	// 分析对话中的主要话题和内容分布
+	GetTopicAnalysis(ctx context.Context, in *GetTopicAnalysisRequest, opts ...grpc.CallOption) (*GetTopicAnalysisReply, error)
+	// GetSystemOverview 获取系统总览统计
+	// 提供整个AI系统的总体使用情况和健康状况
+	GetSystemOverview(ctx context.Context, in *GetSystemOverviewRequest, opts ...grpc.CallOption) (*GetSystemOverviewReply, error)
 }
 
 type aiClient struct {
@@ -109,180 +61,60 @@ func NewAiClient(cc grpc.ClientConnInterface) AiClient {
 	return &aiClient{cc}
 }
 
-func (c *aiClient) CreateConversation(ctx context.Context, in *CreateConversationRequest, opts ...grpc.CallOption) (*CreateConversationReply, error) {
+func (c *aiClient) GetConversationAnalytics(ctx context.Context, in *GetConversationAnalyticsRequest, opts ...grpc.CallOption) (*GetConversationAnalyticsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateConversationReply)
-	err := c.cc.Invoke(ctx, Ai_CreateConversation_FullMethodName, in, out, cOpts...)
+	out := new(GetConversationAnalyticsReply)
+	err := c.cc.Invoke(ctx, Ai_GetConversationAnalytics_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aiClient) GetConversation(ctx context.Context, in *GetConversationRequest, opts ...grpc.CallOption) (*GetConversationReply, error) {
+func (c *aiClient) GetUserUsageStats(ctx context.Context, in *GetUserUsageStatsRequest, opts ...grpc.CallOption) (*GetUserUsageStatsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetConversationReply)
-	err := c.cc.Invoke(ctx, Ai_GetConversation_FullMethodName, in, out, cOpts...)
+	out := new(GetUserUsageStatsReply)
+	err := c.cc.Invoke(ctx, Ai_GetUserUsageStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aiClient) UpdateConversation(ctx context.Context, in *UpdateConversationRequest, opts ...grpc.CallOption) (*UpdateConversationReply, error) {
+func (c *aiClient) GetModelPerformanceStats(ctx context.Context, in *GetModelPerformanceStatsRequest, opts ...grpc.CallOption) (*GetModelPerformanceStatsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateConversationReply)
-	err := c.cc.Invoke(ctx, Ai_UpdateConversation_FullMethodName, in, out, cOpts...)
+	out := new(GetModelPerformanceStatsReply)
+	err := c.cc.Invoke(ctx, Ai_GetModelPerformanceStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aiClient) DeleteConversation(ctx context.Context, in *DeleteConversationRequest, opts ...grpc.CallOption) (*DeleteConversationReply, error) {
+func (c *aiClient) GetConversationTrends(ctx context.Context, in *GetConversationTrendsRequest, opts ...grpc.CallOption) (*GetConversationTrendsReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteConversationReply)
-	err := c.cc.Invoke(ctx, Ai_DeleteConversation_FullMethodName, in, out, cOpts...)
+	out := new(GetConversationTrendsReply)
+	err := c.cc.Invoke(ctx, Ai_GetConversationTrends_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aiClient) ListConversations(ctx context.Context, in *ListConversationsRequest, opts ...grpc.CallOption) (*ListConversationsReply, error) {
+func (c *aiClient) GetTopicAnalysis(ctx context.Context, in *GetTopicAnalysisRequest, opts ...grpc.CallOption) (*GetTopicAnalysisReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListConversationsReply)
-	err := c.cc.Invoke(ctx, Ai_ListConversations_FullMethodName, in, out, cOpts...)
+	out := new(GetTopicAnalysisReply)
+	err := c.cc.Invoke(ctx, Ai_GetTopicAnalysis_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aiClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageReply, error) {
+func (c *aiClient) GetSystemOverview(ctx context.Context, in *GetSystemOverviewRequest, opts ...grpc.CallOption) (*GetSystemOverviewReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SendMessageReply)
-	err := c.cc.Invoke(ctx, Ai_SendMessage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (*GetMessagesReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMessagesReply)
-	err := c.cc.Invoke(ctx, Ai_GetMessages_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) ListTools(ctx context.Context, in *ListToolsRequest, opts ...grpc.CallOption) (*ListToolsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListToolsReply)
-	err := c.cc.Invoke(ctx, Ai_ListTools_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) CallTool(ctx context.Context, in *CallToolRequest, opts ...grpc.CallOption) (*CallToolResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CallToolResponse)
-	err := c.cc.Invoke(ctx, Ai_CallTool_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) GetToolSchema(ctx context.Context, in *GetToolSchemaRequest, opts ...grpc.CallOption) (*GetToolSchemaReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetToolSchemaReply)
-	err := c.cc.Invoke(ctx, Ai_GetToolSchema_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListResourcesReply)
-	err := c.cc.Invoke(ctx, Ai_ListResources_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetResourceReply)
-	err := c.cc.Invoke(ctx, Ai_GetResource_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) CreateKnowledgeBase(ctx context.Context, in *CreateKnowledgeBaseRequest, opts ...grpc.CallOption) (*CreateKnowledgeBaseReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateKnowledgeBaseReply)
-	err := c.cc.Invoke(ctx, Ai_CreateKnowledgeBase_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) UpdateKnowledgeBase(ctx context.Context, in *UpdateKnowledgeBaseRequest, opts ...grpc.CallOption) (*UpdateKnowledgeBaseReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateKnowledgeBaseReply)
-	err := c.cc.Invoke(ctx, Ai_UpdateKnowledgeBase_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) DeleteKnowledgeBase(ctx context.Context, in *DeleteKnowledgeBaseRequest, opts ...grpc.CallOption) (*DeleteKnowledgeBaseReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteKnowledgeBaseReply)
-	err := c.cc.Invoke(ctx, Ai_DeleteKnowledgeBase_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) ListKnowledgeBases(ctx context.Context, in *ListKnowledgeBasesRequest, opts ...grpc.CallOption) (*ListKnowledgeBasesReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListKnowledgeBasesReply)
-	err := c.cc.Invoke(ctx, Ai_ListKnowledgeBases_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) UploadDocument(ctx context.Context, in *UploadDocumentRequest, opts ...grpc.CallOption) (*UploadDocumentReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UploadDocumentReply)
-	err := c.cc.Invoke(ctx, Ai_UploadDocument_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) SearchKnowledge(ctx context.Context, in *SearchKnowledgeRequest, opts ...grpc.CallOption) (*SearchKnowledgeReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SearchKnowledgeReply)
-	err := c.cc.Invoke(ctx, Ai_SearchKnowledge_FullMethodName, in, out, cOpts...)
+	out := new(GetSystemOverviewReply)
+	err := c.cc.Invoke(ctx, Ai_GetSystemOverview_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -295,60 +127,24 @@ func (c *aiClient) SearchKnowledge(ctx context.Context, in *SearchKnowledgeReque
 //
 // AI服务接口定义
 type AiServer interface {
-	// CreateConversation 创建新的对话会话
-	// 为指定用户创建一个新的对话，可以指定模型、系统提示词等配置
-	CreateConversation(context.Context, *CreateConversationRequest) (*CreateConversationReply, error)
-	// GetConversation 获取指定对话的详细信息
-	// 根据对话ID获取对话的基本信息，包括标题、模型、配置等
-	GetConversation(context.Context, *GetConversationRequest) (*GetConversationReply, error)
-	// UpdateConversation 更新对话的配置信息
-	// 可以修改对话的标题、系统提示词、模型配置等
-	UpdateConversation(context.Context, *UpdateConversationRequest) (*UpdateConversationReply, error)
-	// DeleteConversation 删除指定的对话
-	// 软删除对话，同时会删除该对话下的所有消息记录
-	DeleteConversation(context.Context, *DeleteConversationRequest) (*DeleteConversationReply, error)
-	// ListConversations 获取用户的对话列表
-	// 支持分页查询和关键词搜索，返回用户的所有对话
-	ListConversations(context.Context, *ListConversationsRequest) (*ListConversationsReply, error)
-	// SendMessage 向指定对话发送消息并获取AI回复
-	// 支持文件附件、工具调用、模型参数配置等高级功能
-	SendMessage(context.Context, *SendMessageRequest) (*SendMessageReply, error)
-	// GetMessages 获取对话的消息历史
-	// 支持分页查询，可选择是否包含工具调用详情
-	GetMessages(context.Context, *GetMessagesRequest) (*GetMessagesReply, error)
-	// ListTools 获取可用的MCP工具列表
-	// 支持按MCP服务器过滤，可选择只显示启用的工具
-	ListTools(context.Context, *ListToolsRequest) (*ListToolsReply, error)
-	// CallTool 调用指定的MCP工具
-	// 执行工具调用并返回结果，支持传入对话上下文
-	CallTool(context.Context, *CallToolRequest) (*CallToolResponse, error)
-	// GetToolSchema 获取工具的参数Schema
-	// 返回工具的详细信息和参数定义，用于动态表单生成
-	GetToolSchema(context.Context, *GetToolSchemaRequest) (*GetToolSchemaReply, error)
-	// ListResources 获取可用的MCP资源列表
-	// 支持按MCP服务器和MIME类型过滤
-	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesReply, error)
-	// GetResource 获取指定资源的内容
-	// 根据资源URI获取资源内容和元数据
-	GetResource(context.Context, *GetResourceRequest) (*GetResourceReply, error)
-	// CreateKnowledgeBase 创建新的知识库
-	// 为用户创建知识库，可以指定向量化模型和分块策略
-	CreateKnowledgeBase(context.Context, *CreateKnowledgeBaseRequest) (*CreateKnowledgeBaseReply, error)
-	// UpdateKnowledgeBase 更新知识库配置
-	// 修改知识库的名称、描述、向量化模型等配置
-	UpdateKnowledgeBase(context.Context, *UpdateKnowledgeBaseRequest) (*UpdateKnowledgeBaseReply, error)
-	// DeleteKnowledgeBase 删除知识库
-	// 软删除知识库及其所有文档和向量数据
-	DeleteKnowledgeBase(context.Context, *DeleteKnowledgeBaseRequest) (*DeleteKnowledgeBaseReply, error)
-	// ListKnowledgeBases 获取用户的知识库列表
-	// 支持分页查询和关键词搜索
-	ListKnowledgeBases(context.Context, *ListKnowledgeBasesRequest) (*ListKnowledgeBasesReply, error)
-	// UploadDocument 向知识库上传文档
-	// 上传文档到指定知识库，自动进行向量化处理
-	UploadDocument(context.Context, *UploadDocumentRequest) (*UploadDocumentReply, error)
-	// SearchKnowledge 在知识库中搜索相关内容
-	// 基于语义相似度搜索知识库内容，支持相似度阈值过滤
-	SearchKnowledge(context.Context, *SearchKnowledgeRequest) (*SearchKnowledgeReply, error)
+	// GetConversationAnalytics 获取对话统计分析数据
+	// 提供用户对话行为的统计分析，包括使用频率、模型偏好、话题分布等
+	GetConversationAnalytics(context.Context, *GetConversationAnalyticsRequest) (*GetConversationAnalyticsReply, error)
+	// GetUserUsageStats 获取用户使用统计
+	// 分析用户的AI使用情况，包括token消耗、成本统计、时间分布等
+	GetUserUsageStats(context.Context, *GetUserUsageStatsRequest) (*GetUserUsageStatsReply, error)
+	// GetModelPerformanceStats 获取模型性能统计
+	// 分析不同模型的使用情况和性能指标
+	GetModelPerformanceStats(context.Context, *GetModelPerformanceStatsRequest) (*GetModelPerformanceStatsReply, error)
+	// GetConversationTrends 获取对话趋势分析
+	// 提供时间序列的对话趋势分析数据
+	GetConversationTrends(context.Context, *GetConversationTrendsRequest) (*GetConversationTrendsReply, error)
+	// GetTopicAnalysis 获取话题分析
+	// 分析对话中的主要话题和内容分布
+	GetTopicAnalysis(context.Context, *GetTopicAnalysisRequest) (*GetTopicAnalysisReply, error)
+	// GetSystemOverview 获取系统总览统计
+	// 提供整个AI系统的总体使用情况和健康状况
+	GetSystemOverview(context.Context, *GetSystemOverviewRequest) (*GetSystemOverviewReply, error)
 	mustEmbedUnimplementedAiServer()
 }
 
@@ -359,59 +155,23 @@ type AiServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAiServer struct{}
 
-func (UnimplementedAiServer) CreateConversation(context.Context, *CreateConversationRequest) (*CreateConversationReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateConversation not implemented")
+func (UnimplementedAiServer) GetConversationAnalytics(context.Context, *GetConversationAnalyticsRequest) (*GetConversationAnalyticsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConversationAnalytics not implemented")
 }
-func (UnimplementedAiServer) GetConversation(context.Context, *GetConversationRequest) (*GetConversationReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetConversation not implemented")
+func (UnimplementedAiServer) GetUserUsageStats(context.Context, *GetUserUsageStatsRequest) (*GetUserUsageStatsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserUsageStats not implemented")
 }
-func (UnimplementedAiServer) UpdateConversation(context.Context, *UpdateConversationRequest) (*UpdateConversationReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateConversation not implemented")
+func (UnimplementedAiServer) GetModelPerformanceStats(context.Context, *GetModelPerformanceStatsRequest) (*GetModelPerformanceStatsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetModelPerformanceStats not implemented")
 }
-func (UnimplementedAiServer) DeleteConversation(context.Context, *DeleteConversationRequest) (*DeleteConversationReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteConversation not implemented")
+func (UnimplementedAiServer) GetConversationTrends(context.Context, *GetConversationTrendsRequest) (*GetConversationTrendsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConversationTrends not implemented")
 }
-func (UnimplementedAiServer) ListConversations(context.Context, *ListConversationsRequest) (*ListConversationsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListConversations not implemented")
+func (UnimplementedAiServer) GetTopicAnalysis(context.Context, *GetTopicAnalysisRequest) (*GetTopicAnalysisReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTopicAnalysis not implemented")
 }
-func (UnimplementedAiServer) SendMessage(context.Context, *SendMessageRequest) (*SendMessageReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
-}
-func (UnimplementedAiServer) GetMessages(context.Context, *GetMessagesRequest) (*GetMessagesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
-}
-func (UnimplementedAiServer) ListTools(context.Context, *ListToolsRequest) (*ListToolsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListTools not implemented")
-}
-func (UnimplementedAiServer) CallTool(context.Context, *CallToolRequest) (*CallToolResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CallTool not implemented")
-}
-func (UnimplementedAiServer) GetToolSchema(context.Context, *GetToolSchemaRequest) (*GetToolSchemaReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetToolSchema not implemented")
-}
-func (UnimplementedAiServer) ListResources(context.Context, *ListResourcesRequest) (*ListResourcesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListResources not implemented")
-}
-func (UnimplementedAiServer) GetResource(context.Context, *GetResourceRequest) (*GetResourceReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetResource not implemented")
-}
-func (UnimplementedAiServer) CreateKnowledgeBase(context.Context, *CreateKnowledgeBaseRequest) (*CreateKnowledgeBaseReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateKnowledgeBase not implemented")
-}
-func (UnimplementedAiServer) UpdateKnowledgeBase(context.Context, *UpdateKnowledgeBaseRequest) (*UpdateKnowledgeBaseReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateKnowledgeBase not implemented")
-}
-func (UnimplementedAiServer) DeleteKnowledgeBase(context.Context, *DeleteKnowledgeBaseRequest) (*DeleteKnowledgeBaseReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteKnowledgeBase not implemented")
-}
-func (UnimplementedAiServer) ListKnowledgeBases(context.Context, *ListKnowledgeBasesRequest) (*ListKnowledgeBasesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListKnowledgeBases not implemented")
-}
-func (UnimplementedAiServer) UploadDocument(context.Context, *UploadDocumentRequest) (*UploadDocumentReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadDocument not implemented")
-}
-func (UnimplementedAiServer) SearchKnowledge(context.Context, *SearchKnowledgeRequest) (*SearchKnowledgeReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchKnowledge not implemented")
+func (UnimplementedAiServer) GetSystemOverview(context.Context, *GetSystemOverviewRequest) (*GetSystemOverviewReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSystemOverview not implemented")
 }
 func (UnimplementedAiServer) mustEmbedUnimplementedAiServer() {}
 func (UnimplementedAiServer) testEmbeddedByValue()            {}
@@ -434,326 +194,110 @@ func RegisterAiServer(s grpc.ServiceRegistrar, srv AiServer) {
 	s.RegisterService(&Ai_ServiceDesc, srv)
 }
 
-func _Ai_CreateConversation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateConversationRequest)
+func _Ai_GetConversationAnalytics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetConversationAnalyticsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AiServer).CreateConversation(ctx, in)
+		return srv.(AiServer).GetConversationAnalytics(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Ai_CreateConversation_FullMethodName,
+		FullMethod: Ai_GetConversationAnalytics_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).CreateConversation(ctx, req.(*CreateConversationRequest))
+		return srv.(AiServer).GetConversationAnalytics(ctx, req.(*GetConversationAnalyticsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Ai_GetConversation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetConversationRequest)
+func _Ai_GetUserUsageStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserUsageStatsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AiServer).GetConversation(ctx, in)
+		return srv.(AiServer).GetUserUsageStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Ai_GetConversation_FullMethodName,
+		FullMethod: Ai_GetUserUsageStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).GetConversation(ctx, req.(*GetConversationRequest))
+		return srv.(AiServer).GetUserUsageStats(ctx, req.(*GetUserUsageStatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Ai_UpdateConversation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateConversationRequest)
+func _Ai_GetModelPerformanceStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetModelPerformanceStatsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AiServer).UpdateConversation(ctx, in)
+		return srv.(AiServer).GetModelPerformanceStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Ai_UpdateConversation_FullMethodName,
+		FullMethod: Ai_GetModelPerformanceStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).UpdateConversation(ctx, req.(*UpdateConversationRequest))
+		return srv.(AiServer).GetModelPerformanceStats(ctx, req.(*GetModelPerformanceStatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Ai_DeleteConversation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteConversationRequest)
+func _Ai_GetConversationTrends_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetConversationTrendsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AiServer).DeleteConversation(ctx, in)
+		return srv.(AiServer).GetConversationTrends(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Ai_DeleteConversation_FullMethodName,
+		FullMethod: Ai_GetConversationTrends_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).DeleteConversation(ctx, req.(*DeleteConversationRequest))
+		return srv.(AiServer).GetConversationTrends(ctx, req.(*GetConversationTrendsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Ai_ListConversations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListConversationsRequest)
+func _Ai_GetTopicAnalysis_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTopicAnalysisRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AiServer).ListConversations(ctx, in)
+		return srv.(AiServer).GetTopicAnalysis(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Ai_ListConversations_FullMethodName,
+		FullMethod: Ai_GetTopicAnalysis_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).ListConversations(ctx, req.(*ListConversationsRequest))
+		return srv.(AiServer).GetTopicAnalysis(ctx, req.(*GetTopicAnalysisRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Ai_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendMessageRequest)
+func _Ai_GetSystemOverview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSystemOverviewRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AiServer).SendMessage(ctx, in)
+		return srv.(AiServer).GetSystemOverview(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Ai_SendMessage_FullMethodName,
+		FullMethod: Ai_GetSystemOverview_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).SendMessage(ctx, req.(*SendMessageRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_GetMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMessagesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).GetMessages(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_GetMessages_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).GetMessages(ctx, req.(*GetMessagesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_ListTools_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListToolsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).ListTools(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_ListTools_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).ListTools(ctx, req.(*ListToolsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_CallTool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CallToolRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).CallTool(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_CallTool_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).CallTool(ctx, req.(*CallToolRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_GetToolSchema_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetToolSchemaRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).GetToolSchema(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_GetToolSchema_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).GetToolSchema(ctx, req.(*GetToolSchemaRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_ListResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListResourcesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).ListResources(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_ListResources_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).ListResources(ctx, req.(*ListResourcesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_GetResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetResourceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).GetResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_GetResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).GetResource(ctx, req.(*GetResourceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_CreateKnowledgeBase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateKnowledgeBaseRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).CreateKnowledgeBase(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_CreateKnowledgeBase_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).CreateKnowledgeBase(ctx, req.(*CreateKnowledgeBaseRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_UpdateKnowledgeBase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateKnowledgeBaseRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).UpdateKnowledgeBase(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_UpdateKnowledgeBase_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).UpdateKnowledgeBase(ctx, req.(*UpdateKnowledgeBaseRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_DeleteKnowledgeBase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteKnowledgeBaseRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).DeleteKnowledgeBase(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_DeleteKnowledgeBase_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).DeleteKnowledgeBase(ctx, req.(*DeleteKnowledgeBaseRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_ListKnowledgeBases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListKnowledgeBasesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).ListKnowledgeBases(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_ListKnowledgeBases_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).ListKnowledgeBases(ctx, req.(*ListKnowledgeBasesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_UploadDocument_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadDocumentRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).UploadDocument(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_UploadDocument_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).UploadDocument(ctx, req.(*UploadDocumentRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_SearchKnowledge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchKnowledgeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).SearchKnowledge(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_SearchKnowledge_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).SearchKnowledge(ctx, req.(*SearchKnowledgeRequest))
+		return srv.(AiServer).GetSystemOverview(ctx, req.(*GetSystemOverviewRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -766,76 +310,28 @@ var Ai_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AiServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateConversation",
-			Handler:    _Ai_CreateConversation_Handler,
+			MethodName: "GetConversationAnalytics",
+			Handler:    _Ai_GetConversationAnalytics_Handler,
 		},
 		{
-			MethodName: "GetConversation",
-			Handler:    _Ai_GetConversation_Handler,
+			MethodName: "GetUserUsageStats",
+			Handler:    _Ai_GetUserUsageStats_Handler,
 		},
 		{
-			MethodName: "UpdateConversation",
-			Handler:    _Ai_UpdateConversation_Handler,
+			MethodName: "GetModelPerformanceStats",
+			Handler:    _Ai_GetModelPerformanceStats_Handler,
 		},
 		{
-			MethodName: "DeleteConversation",
-			Handler:    _Ai_DeleteConversation_Handler,
+			MethodName: "GetConversationTrends",
+			Handler:    _Ai_GetConversationTrends_Handler,
 		},
 		{
-			MethodName: "ListConversations",
-			Handler:    _Ai_ListConversations_Handler,
+			MethodName: "GetTopicAnalysis",
+			Handler:    _Ai_GetTopicAnalysis_Handler,
 		},
 		{
-			MethodName: "SendMessage",
-			Handler:    _Ai_SendMessage_Handler,
-		},
-		{
-			MethodName: "GetMessages",
-			Handler:    _Ai_GetMessages_Handler,
-		},
-		{
-			MethodName: "ListTools",
-			Handler:    _Ai_ListTools_Handler,
-		},
-		{
-			MethodName: "CallTool",
-			Handler:    _Ai_CallTool_Handler,
-		},
-		{
-			MethodName: "GetToolSchema",
-			Handler:    _Ai_GetToolSchema_Handler,
-		},
-		{
-			MethodName: "ListResources",
-			Handler:    _Ai_ListResources_Handler,
-		},
-		{
-			MethodName: "GetResource",
-			Handler:    _Ai_GetResource_Handler,
-		},
-		{
-			MethodName: "CreateKnowledgeBase",
-			Handler:    _Ai_CreateKnowledgeBase_Handler,
-		},
-		{
-			MethodName: "UpdateKnowledgeBase",
-			Handler:    _Ai_UpdateKnowledgeBase_Handler,
-		},
-		{
-			MethodName: "DeleteKnowledgeBase",
-			Handler:    _Ai_DeleteKnowledgeBase_Handler,
-		},
-		{
-			MethodName: "ListKnowledgeBases",
-			Handler:    _Ai_ListKnowledgeBases_Handler,
-		},
-		{
-			MethodName: "UploadDocument",
-			Handler:    _Ai_UploadDocument_Handler,
-		},
-		{
-			MethodName: "SearchKnowledge",
-			Handler:    _Ai_SearchKnowledge_Handler,
+			MethodName: "GetSystemOverview",
+			Handler:    _Ai_GetSystemOverview_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -11,416 +11,323 @@ option java_outer_classname = "AiProtoV1";
 
 // AI服务接口定义
 service Ai {
-  // 对话管理相关接口
-
-  // CreateConversation 创建新的对话会话
-  // 为指定用户创建一个新的对话，可以指定模型、系统提示词等配置
-  rpc CreateConversation (CreateConversationRequest) returns (CreateConversationReply);
-
-  // GetConversation 获取指定对话的详细信息
-  // 根据对话ID获取对话的基本信息，包括标题、模型、配置等
-  rpc GetConversation (GetConversationRequest) returns (GetConversationReply);
-
-  // UpdateConversation 更新对话的配置信息
-  // 可以修改对话的标题、系统提示词、模型配置等
-  rpc UpdateConversation (UpdateConversationRequest) returns (UpdateConversationReply);
-
-  // DeleteConversation 删除指定的对话
-  // 软删除对话，同时会删除该对话下的所有消息记录
-  rpc DeleteConversation (DeleteConversationRequest) returns (DeleteConversationReply);
-
-  // ListConversations 获取用户的对话列表
-  // 支持分页查询和关键词搜索，返回用户的所有对话
-  rpc ListConversations (ListConversationsRequest) returns (ListConversationsReply);
-
-  // 消息发送与对话接口
-
-  // SendMessage 向指定对话发送消息并获取AI回复
-  // 支持文件附件、工具调用、模型参数配置等高级功能
-  rpc SendMessage (SendMessageRequest) returns (SendMessageReply);
-
-  // GetMessages 获取对话的消息历史
-  // 支持分页查询，可选择是否包含工具调用详情
-  rpc GetMessages (GetMessagesRequest) returns (GetMessagesReply);
-
-  // MCP工具相关接口
-
-  // ListTools 获取可用的MCP工具列表
-  // 支持按MCP服务器过滤，可选择只显示启用的工具
-  rpc ListTools (ListToolsRequest) returns (ListToolsReply);
-
-  // CallTool 调用指定的MCP工具
-  // 执行工具调用并返回结果，支持传入对话上下文
-  rpc CallTool (CallToolRequest) returns (CallToolResponse);
-
-  // GetToolSchema 获取工具的参数Schema
-  // 返回工具的详细信息和参数定义，用于动态表单生成
-  rpc GetToolSchema (GetToolSchemaRequest) returns (GetToolSchemaReply);
-
-  // 资源管理接口
-
-  // ListResources 获取可用的MCP资源列表
-  // 支持按MCP服务器和MIME类型过滤
-  rpc ListResources (ListResourcesRequest) returns (ListResourcesReply);
-
-  // GetResource 获取指定资源的内容
-  // 根据资源URI获取资源内容和元数据
-  rpc GetResource (GetResourceRequest) returns (GetResourceReply);
-
-  // 知识库管理接口
-
-  // CreateKnowledgeBase 创建新的知识库
-  // 为用户创建知识库，可以指定向量化模型和分块策略
-  rpc CreateKnowledgeBase (CreateKnowledgeBaseRequest) returns (CreateKnowledgeBaseReply);
-
-  // UpdateKnowledgeBase 更新知识库配置
-  // 修改知识库的名称、描述、向量化模型等配置
-  rpc UpdateKnowledgeBase (UpdateKnowledgeBaseRequest) returns (UpdateKnowledgeBaseReply);
-
-  // DeleteKnowledgeBase 删除知识库
-  // 软删除知识库及其所有文档和向量数据
-  rpc DeleteKnowledgeBase (DeleteKnowledgeBaseRequest) returns (DeleteKnowledgeBaseReply);
-
-  // ListKnowledgeBases 获取用户的知识库列表
-  // 支持分页查询和关键词搜索
-  rpc ListKnowledgeBases (ListKnowledgeBasesRequest) returns (ListKnowledgeBasesReply);
-
-  // UploadDocument 向知识库上传文档
-  // 上传文档到指定知识库，自动进行向量化处理
-  rpc UploadDocument (UploadDocumentRequest) returns (UploadDocumentReply);
-
-  // SearchKnowledge 在知识库中搜索相关内容
-  // 基于语义相似度搜索知识库内容，支持相似度阈值过滤
-  rpc SearchKnowledge (SearchKnowledgeRequest) returns (SearchKnowledgeReply);
+  // === 对话统计分析接口 ===
+  
+  // GetConversationAnalytics 获取对话统计分析数据
+  // 提供用户对话行为的统计分析，包括使用频率、模型偏好、话题分布等
+  rpc GetConversationAnalytics (GetConversationAnalyticsRequest) returns (GetConversationAnalyticsReply);
+  
+  // GetUserUsageStats 获取用户使用统计
+  // 分析用户的AI使用情况，包括token消耗、成本统计、时间分布等
+  rpc GetUserUsageStats (GetUserUsageStatsRequest) returns (GetUserUsageStatsReply);
+  
+  // GetModelPerformanceStats 获取模型性能统计
+  // 分析不同模型的使用情况和性能指标
+  rpc GetModelPerformanceStats (GetModelPerformanceStatsRequest) returns (GetModelPerformanceStatsReply);
+  
+  // GetConversationTrends 获取对话趋势分析
+  // 提供时间序列的对话趋势分析数据
+  rpc GetConversationTrends (GetConversationTrendsRequest) returns (GetConversationTrendsReply);
+  
+  // GetTopicAnalysis 获取话题分析
+  // 分析对话中的主要话题和内容分布
+  rpc GetTopicAnalysis (GetTopicAnalysisRequest) returns (GetTopicAnalysisReply);
+  
+  // GetSystemOverview 获取系统总览统计
+  // 提供整个AI系统的总体使用情况和健康状况
+  rpc GetSystemOverview (GetSystemOverviewRequest) returns (GetSystemOverviewReply);
 }
 
-// 对话相关消息定义
+// === 统计分析相关消息定义 ===
 
-// 对话记录
-message Conversation {
-  int64 id = 1;                                    // 对话ID
-  int64 user_id = 2;                              // 用户ID
-  string title = 3;                               // 对话标题
-  string model_name = 4;                          // 使用的模型名称
-  string system_prompt = 5;                       // 系统提示词
-  map<string, string> config = 6;                // 对话配置参数
-  int32 status = 7;                              // 对话状态 (0:正常, 1:已删除)
-  google.protobuf.Timestamp created_at = 8;      // 创建时间
-  google.protobuf.Timestamp updated_at = 9;      // 更新时间
+// 对话统计分析请求
+message GetConversationAnalyticsRequest {
+  int64 user_id = 1;                                    // 用户ID，为空则分析全局数据
+  google.protobuf.Timestamp start_time = 2;            // 开始时间
+  google.protobuf.Timestamp end_time = 3;              // 结束时间
+  AnalyticsGranularity granularity = 4;                // 时间粒度
+  repeated AnalyticsMetric metrics = 5;                 // 需要的指标
+  map<string, string> filters = 6;                     // 过滤条件
 }
 
-// 消息记录
-message Message {
-  int64 id = 1;                                  // 消息ID
-  int64 conversation_id = 2;                     // 对话ID
-  string role = 3;                               // 角色 (user/assistant/system)
-  string content = 4;                            // 消息内容
-  repeated ToolCall tool_calls = 5;              // 工具调用记录
-  map<string, string> metadata = 6;             // 消息元数据
-  google.protobuf.Timestamp created_at = 7;     // 创建时间
+message GetConversationAnalyticsReply {
+  ConversationAnalytics analytics = 1;                  // 分析结果
 }
 
-// 工具调用记录
-message ToolCall {
-  string id = 1;                                 // 调用ID
-  string name = 2;                               // 工具名称
-  string arguments = 3;                          // 调用参数(JSON格式)
-  string result = 4;                             // 执行结果
-  int32 status = 5;                              // 执行状态 (0:成功, 1:失败)
-  string error_message = 6;                      // 错误信息
-  google.protobuf.Timestamp created_at = 7;     // 执行时间
+// 用户使用统计请求
+message GetUserUsageStatsRequest {
+  int64 user_id = 1;                                    // 用户ID
+  google.protobuf.Timestamp start_time = 2;            // 开始时间
+  google.protobuf.Timestamp end_time = 3;              // 结束时间
+  bool include_cost_breakdown = 4;                      // 是否包含成本明细
+  bool include_model_usage = 5;                         // 是否包含模型使用情况
 }
 
-// 模型配置
-message ModelConfig {
-  string name = 1;                               // 模型名称
-  string provider = 2;                           // 提供商 (openai/anthropic/local)
-  string api_key = 3;                            // API密钥
-  string api_base = 4;                           // API基础URL
-  double temperature = 5;                        // 温度参数
-  int32 max_tokens = 6;                          // 最大token数
-  double top_p = 7;                              // top_p参数
-  double frequency_penalty = 8;                  // 频率惩罚
-  double presence_penalty = 9;                   // 存在惩罚
-  repeated string stop_sequences = 10;           // 停止序列
-  bool supports_tools = 11;                      // 是否支持工具调用
-  bool supports_vision = 12;                     // 是否支持视觉输入
-  map<string, string> extra_params = 13;        // 额外参数
-  int32 status = 14;                             // 状态 (0:可用, 1:不可用)
+message GetUserUsageStatsReply {
+  UserUsageStats usage_stats = 1;                       // 使用统计
 }
 
-// MCP工具定义
-message Tool {
-  string name = 1;                               // 工具名称
-  string description = 2;                        // 工具描述
-  string schema = 3;                             // 参数schema(JSON格式)
-  string mcp_server = 4;                         // MCP服务器标识
-  map<string, string> metadata = 5;             // 工具元数据
-  bool enabled = 6;                              // 是否启用
+// 模型性能统计请求
+message GetModelPerformanceStatsRequest {
+  repeated string model_names = 1;                      // 模型名称列表，为空则分析所有模型
+  google.protobuf.Timestamp start_time = 2;            // 开始时间
+  google.protobuf.Timestamp end_time = 3;              // 结束时间
+  bool include_user_satisfaction = 4;                   // 是否包含用户满意度
+  bool include_error_analysis = 5;                      // 是否包含错误分析
 }
 
-// 资源定义
-message Resource {
-  string uri = 1;                                // 资源URI
-  string name = 2;                               // 资源名称
-  string description = 3;                        // 资源描述
-  string mime_type = 4;                          // MIME类型
-  string mcp_server = 5;                         // MCP服务器标识
-  map<string, string> metadata = 6;             // 资源元数据
+message GetModelPerformanceStatsReply {
+  repeated ModelPerformanceStats model_stats = 1;       // 模型统计列表
 }
 
-// 知识库定义
-message KnowledgeBase {
-  int64 id = 1;                                  // 知识库ID
-  int64 user_id = 2;                             // 用户ID
-  string name = 3;                               // 知识库名称
-  string description = 4;                        // 知识库描述
-  string embedding_model = 5;                    // 向量化模型
-  int32 chunk_size = 6;                          // 文档分块大小
-  int32 chunk_overlap = 7;                       // 分块重叠大小
-  int32 status = 8;                              // 状态 (0:正常, 1:已删除)
-  google.protobuf.Timestamp created_at = 9;     // 创建时间
-  google.protobuf.Timestamp updated_at = 10;    // 更新时间
+// 对话趋势分析请求
+message GetConversationTrendsRequest {
+  int64 user_id = 1;                                    // 用户ID，为空则分析全局趋势
+  google.protobuf.Timestamp start_time = 2;            // 开始时间
+  google.protobuf.Timestamp end_time = 3;              // 结束时间
+  AnalyticsGranularity granularity = 4;                // 时间粒度
+  repeated TrendMetric trend_metrics = 5;               // 趋势指标
 }
 
-// 文档定义
-message Document {
-  int64 id = 1;                                  // 文档ID
-  int64 knowledge_base_id = 2;                   // 知识库ID
-  string name = 3;                               // 文档名称
-  string content = 4;                            // 文档内容
-  string file_path = 5;                          // 文件路径
-  string mime_type = 6;                          // 文件类型
-  int64 file_size = 7;                           // 文件大小
-  int32 chunk_count = 8;                         // 分块数量
-  int32 status = 9;                              // 状态 (0:处理中, 1:完成, 2:失败)
-  google.protobuf.Timestamp created_at = 10;    // 创建时间
-  google.protobuf.Timestamp updated_at = 11;    // 更新时间
+message GetConversationTrendsReply {
+  repeated TrendData trends = 1;                         // 趋势数据
 }
 
-// 请求和响应消息定义
-
-// 创建对话
-message CreateConversationRequest {
-  int64 user_id = 1;                             // 用户ID
-  string title = 2;                              // 对话标题
-  string model_name = 3;                         // 使用的模型名称
-  string system_prompt = 4;                      // 系统提示词(可选)
-  map<string, string> config = 5;               // 对话配置参数(可选)
+// 话题分析请求
+message GetTopicAnalysisRequest {
+  int64 user_id = 1;                                    // 用户ID，为空则分析全局话题
+  google.protobuf.Timestamp start_time = 2;            // 开始时间
+  google.protobuf.Timestamp end_time = 3;              // 结束时间
+  int32 top_topics_count = 4;                           // 返回热门话题数量
+  TopicAnalysisMethod method = 5;                       // 分析方法
+  map<string, string> filters = 6;                     // 过滤条件
 }
 
-message CreateConversationReply {
-  Conversation conversation = 1;                 // 创建的对话
+message GetTopicAnalysisReply {
+  repeated TopicInsight topics = 1;                      // 话题洞察
+  TopicDistribution distribution = 2;                   // 话题分布
 }
 
-// 获取对话
-message GetConversationRequest {
-  int64 id = 1;                                  // 对话ID
+// 系统总览请求
+message GetSystemOverviewRequest {
+  google.protobuf.Timestamp start_time = 1;            // 开始时间
+  google.protobuf.Timestamp end_time = 2;              // 结束时间
+  bool include_health_metrics = 3;                      // 是否包含健康指标
+  bool include_resource_usage = 4;                      // 是否包含资源使用情况
 }
 
-message GetConversationReply {
-  Conversation conversation = 1;                 // 对话信息
+message GetSystemOverviewReply {
+  SystemOverviewStats overview = 1;                     // 系统总览
 }
 
-// 更新对话
-message UpdateConversationRequest {
-  int64 id = 1;                                  // 对话ID
-  string title = 2;                              // 对话标题(可选)
-  string system_prompt = 3;                      // 系统提示词(可选)
-  map<string, string> config = 4;               // 对话配置参数(可选)
+// === 数据模型定义 ===
+
+// 时间粒度枚举
+enum AnalyticsGranularity {
+  ANALYTICS_GRANULARITY_UNSPECIFIED = 0;
+  ANALYTICS_GRANULARITY_HOUR = 1;          // 小时
+  ANALYTICS_GRANULARITY_DAY = 2;           // 天
+  ANALYTICS_GRANULARITY_WEEK = 3;          // 周
+  ANALYTICS_GRANULARITY_MONTH = 4;         // 月
 }
 
-message UpdateConversationReply {
-  Conversation conversation = 1;                 // 更新后的对话
+// 分析指标枚举
+enum AnalyticsMetric {
+  ANALYTICS_METRIC_UNSPECIFIED = 0;
+  ANALYTICS_METRIC_CONVERSATION_COUNT = 1;      // 对话数量
+  ANALYTICS_METRIC_MESSAGE_COUNT = 2;           // 消息数量
+  ANALYTICS_METRIC_TOKEN_USAGE = 3;             // Token使用量
+  ANALYTICS_METRIC_RESPONSE_TIME = 4;           // 响应时间
+  ANALYTICS_METRIC_USER_ENGAGEMENT = 5;         // 用户参与度
+  ANALYTICS_METRIC_TOOL_USAGE = 6;              // 工具使用情况
 }
 
-// 删除对话
-message DeleteConversationRequest {
-  int64 id = 1;                                  // 对话ID
+// 趋势指标枚举
+enum TrendMetric {
+  TREND_METRIC_UNSPECIFIED = 0;
+  TREND_METRIC_ACTIVE_USERS = 1;          // 活跃用户数
+  TREND_METRIC_NEW_CONVERSATIONS = 2;     // 新对话数
+  TREND_METRIC_MESSAGE_VOLUME = 3;        // 消息量
+  TREND_METRIC_TOKEN_CONSUMPTION = 4;     // Token消耗
+  TREND_METRIC_COST = 5;                  // 成本
 }
 
-message DeleteConversationReply {}
-
-// 列出对话
-message ListConversationsRequest {
-  int64 user_id = 1;                             // 用户ID
-  int32 page = 2;                                // 页码
-  int32 page_size = 3;                           // 页面大小
-  string keyword = 4;                            // 搜索关键词(可选)
+// 话题分析方法枚举
+enum TopicAnalysisMethod {
+  TOPIC_ANALYSIS_METHOD_UNSPECIFIED = 0;
+  TOPIC_ANALYSIS_METHOD_KEYWORD = 1;      // 关键词分析
+  TOPIC_ANALYSIS_METHOD_LDA = 2;          // LDA主题模型
+  TOPIC_ANALYSIS_METHOD_CLUSTERING = 3;   // 聚类分析
+  TOPIC_ANALYSIS_METHOD_SEMANTIC = 4;     // 语义分析
 }
 
-message ListConversationsReply {
-  repeated Conversation conversations = 1;        // 对话列表
-  int64 total = 2;                               // 总数
-  int32 page = 3;                                // 当前页
-  int32 page_size = 4;                           // 页面大小
+// 对话分析数据
+message ConversationAnalytics {
+  int64 total_conversations = 1;                        // 总对话数
+  int64 active_users = 2;                               // 活跃用户数
+  double average_conversation_length = 3;               // 平均对话长度
+  double average_response_time = 4;                     // 平均响应时间
+  map<string, int64> model_usage_distribution = 5;     // 模型使用分布
+  map<string, int64> time_distribution = 6;            // 时间分布
+  repeated TimeSeriesPoint time_series_data = 7;       // 时序数据
+  UserEngagementMetrics engagement = 8;                // 用户参与度指标
 }
 
-// 发送消息
-message SendMessageRequest {
-  int64 conversation_id = 1;                     // 对话ID
-  string content = 2;                            // 消息内容
-  repeated string attachments = 3;               // 附件列表(文件路径或URL)
-  bool enable_tools = 4;                         // 是否启用工具调用
-  repeated string allowed_tools = 5;             // 允许使用的工具列表(空表示所有)
-  map<string, string> options = 6;              // 额外选项
+// 用户使用统计
+message UserUsageStats {
+  int64 user_id = 1;                                    // 用户ID
+  int64 total_conversations = 2;                        // 总对话数
+  int64 total_messages = 3;                             // 总消息数
+  int64 total_input_tokens = 4;                         // 总输入Token
+  int64 total_output_tokens = 5;                        // 总输出Token
+  double total_cost = 6;                                // 总成本
+  double average_session_duration = 7;                  // 平均会话时长
+  map<string, ModelUsageStats> model_usage = 8;        // 各模型使用情况
+  map<string, double> cost_breakdown = 9;              // 成本明细
+  repeated UsageTimePoint usage_timeline = 10;         // 使用时间线
+  UserBehaviorProfile behavior_profile = 11;           // 用户行为画像
 }
 
-message SendMessageReply {
-  Message user_message = 1;                      // 用户消息
-  Message assistant_message = 2;                 // AI助手回复
+// 模型性能统计
+message ModelPerformanceStats {
+  string model_name = 1;                                // 模型名称
+  int64 total_requests = 2;                             // 总请求数
+  double success_rate = 3;                              // 成功率
+  double average_response_time = 4;                     // 平均响应时间
+  double average_input_tokens = 5;                      // 平均输入Token数
+  double average_output_tokens = 6;                     // 平均输出Token数
+  double cost_per_request = 7;                          // 每请求成本
+  double user_satisfaction_score = 8;                   // 用户满意度评分
+  map<string, int64> error_distribution = 9;           // 错误分布
+  repeated PerformanceTimePoint performance_timeline = 10; // 性能时间线
+  ModelCapabilityMetrics capabilities = 11;            // 能力指标
 }
 
-// 获取消息列表
-message GetMessagesRequest {
-  int64 conversation_id = 1;                     // 对话ID
-  int32 page = 2;                                // 页码
-  int32 page_size = 3;                           // 页面大小
-  bool include_tool_calls = 4;                   // 是否包含工具调用详情
+// 趋势数据
+message TrendData {
+  TrendMetric metric = 1;                               // 指标类型
+  repeated TimeSeriesPoint data_points = 2;            // 数据点
+  double growth_rate = 3;                               // 增长率
+  string trend_direction = 4;                           // 趋势方向: up/down/stable
 }
 
-message GetMessagesReply {
-  repeated Message messages = 1;                 // 消息列表
-  int64 total = 2;                               // 总数
-  int32 page = 3;                                // 当前页
-  int32 page_size = 4;                           // 页面大小
+// 话题洞察
+message TopicInsight {
+  string topic_name = 1;                                // 话题名称
+  repeated string keywords = 2;                         // 关键词
+  int64 message_count = 3;                              // 消息数量
+  double relevance_score = 4;                           // 相关度分数
+  double sentiment_score = 5;                           // 情感分数
+  repeated string representative_messages = 6;          // 代表性消息
+  google.protobuf.Timestamp first_seen = 7;           // 首次出现时间
+  google.protobuf.Timestamp last_seen = 8;            // 最后出现时间
 }
 
-// 注意：模型管理的请求/响应消息已迁移到 model.proto
-
-// 列出可用工具
-message ListToolsRequest {
-  string mcp_server = 1;                         // MCP服务器过滤(可选)
-  bool only_enabled = 2;                         // 只显示启用的工具
+// 话题分布
+message TopicDistribution {
+  map<string, double> topic_percentages = 1;           // 话题百分比分布
+  double topic_diversity_index = 2;                    // 话题多样性指数
+  int32 total_topics_detected = 3;                     // 检测到的总话题数
 }
 
-message ListToolsReply {
-  repeated Tool tools = 1;                       // 工具列表
+// 系统总览统计
+message SystemOverviewStats {
+  int64 total_users = 1;                                // 总用户数
+  int64 active_users_today = 2;                         // 今日活跃用户
+  int64 total_conversations = 3;                        // 总对话数
+  int64 total_messages = 4;                             // 总消息数
+  int64 total_tokens_processed = 5;                     // 总处理Token数
+  double total_cost = 6;                                // 总成本
+  SystemHealthMetrics health = 7;                       // 系统健康指标
+  ResourceUsageStats resource_usage = 8;               // 资源使用统计
+  map<string, ServiceStats> service_stats = 9;         // 各服务统计
 }
 
-// 调用工具
-message CallToolRequest {
-  string name = 1;                               // 工具名称
-  string arguments = 2;                          // 参数(JSON格式)
-  int64 conversation_id = 3;                     // 对话ID(可选，用于上下文)
+// === 辅助数据结构 ===
+
+// 时序数据点
+message TimeSeriesPoint {
+  google.protobuf.Timestamp timestamp = 1;            // 时间戳
+  double value = 2;                                    // 数值
+  string label = 3;                                    // 标签
+  map<string, double> dimensions = 4;                 // 多维数据
 }
 
-message CallToolResponse {
-  string result = 1;                             // 执行结果
-  int32 status = 2;                              // 状态码 (0:成功, 非0:失败)
-  string error_message = 3;                      // 错误信息(如果失败)
-  map<string, string> metadata = 4;             // 执行元数据
+// 用户参与度指标
+message UserEngagementMetrics {
+  double average_messages_per_conversation = 1;        // 每对话平均消息数
+  double conversation_completion_rate = 2;             // 对话完成率
+  double user_retention_rate = 3;                      // 用户留存率
+  double feature_adoption_rate = 4;                    // 功能采用率
 }
 
-// 获取工具Schema
-message GetToolSchemaRequest {
-  string name = 1;                               // 工具名称
+// 模型使用统计
+message ModelUsageStats {
+  string model_name = 1;                               // 模型名称
+  int64 request_count = 2;                             // 请求数
+  int64 input_tokens = 3;                              // 输入Token数
+  int64 output_tokens = 4;                             // 输出Token数
+  double cost = 5;                                     // 成本
+  double average_response_time = 6;                    // 平均响应时间
 }
 
-message GetToolSchemaReply {
-  Tool tool = 1;                                 // 工具信息和Schema
+// 使用时间点
+message UsageTimePoint {
+  google.protobuf.Timestamp timestamp = 1;            // 时间戳
+  int32 message_count = 2;                             // 消息数
+  int32 token_count = 3;                               // Token数
+  double cost = 4;                                     // 成本
 }
 
-// 列出资源
-message ListResourcesRequest {
-  string mcp_server = 1;                         // MCP服务器过滤(可选)
-  string mime_type = 2;                          // MIME类型过滤(可选)
+// 用户行为画像
+message UserBehaviorProfile {
+  repeated string preferred_models = 1;                // 偏好模型
+  repeated string frequent_topics = 2;                 // 常用话题
+  string most_active_time = 3;                         // 最活跃时间段
+  double complexity_preference = 4;                    // 复杂度偏好
+  map<string, double> feature_usage = 5;              // 功能使用情况
 }
 
-message ListResourcesReply {
-  repeated Resource resources = 1;               // 资源列表
+// 性能时间点
+message PerformanceTimePoint {
+  google.protobuf.Timestamp timestamp = 1;            // 时间戳
+  double response_time = 2;                            // 响应时间
+  double success_rate = 3;                             // 成功率
+  double throughput = 4;                               // 吞吐量
 }
 
-// 获取资源
-message GetResourceRequest {
-  string uri = 1;                                // 资源URI
+// 模型能力指标
+message ModelCapabilityMetrics {
+  double reasoning_score = 1;                          // 推理能力分数
+  double creativity_score = 2;                         // 创造力分数
+  double accuracy_score = 3;                           // 准确性分数
+  double safety_score = 4;                             // 安全性分数
+  map<string, double> task_specific_scores = 5;       // 任务特定分数
 }
 
-message GetResourceReply {
-  string content = 1;                            // 资源内容
-  string mime_type = 2;                          // MIME类型
-  map<string, string> metadata = 3;             // 资源元数据
+// 系统健康指标
+message SystemHealthMetrics {
+  double overall_health_score = 1;                     // 总体健康分数
+  double service_availability = 2;                     // 服务可用性
+  double average_response_time = 3;                    // 平均响应时间
+  double error_rate = 4;                               // 错误率
+  int64 active_connections = 5;                        // 活跃连接数
 }
 
-// 创建知识库
-message CreateKnowledgeBaseRequest {
-  int64 user_id = 1;                             // 用户ID
-  string name = 2;                               // 知识库名称
-  string description = 3;                        // 知识库描述
-  string embedding_model = 4;                    // 向量化模型(可选)
-  int32 chunk_size = 5;                          // 文档分块大小(可选)
-  int32 chunk_overlap = 6;                       // 分块重叠大小(可选)
+// 资源使用统计
+message ResourceUsageStats {
+  double cpu_usage_percentage = 1;                     // CPU使用率
+  double memory_usage_percentage = 2;                  // 内存使用率
+  double storage_usage_gb = 3;                         // 存储使用量(GB)
+  double network_bandwidth_mbps = 4;                   // 网络带宽(Mbps)
+  int64 database_connections = 5;                      // 数据库连接数
 }
 
-message CreateKnowledgeBaseReply {
-  KnowledgeBase knowledge_base = 1;              // 创建的知识库
-}
-
-// 更新知识库
-message UpdateKnowledgeBaseRequest {
-  int64 id = 1;                                  // 知识库ID
-  string name = 2;                               // 知识库名称(可选)
-  string description = 3;                        // 知识库描述(可选)
-  string embedding_model = 4;                    // 向量化模型(可选)
-  int32 chunk_size = 5;                          // 文档分块大小(可选)
-  int32 chunk_overlap = 6;                       // 分块重叠大小(可选)
-}
-
-message UpdateKnowledgeBaseReply {
-  KnowledgeBase knowledge_base = 1;              // 更新后的知识库
-}
-
-// 删除知识库
-message DeleteKnowledgeBaseRequest {
-  int64 id = 1;                                  // 知识库ID
-}
-
-message DeleteKnowledgeBaseReply {}
-
-// 列出知识库
-message ListKnowledgeBasesRequest {
-  int64 user_id = 1;                             // 用户ID
-  int32 page = 2;                                // 页码
-  int32 page_size = 3;                           // 页面大小
-  string keyword = 4;                            // 搜索关键词(可选)
-}
-
-message ListKnowledgeBasesReply {
-  repeated KnowledgeBase knowledge_bases = 1;    // 知识库列表
-  int64 total = 2;                               // 总数
-  int32 page = 3;                                // 当前页
-  int32 page_size = 4;                           // 页面大小
-}
-
-// 上传文档
-message UploadDocumentRequest {
-  int64 knowledge_base_id = 1;                   // 知识库ID
-  string name = 2;                               // 文档名称
-  bytes content = 3;                             // 文档内容
-  string mime_type = 4;                          // 文件类型
-}
-
-message UploadDocumentReply {
-  Document document = 1;                         // 上传的文档
-}
-
-// 搜索知识
-message SearchKnowledgeRequest {
-  int64 knowledge_base_id = 1;                   // 知识库ID
-  string query = 2;                              // 搜索查询
-  int32 limit = 3;                               // 返回结果数量限制
-  double threshold = 4;                          // 相似度阈值
-}
-
-message SearchKnowledgeReply {
-  repeated KnowledgeChunk chunks = 1;            // 搜索结果
-}
-
-// 知识库块
-message KnowledgeChunk {
-  int64 id = 1;                                  // 块ID
-  int64 document_id = 2;                         // 文档ID
-  string content = 3;                            // 块内容
-  double score = 4;                              // 相似度分数
-  map<string, string> metadata = 5;             // 块元数据
+// 服务统计
+message ServiceStats {
+  string service_name = 1;                             // 服务名称
+  double uptime_percentage = 2;                        // 运行时间百分比
+  int64 request_count = 3;                             // 请求数
+  double average_response_time = 4;                    // 平均响应时间
+  double error_rate = 5;                               // 错误率
 }

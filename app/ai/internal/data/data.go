@@ -12,7 +12,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewAiRepo, NewProviderRepo, NewModelRepo, NewQuotaRepo, NewRateLimitRepo, NewHealthRepo)
+var ProviderSet = wire.NewSet(NewData, NewAiRepo, NewProviderRepo, NewModelRepo, NewQuotaRepo, NewRateLimitRepo, NewHealthRepo, NewConversationRepo, NewKnowledgeRepo)
 
 // Data .
 type Data struct {
@@ -49,6 +49,16 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 		&model.RateLimitConfig{},
 		&model.ModelHealth{},
 		&model.UserDefaultModel{},
+		&model.Conversation{},
+		&model.ConversationMemory{},
+		&model.Message{},
+		&model.ToolCall{},
+		&model.MessageAttachment{},
+		&model.KnowledgeBase{},
+		&model.Document{},
+		&model.KnowledgeChunk{},
+		&model.ProcessingJob{},
+		&model.SearchHistory{},
 	); err != nil {
 		helper.Fatalf("failed to migrate database: %v", err)
 		return nil, nil, err

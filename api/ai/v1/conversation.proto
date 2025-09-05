@@ -11,7 +11,7 @@ option java_package = "com.oldwei.universal.api.ai.v1";
 option java_outer_classname = "ConversationProtoV1";
 
 // 对话管理服务 - 合并了会话管理、消息发送和对话功能
-service ConversationService {
+service Conversation {
   // === 会话创建、管理和持久化 ===
   
   // CreateConversation 创建新的对话会话
@@ -108,7 +108,7 @@ service ConversationService {
 // === 核心数据模型 ===
 
 // 对话记录 - 增强版
-message Conversation {
+message ConversationInfo {
   int64 id = 1;                                    // 对话ID
   int64 user_id = 2;                              // 用户ID
   string title = 3;                               // 对话标题
@@ -285,7 +285,7 @@ message CreateConversationRequest {
 }
 
 message CreateConversationReply {
-  Conversation conversation = 1;                 // 创建的对话
+  ConversationInfo conversation = 1;                 // 创建的对话
 }
 
 // 获取对话
@@ -297,7 +297,7 @@ message GetConversationRequest {
 }
 
 message GetConversationReply {
-  Conversation conversation = 1;                 // 对话信息
+  ConversationInfo conversation = 1;                 // 对话信息
 }
 
 // 更新对话
@@ -312,7 +312,7 @@ message UpdateConversationRequest {
 }
 
 message UpdateConversationReply {
-  Conversation conversation = 1;                 // 更新后的对话
+  ConversationInfo conversation = 1;                 // 更新后的对话
 }
 
 // 删除对话
@@ -336,7 +336,7 @@ message ListConversationsRequest {
 }
 
 message ListConversationsReply {
-  repeated Conversation conversations = 1;        // 对话列表
+  repeated ConversationInfo conversations = 1;        // 对话列表
   int64 total = 2;                               // 总数
   int32 page = 3;                                // 当前页
   int32 page_size = 4;                           // 页面大小
@@ -356,7 +356,7 @@ message RestoreConversationRequest {
 }
 
 message RestoreConversationReply {
-  Conversation conversation = 1;                 // 恢复的对话
+  ConversationInfo conversation = 1;                 // 恢复的对话
 }
 
 // 发送消息
@@ -520,7 +520,7 @@ message ImportConversationRequest {
 }
 
 message ImportConversationReply {
-  repeated Conversation conversations = 1;        // 导入的对话列表
+  repeated ConversationInfo conversations = 1;        // 导入的对话列表
   int32 imported_count = 2;                      // 导入数量
   int32 skipped_count = 3;                       // 跳过数量
   repeated string warnings = 4;                  // 警告信息
