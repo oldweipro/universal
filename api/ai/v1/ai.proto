@@ -1,0 +1,467 @@
+syntax = "proto3";
+
+package api.ai.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "universal/api/ai/v1;v1";
+option java_multiple_files = true;
+option java_package = "com.oldwei.universal.api.ai.v1";
+option java_outer_classname = "AiProtoV1";
+
+// AI服务接口定义
+service Ai {
+  // 对话管理相关接口
+
+  // CreateConversation 创建新的对话会话
+  // 为指定用户创建一个新的对话，可以指定模型、系统提示词等配置
+  rpc CreateConversation (CreateConversationRequest) returns (CreateConversationReply);
+
+  // GetConversation 获取指定对话的详细信息
+  // 根据对话ID获取对话的基本信息，包括标题、模型、配置等
+  rpc GetConversation (GetConversationRequest) returns (GetConversationReply);
+
+  // UpdateConversation 更新对话的配置信息
+  // 可以修改对话的标题、系统提示词、模型配置等
+  rpc UpdateConversation (UpdateConversationRequest) returns (UpdateConversationReply);
+
+  // DeleteConversation 删除指定的对话
+  // 软删除对话，同时会删除该对话下的所有消息记录
+  rpc DeleteConversation (DeleteConversationRequest) returns (DeleteConversationReply);
+
+  // ListConversations 获取用户的对话列表
+  // 支持分页查询和关键词搜索，返回用户的所有对话
+  rpc ListConversations (ListConversationsRequest) returns (ListConversationsReply);
+
+  // 消息发送与对话接口
+
+  // SendMessage 向指定对话发送消息并获取AI回复
+  // 支持文件附件、工具调用、模型参数配置等高级功能
+  rpc SendMessage (SendMessageRequest) returns (SendMessageReply);
+
+  // GetMessages 获取对话的消息历史
+  // 支持分页查询，可选择是否包含工具调用详情
+  rpc GetMessages (GetMessagesRequest) returns (GetMessagesReply);
+
+  // 模型管理接口
+
+  // ListModels 获取可用的AI模型列表
+  // 支持按提供商过滤，可选择只显示启用的模型
+  rpc ListModels (ListModelsRequest) returns (ListModelsReply);
+
+  // GetModelConfig 获取指定模型的配置信息
+  // 返回模型的详细配置，包括API密钥、参数设置等
+  rpc GetModelConfig (GetModelConfigRequest) returns (GetModelConfigReply);
+
+  // UpdateModelConfig 更新模型的配置
+  // 修改模型的API密钥、参数设置、启用状态等
+  rpc UpdateModelConfig (UpdateModelConfigRequest) returns (UpdateModelConfigReply);
+
+  // MCP工具相关接口
+
+  // ListTools 获取可用的MCP工具列表
+  // 支持按MCP服务器过滤，可选择只显示启用的工具
+  rpc ListTools (ListToolsRequest) returns (ListToolsReply);
+
+  // CallTool 调用指定的MCP工具
+  // 执行工具调用并返回结果，支持传入对话上下文
+  rpc CallTool (CallToolRequest) returns (CallToolResponse);
+
+  // GetToolSchema 获取工具的参数Schema
+  // 返回工具的详细信息和参数定义，用于动态表单生成
+  rpc GetToolSchema (GetToolSchemaRequest) returns (GetToolSchemaReply);
+
+  // 资源管理接口
+
+  // ListResources 获取可用的MCP资源列表
+  // 支持按MCP服务器和MIME类型过滤
+  rpc ListResources (ListResourcesRequest) returns (ListResourcesReply);
+
+  // GetResource 获取指定资源的内容
+  // 根据资源URI获取资源内容和元数据
+  rpc GetResource (GetResourceRequest) returns (GetResourceReply);
+
+  // 知识库管理接口
+
+  // CreateKnowledgeBase 创建新的知识库
+  // 为用户创建知识库，可以指定向量化模型和分块策略
+  rpc CreateKnowledgeBase (CreateKnowledgeBaseRequest) returns (CreateKnowledgeBaseReply);
+
+  // UpdateKnowledgeBase 更新知识库配置
+  // 修改知识库的名称、描述、向量化模型等配置
+  rpc UpdateKnowledgeBase (UpdateKnowledgeBaseRequest) returns (UpdateKnowledgeBaseReply);
+
+  // DeleteKnowledgeBase 删除知识库
+  // 软删除知识库及其所有文档和向量数据
+  rpc DeleteKnowledgeBase (DeleteKnowledgeBaseRequest) returns (DeleteKnowledgeBaseReply);
+
+  // ListKnowledgeBases 获取用户的知识库列表
+  // 支持分页查询和关键词搜索
+  rpc ListKnowledgeBases (ListKnowledgeBasesRequest) returns (ListKnowledgeBasesReply);
+
+  // UploadDocument 向知识库上传文档
+  // 上传文档到指定知识库，自动进行向量化处理
+  rpc UploadDocument (UploadDocumentRequest) returns (UploadDocumentReply);
+
+  // SearchKnowledge 在知识库中搜索相关内容
+  // 基于语义相似度搜索知识库内容，支持相似度阈值过滤
+  rpc SearchKnowledge (SearchKnowledgeRequest) returns (SearchKnowledgeReply);
+}
+
+// 对话相关消息定义
+
+// 对话记录
+message Conversation {
+  int64 id = 1;                                    // 对话ID
+  int64 user_id = 2;                              // 用户ID
+  string title = 3;                               // 对话标题
+  string model_name = 4;                          // 使用的模型名称
+  string system_prompt = 5;                       // 系统提示词
+  map<string, string> config = 6;                // 对话配置参数
+  int32 status = 7;                              // 对话状态 (0:正常, 1:已删除)
+  google.protobuf.Timestamp created_at = 8;      // 创建时间
+  google.protobuf.Timestamp updated_at = 9;      // 更新时间
+}
+
+// 消息记录
+message Message {
+  int64 id = 1;                                  // 消息ID
+  int64 conversation_id = 2;                     // 对话ID
+  string role = 3;                               // 角色 (user/assistant/system)
+  string content = 4;                            // 消息内容
+  repeated ToolCall tool_calls = 5;              // 工具调用记录
+  map<string, string> metadata = 6;             // 消息元数据
+  google.protobuf.Timestamp created_at = 7;     // 创建时间
+}
+
+// 工具调用记录
+message ToolCall {
+  string id = 1;                                 // 调用ID
+  string name = 2;                               // 工具名称
+  string arguments = 3;                          // 调用参数(JSON格式)
+  string result = 4;                             // 执行结果
+  int32 status = 5;                              // 执行状态 (0:成功, 1:失败)
+  string error_message = 6;                      // 错误信息
+  google.protobuf.Timestamp created_at = 7;     // 执行时间
+}
+
+// 模型配置
+message ModelConfig {
+  string name = 1;                               // 模型名称
+  string provider = 2;                           // 提供商 (openai/anthropic/local)
+  string api_key = 3;                            // API密钥
+  string api_base = 4;                           // API基础URL
+  double temperature = 5;                        // 温度参数
+  int32 max_tokens = 6;                          // 最大token数
+  double top_p = 7;                              // top_p参数
+  double frequency_penalty = 8;                  // 频率惩罚
+  double presence_penalty = 9;                   // 存在惩罚
+  repeated string stop_sequences = 10;           // 停止序列
+  bool supports_tools = 11;                      // 是否支持工具调用
+  bool supports_vision = 12;                     // 是否支持视觉输入
+  map<string, string> extra_params = 13;        // 额外参数
+  int32 status = 14;                             // 状态 (0:可用, 1:不可用)
+}
+
+// MCP工具定义
+message Tool {
+  string name = 1;                               // 工具名称
+  string description = 2;                        // 工具描述
+  string schema = 3;                             // 参数schema(JSON格式)
+  string mcp_server = 4;                         // MCP服务器标识
+  map<string, string> metadata = 5;             // 工具元数据
+  bool enabled = 6;                              // 是否启用
+}
+
+// 资源定义
+message Resource {
+  string uri = 1;                                // 资源URI
+  string name = 2;                               // 资源名称
+  string description = 3;                        // 资源描述
+  string mime_type = 4;                          // MIME类型
+  string mcp_server = 5;                         // MCP服务器标识
+  map<string, string> metadata = 6;             // 资源元数据
+}
+
+// 知识库定义
+message KnowledgeBase {
+  int64 id = 1;                                  // 知识库ID
+  int64 user_id = 2;                             // 用户ID
+  string name = 3;                               // 知识库名称
+  string description = 4;                        // 知识库描述
+  string embedding_model = 5;                    // 向量化模型
+  int32 chunk_size = 6;                          // 文档分块大小
+  int32 chunk_overlap = 7;                       // 分块重叠大小
+  int32 status = 8;                              // 状态 (0:正常, 1:已删除)
+  google.protobuf.Timestamp created_at = 9;     // 创建时间
+  google.protobuf.Timestamp updated_at = 10;    // 更新时间
+}
+
+// 文档定义
+message Document {
+  int64 id = 1;                                  // 文档ID
+  int64 knowledge_base_id = 2;                   // 知识库ID
+  string name = 3;                               // 文档名称
+  string content = 4;                            // 文档内容
+  string file_path = 5;                          // 文件路径
+  string mime_type = 6;                          // 文件类型
+  int64 file_size = 7;                           // 文件大小
+  int32 chunk_count = 8;                         // 分块数量
+  int32 status = 9;                              // 状态 (0:处理中, 1:完成, 2:失败)
+  google.protobuf.Timestamp created_at = 10;    // 创建时间
+  google.protobuf.Timestamp updated_at = 11;    // 更新时间
+}
+
+// 请求和响应消息定义
+
+// 创建对话
+message CreateConversationRequest {
+  int64 user_id = 1;                             // 用户ID
+  string title = 2;                              // 对话标题
+  string model_name = 3;                         // 使用的模型名称
+  string system_prompt = 4;                      // 系统提示词(可选)
+  map<string, string> config = 5;               // 对话配置参数(可选)
+}
+
+message CreateConversationReply {
+  Conversation conversation = 1;                 // 创建的对话
+}
+
+// 获取对话
+message GetConversationRequest {
+  int64 id = 1;                                  // 对话ID
+}
+
+message GetConversationReply {
+  Conversation conversation = 1;                 // 对话信息
+}
+
+// 更新对话
+message UpdateConversationRequest {
+  int64 id = 1;                                  // 对话ID
+  string title = 2;                              // 对话标题(可选)
+  string system_prompt = 3;                      // 系统提示词(可选)
+  map<string, string> config = 4;               // 对话配置参数(可选)
+}
+
+message UpdateConversationReply {
+  Conversation conversation = 1;                 // 更新后的对话
+}
+
+// 删除对话
+message DeleteConversationRequest {
+  int64 id = 1;                                  // 对话ID
+}
+
+message DeleteConversationReply {}
+
+// 列出对话
+message ListConversationsRequest {
+  int64 user_id = 1;                             // 用户ID
+  int32 page = 2;                                // 页码
+  int32 page_size = 3;                           // 页面大小
+  string keyword = 4;                            // 搜索关键词(可选)
+}
+
+message ListConversationsReply {
+  repeated Conversation conversations = 1;        // 对话列表
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 发送消息
+message SendMessageRequest {
+  int64 conversation_id = 1;                     // 对话ID
+  string content = 2;                            // 消息内容
+  repeated string attachments = 3;               // 附件列表(文件路径或URL)
+  bool enable_tools = 4;                         // 是否启用工具调用
+  repeated string allowed_tools = 5;             // 允许使用的工具列表(空表示所有)
+  map<string, string> options = 6;              // 额外选项
+}
+
+message SendMessageReply {
+  Message user_message = 1;                      // 用户消息
+  Message assistant_message = 2;                 // AI助手回复
+}
+
+// 获取消息列表
+message GetMessagesRequest {
+  int64 conversation_id = 1;                     // 对话ID
+  int32 page = 2;                                // 页码
+  int32 page_size = 3;                           // 页面大小
+  bool include_tool_calls = 4;                   // 是否包含工具调用详情
+}
+
+message GetMessagesReply {
+  repeated Message messages = 1;                 // 消息列表
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 列出可用模型
+message ListModelsRequest {
+  string provider = 1;                           // 提供商过滤(可选)
+  bool only_enabled = 2;                         // 只显示启用的模型
+}
+
+message ListModelsReply {
+  repeated ModelConfig models = 1;               // 模型列表
+}
+
+// 获取模型配置
+message GetModelConfigRequest {
+  string name = 1;                               // 模型名称
+}
+
+message GetModelConfigReply {
+  ModelConfig model = 1;                         // 模型配置
+}
+
+// 更新模型配置
+message UpdateModelConfigRequest {
+  string name = 1;                               // 模型名称
+  ModelConfig config = 2;                        // 新配置
+}
+
+message UpdateModelConfigReply {
+  ModelConfig model = 1;                         // 更新后的配置
+}
+
+// 列出可用工具
+message ListToolsRequest {
+  string mcp_server = 1;                         // MCP服务器过滤(可选)
+  bool only_enabled = 2;                         // 只显示启用的工具
+}
+
+message ListToolsReply {
+  repeated Tool tools = 1;                       // 工具列表
+}
+
+// 调用工具
+message CallToolRequest {
+  string name = 1;                               // 工具名称
+  string arguments = 2;                          // 参数(JSON格式)
+  int64 conversation_id = 3;                     // 对话ID(可选，用于上下文)
+}
+
+message CallToolResponse {
+  string result = 1;                             // 执行结果
+  int32 status = 2;                              // 状态码 (0:成功, 非0:失败)
+  string error_message = 3;                      // 错误信息(如果失败)
+  map<string, string> metadata = 4;             // 执行元数据
+}
+
+// 获取工具Schema
+message GetToolSchemaRequest {
+  string name = 1;                               // 工具名称
+}
+
+message GetToolSchemaReply {
+  Tool tool = 1;                                 // 工具信息和Schema
+}
+
+// 列出资源
+message ListResourcesRequest {
+  string mcp_server = 1;                         // MCP服务器过滤(可选)
+  string mime_type = 2;                          // MIME类型过滤(可选)
+}
+
+message ListResourcesReply {
+  repeated Resource resources = 1;               // 资源列表
+}
+
+// 获取资源
+message GetResourceRequest {
+  string uri = 1;                                // 资源URI
+}
+
+message GetResourceReply {
+  string content = 1;                            // 资源内容
+  string mime_type = 2;                          // MIME类型
+  map<string, string> metadata = 3;             // 资源元数据
+}
+
+// 创建知识库
+message CreateKnowledgeBaseRequest {
+  int64 user_id = 1;                             // 用户ID
+  string name = 2;                               // 知识库名称
+  string description = 3;                        // 知识库描述
+  string embedding_model = 4;                    // 向量化模型(可选)
+  int32 chunk_size = 5;                          // 文档分块大小(可选)
+  int32 chunk_overlap = 6;                       // 分块重叠大小(可选)
+}
+
+message CreateKnowledgeBaseReply {
+  KnowledgeBase knowledge_base = 1;              // 创建的知识库
+}
+
+// 更新知识库
+message UpdateKnowledgeBaseRequest {
+  int64 id = 1;                                  // 知识库ID
+  string name = 2;                               // 知识库名称(可选)
+  string description = 3;                        // 知识库描述(可选)
+  string embedding_model = 4;                    // 向量化模型(可选)
+  int32 chunk_size = 5;                          // 文档分块大小(可选)
+  int32 chunk_overlap = 6;                       // 分块重叠大小(可选)
+}
+
+message UpdateKnowledgeBaseReply {
+  KnowledgeBase knowledge_base = 1;              // 更新后的知识库
+}
+
+// 删除知识库
+message DeleteKnowledgeBaseRequest {
+  int64 id = 1;                                  // 知识库ID
+}
+
+message DeleteKnowledgeBaseReply {}
+
+// 列出知识库
+message ListKnowledgeBasesRequest {
+  int64 user_id = 1;                             // 用户ID
+  int32 page = 2;                                // 页码
+  int32 page_size = 3;                           // 页面大小
+  string keyword = 4;                            // 搜索关键词(可选)
+}
+
+message ListKnowledgeBasesReply {
+  repeated KnowledgeBase knowledge_bases = 1;    // 知识库列表
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 上传文档
+message UploadDocumentRequest {
+  int64 knowledge_base_id = 1;                   // 知识库ID
+  string name = 2;                               // 文档名称
+  bytes content = 3;                             // 文档内容
+  string mime_type = 4;                          // 文件类型
+}
+
+message UploadDocumentReply {
+  Document document = 1;                         // 上传的文档
+}
+
+// 搜索知识
+message SearchKnowledgeRequest {
+  int64 knowledge_base_id = 1;                   // 知识库ID
+  string query = 2;                              // 搜索查询
+  int32 limit = 3;                               // 返回结果数量限制
+  double threshold = 4;                          // 相似度阈值
+}
+
+message SearchKnowledgeReply {
+  repeated KnowledgeChunk chunks = 1;            // 搜索结果
+}
+
+// 知识库块
+message KnowledgeChunk {
+  int64 id = 1;                                  // 块ID
+  int64 document_id = 2;                         // 文档ID
+  string content = 3;                            // 块内容
+  double score = 4;                              // 相似度分数
+  map<string, string> metadata = 5;             // 块元数据
+}

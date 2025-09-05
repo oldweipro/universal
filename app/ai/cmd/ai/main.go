@@ -5,7 +5,7 @@ import (
 	"os"
 	"universal/pkg/idgen"
 
-	"universal/app/user/internal/conf"
+	"universal/app/ai/internal/conf"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -22,9 +22,9 @@ import (
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name = "universal.user.service"
+	Name = "universal.ai.service"
 	// Version is the version of the compiled software.
-	Version = "v1.0.0"
+	Version = "0.0.1"
 	// flagconf is the config flag.
 	flagconf string
 

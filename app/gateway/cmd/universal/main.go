@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"universal/app/gateway/internal/conf"
+	"universal/pkg/idgen"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -27,16 +27,11 @@ var (
 	// flagconf is the config flag.
 	flagconf string
 
-	id = generateServiceID()
+	id = idgen.GenerateServiceID(Name)
 )
 
 func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
-}
-
-func generateServiceID() string {
-	hostname, _ := os.Hostname()
-	return fmt.Sprintf("%s-%s-%d", hostname, Name, os.Getpid())
 }
 
 func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, r registry.Registrar) *kratos.App {
