@@ -26,9 +26,6 @@ const (
 	Ai_ListConversations_FullMethodName   = "/api.ai.v1.Ai/ListConversations"
 	Ai_SendMessage_FullMethodName         = "/api.ai.v1.Ai/SendMessage"
 	Ai_GetMessages_FullMethodName         = "/api.ai.v1.Ai/GetMessages"
-	Ai_ListModels_FullMethodName          = "/api.ai.v1.Ai/ListModels"
-	Ai_GetModelConfig_FullMethodName      = "/api.ai.v1.Ai/GetModelConfig"
-	Ai_UpdateModelConfig_FullMethodName   = "/api.ai.v1.Ai/UpdateModelConfig"
 	Ai_ListTools_FullMethodName           = "/api.ai.v1.Ai/ListTools"
 	Ai_CallTool_FullMethodName            = "/api.ai.v1.Ai/CallTool"
 	Ai_GetToolSchema_FullMethodName       = "/api.ai.v1.Ai/GetToolSchema"
@@ -69,15 +66,6 @@ type AiClient interface {
 	// GetMessages 获取对话的消息历史
 	// 支持分页查询，可选择是否包含工具调用详情
 	GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (*GetMessagesReply, error)
-	// ListModels 获取可用的AI模型列表
-	// 支持按提供商过滤，可选择只显示启用的模型
-	ListModels(ctx context.Context, in *ListModelsRequest, opts ...grpc.CallOption) (*ListModelsReply, error)
-	// GetModelConfig 获取指定模型的配置信息
-	// 返回模型的详细配置，包括API密钥、参数设置等
-	GetModelConfig(ctx context.Context, in *GetModelConfigRequest, opts ...grpc.CallOption) (*GetModelConfigReply, error)
-	// UpdateModelConfig 更新模型的配置
-	// 修改模型的API密钥、参数设置、启用状态等
-	UpdateModelConfig(ctx context.Context, in *UpdateModelConfigRequest, opts ...grpc.CallOption) (*UpdateModelConfigReply, error)
 	// ListTools 获取可用的MCP工具列表
 	// 支持按MCP服务器过滤，可选择只显示启用的工具
 	ListTools(ctx context.Context, in *ListToolsRequest, opts ...grpc.CallOption) (*ListToolsReply, error)
@@ -185,36 +173,6 @@ func (c *aiClient) GetMessages(ctx context.Context, in *GetMessagesRequest, opts
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetMessagesReply)
 	err := c.cc.Invoke(ctx, Ai_GetMessages_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) ListModels(ctx context.Context, in *ListModelsRequest, opts ...grpc.CallOption) (*ListModelsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListModelsReply)
-	err := c.cc.Invoke(ctx, Ai_ListModels_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) GetModelConfig(ctx context.Context, in *GetModelConfigRequest, opts ...grpc.CallOption) (*GetModelConfigReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetModelConfigReply)
-	err := c.cc.Invoke(ctx, Ai_GetModelConfig_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *aiClient) UpdateModelConfig(ctx context.Context, in *UpdateModelConfigRequest, opts ...grpc.CallOption) (*UpdateModelConfigReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateModelConfigReply)
-	err := c.cc.Invoke(ctx, Ai_UpdateModelConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -358,15 +316,6 @@ type AiServer interface {
 	// GetMessages 获取对话的消息历史
 	// 支持分页查询，可选择是否包含工具调用详情
 	GetMessages(context.Context, *GetMessagesRequest) (*GetMessagesReply, error)
-	// ListModels 获取可用的AI模型列表
-	// 支持按提供商过滤，可选择只显示启用的模型
-	ListModels(context.Context, *ListModelsRequest) (*ListModelsReply, error)
-	// GetModelConfig 获取指定模型的配置信息
-	// 返回模型的详细配置，包括API密钥、参数设置等
-	GetModelConfig(context.Context, *GetModelConfigRequest) (*GetModelConfigReply, error)
-	// UpdateModelConfig 更新模型的配置
-	// 修改模型的API密钥、参数设置、启用状态等
-	UpdateModelConfig(context.Context, *UpdateModelConfigRequest) (*UpdateModelConfigReply, error)
 	// ListTools 获取可用的MCP工具列表
 	// 支持按MCP服务器过滤，可选择只显示启用的工具
 	ListTools(context.Context, *ListToolsRequest) (*ListToolsReply, error)
@@ -430,15 +379,6 @@ func (UnimplementedAiServer) SendMessage(context.Context, *SendMessageRequest) (
 }
 func (UnimplementedAiServer) GetMessages(context.Context, *GetMessagesRequest) (*GetMessagesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
-}
-func (UnimplementedAiServer) ListModels(context.Context, *ListModelsRequest) (*ListModelsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListModels not implemented")
-}
-func (UnimplementedAiServer) GetModelConfig(context.Context, *GetModelConfigRequest) (*GetModelConfigReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetModelConfig not implemented")
-}
-func (UnimplementedAiServer) UpdateModelConfig(context.Context, *UpdateModelConfigRequest) (*UpdateModelConfigReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateModelConfig not implemented")
 }
 func (UnimplementedAiServer) ListTools(context.Context, *ListToolsRequest) (*ListToolsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTools not implemented")
@@ -616,60 +556,6 @@ func _Ai_GetMessages_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AiServer).GetMessages(ctx, req.(*GetMessagesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_ListModels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListModelsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).ListModels(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_ListModels_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).ListModels(ctx, req.(*ListModelsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_GetModelConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetModelConfigRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).GetModelConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_GetModelConfig_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).GetModelConfig(ctx, req.(*GetModelConfigRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Ai_UpdateModelConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateModelConfigRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AiServer).UpdateModelConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Ai_UpdateModelConfig_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AiServer).UpdateModelConfig(ctx, req.(*UpdateModelConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -906,18 +792,6 @@ var Ai_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMessages",
 			Handler:    _Ai_GetMessages_Handler,
-		},
-		{
-			MethodName: "ListModels",
-			Handler:    _Ai_ListModels_Handler,
-		},
-		{
-			MethodName: "GetModelConfig",
-			Handler:    _Ai_GetModelConfig_Handler,
-		},
-		{
-			MethodName: "UpdateModelConfig",
-			Handler:    _Ai_UpdateModelConfig_Handler,
 		},
 		{
 			MethodName: "ListTools",

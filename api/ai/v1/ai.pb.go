@@ -1693,289 +1693,6 @@ func (x *GetMessagesReply) GetPageSize() int32 {
 	return 0
 }
 
-// 列出可用模型
-type ListModelsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Provider      string                 `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`                           // 提供商过滤(可选)
-	OnlyEnabled   bool                   `protobuf:"varint,2,opt,name=only_enabled,json=onlyEnabled,proto3" json:"only_enabled,omitempty"` // 只显示启用的模型
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListModelsRequest) Reset() {
-	*x = ListModelsRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[22]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListModelsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListModelsRequest) ProtoMessage() {}
-
-func (x *ListModelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[22]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListModelsRequest.ProtoReflect.Descriptor instead.
-func (*ListModelsRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *ListModelsRequest) GetProvider() string {
-	if x != nil {
-		return x.Provider
-	}
-	return ""
-}
-
-func (x *ListModelsRequest) GetOnlyEnabled() bool {
-	if x != nil {
-		return x.OnlyEnabled
-	}
-	return false
-}
-
-type ListModelsReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Models        []*ModelConfig         `protobuf:"bytes,1,rep,name=models,proto3" json:"models,omitempty"` // 模型列表
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListModelsReply) Reset() {
-	*x = ListModelsReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[23]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListModelsReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListModelsReply) ProtoMessage() {}
-
-func (x *ListModelsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[23]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListModelsReply.ProtoReflect.Descriptor instead.
-func (*ListModelsReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{23}
-}
-
-func (x *ListModelsReply) GetModels() []*ModelConfig {
-	if x != nil {
-		return x.Models
-	}
-	return nil
-}
-
-// 获取模型配置
-type GetModelConfigRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // 模型名称
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetModelConfigRequest) Reset() {
-	*x = GetModelConfigRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[24]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetModelConfigRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetModelConfigRequest) ProtoMessage() {}
-
-func (x *GetModelConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[24]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetModelConfigRequest.ProtoReflect.Descriptor instead.
-func (*GetModelConfigRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{24}
-}
-
-func (x *GetModelConfigRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-type GetModelConfigReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Model         *ModelConfig           `protobuf:"bytes,1,opt,name=model,proto3" json:"model,omitempty"` // 模型配置
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetModelConfigReply) Reset() {
-	*x = GetModelConfigReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetModelConfigReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetModelConfigReply) ProtoMessage() {}
-
-func (x *GetModelConfigReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetModelConfigReply.ProtoReflect.Descriptor instead.
-func (*GetModelConfigReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *GetModelConfigReply) GetModel() *ModelConfig {
-	if x != nil {
-		return x.Model
-	}
-	return nil
-}
-
-// 更新模型配置
-type UpdateModelConfigRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`     // 模型名称
-	Config        *ModelConfig           `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"` // 新配置
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateModelConfigRequest) Reset() {
-	*x = UpdateModelConfigRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[26]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateModelConfigRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateModelConfigRequest) ProtoMessage() {}
-
-func (x *UpdateModelConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[26]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateModelConfigRequest.ProtoReflect.Descriptor instead.
-func (*UpdateModelConfigRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{26}
-}
-
-func (x *UpdateModelConfigRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *UpdateModelConfigRequest) GetConfig() *ModelConfig {
-	if x != nil {
-		return x.Config
-	}
-	return nil
-}
-
-type UpdateModelConfigReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Model         *ModelConfig           `protobuf:"bytes,1,opt,name=model,proto3" json:"model,omitempty"` // 更新后的配置
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateModelConfigReply) Reset() {
-	*x = UpdateModelConfigReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[27]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateModelConfigReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateModelConfigReply) ProtoMessage() {}
-
-func (x *UpdateModelConfigReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[27]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateModelConfigReply.ProtoReflect.Descriptor instead.
-func (*UpdateModelConfigReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{27}
-}
-
-func (x *UpdateModelConfigReply) GetModel() *ModelConfig {
-	if x != nil {
-		return x.Model
-	}
-	return nil
-}
-
 // 列出可用工具
 type ListToolsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1987,7 +1704,7 @@ type ListToolsRequest struct {
 
 func (x *ListToolsRequest) Reset() {
 	*x = ListToolsRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[28]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1999,7 +1716,7 @@ func (x *ListToolsRequest) String() string {
 func (*ListToolsRequest) ProtoMessage() {}
 
 func (x *ListToolsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[28]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2012,7 +1729,7 @@ func (x *ListToolsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListToolsRequest.ProtoReflect.Descriptor instead.
 func (*ListToolsRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{28}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *ListToolsRequest) GetMcpServer() string {
@@ -2038,7 +1755,7 @@ type ListToolsReply struct {
 
 func (x *ListToolsReply) Reset() {
 	*x = ListToolsReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[29]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2050,7 +1767,7 @@ func (x *ListToolsReply) String() string {
 func (*ListToolsReply) ProtoMessage() {}
 
 func (x *ListToolsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[29]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2063,7 +1780,7 @@ func (x *ListToolsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListToolsReply.ProtoReflect.Descriptor instead.
 func (*ListToolsReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{29}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ListToolsReply) GetTools() []*Tool {
@@ -2085,7 +1802,7 @@ type CallToolRequest struct {
 
 func (x *CallToolRequest) Reset() {
 	*x = CallToolRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[30]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2097,7 +1814,7 @@ func (x *CallToolRequest) String() string {
 func (*CallToolRequest) ProtoMessage() {}
 
 func (x *CallToolRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[30]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2110,7 +1827,7 @@ func (x *CallToolRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CallToolRequest.ProtoReflect.Descriptor instead.
 func (*CallToolRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{30}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *CallToolRequest) GetName() string {
@@ -2146,7 +1863,7 @@ type CallToolResponse struct {
 
 func (x *CallToolResponse) Reset() {
 	*x = CallToolResponse{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[31]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2158,7 +1875,7 @@ func (x *CallToolResponse) String() string {
 func (*CallToolResponse) ProtoMessage() {}
 
 func (x *CallToolResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[31]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2171,7 +1888,7 @@ func (x *CallToolResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CallToolResponse.ProtoReflect.Descriptor instead.
 func (*CallToolResponse) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{31}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *CallToolResponse) GetResult() string {
@@ -2212,7 +1929,7 @@ type GetToolSchemaRequest struct {
 
 func (x *GetToolSchemaRequest) Reset() {
 	*x = GetToolSchemaRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[32]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2224,7 +1941,7 @@ func (x *GetToolSchemaRequest) String() string {
 func (*GetToolSchemaRequest) ProtoMessage() {}
 
 func (x *GetToolSchemaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[32]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2237,7 +1954,7 @@ func (x *GetToolSchemaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetToolSchemaRequest.ProtoReflect.Descriptor instead.
 func (*GetToolSchemaRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{32}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *GetToolSchemaRequest) GetName() string {
@@ -2256,7 +1973,7 @@ type GetToolSchemaReply struct {
 
 func (x *GetToolSchemaReply) Reset() {
 	*x = GetToolSchemaReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[33]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2268,7 +1985,7 @@ func (x *GetToolSchemaReply) String() string {
 func (*GetToolSchemaReply) ProtoMessage() {}
 
 func (x *GetToolSchemaReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[33]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2281,7 +1998,7 @@ func (x *GetToolSchemaReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetToolSchemaReply.ProtoReflect.Descriptor instead.
 func (*GetToolSchemaReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{33}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *GetToolSchemaReply) GetTool() *Tool {
@@ -2302,7 +2019,7 @@ type ListResourcesRequest struct {
 
 func (x *ListResourcesRequest) Reset() {
 	*x = ListResourcesRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[34]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2314,7 +2031,7 @@ func (x *ListResourcesRequest) String() string {
 func (*ListResourcesRequest) ProtoMessage() {}
 
 func (x *ListResourcesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[34]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2327,7 +2044,7 @@ func (x *ListResourcesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListResourcesRequest.ProtoReflect.Descriptor instead.
 func (*ListResourcesRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{34}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *ListResourcesRequest) GetMcpServer() string {
@@ -2353,7 +2070,7 @@ type ListResourcesReply struct {
 
 func (x *ListResourcesReply) Reset() {
 	*x = ListResourcesReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[35]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2365,7 +2082,7 @@ func (x *ListResourcesReply) String() string {
 func (*ListResourcesReply) ProtoMessage() {}
 
 func (x *ListResourcesReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[35]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2378,7 +2095,7 @@ func (x *ListResourcesReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListResourcesReply.ProtoReflect.Descriptor instead.
 func (*ListResourcesReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{35}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *ListResourcesReply) GetResources() []*Resource {
@@ -2398,7 +2115,7 @@ type GetResourceRequest struct {
 
 func (x *GetResourceRequest) Reset() {
 	*x = GetResourceRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[36]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2410,7 +2127,7 @@ func (x *GetResourceRequest) String() string {
 func (*GetResourceRequest) ProtoMessage() {}
 
 func (x *GetResourceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[36]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2423,7 +2140,7 @@ func (x *GetResourceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResourceRequest.ProtoReflect.Descriptor instead.
 func (*GetResourceRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{36}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *GetResourceRequest) GetUri() string {
@@ -2444,7 +2161,7 @@ type GetResourceReply struct {
 
 func (x *GetResourceReply) Reset() {
 	*x = GetResourceReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[37]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2456,7 +2173,7 @@ func (x *GetResourceReply) String() string {
 func (*GetResourceReply) ProtoMessage() {}
 
 func (x *GetResourceReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[37]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2469,7 +2186,7 @@ func (x *GetResourceReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResourceReply.ProtoReflect.Descriptor instead.
 func (*GetResourceReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{37}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *GetResourceReply) GetContent() string {
@@ -2508,7 +2225,7 @@ type CreateKnowledgeBaseRequest struct {
 
 func (x *CreateKnowledgeBaseRequest) Reset() {
 	*x = CreateKnowledgeBaseRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[38]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2520,7 +2237,7 @@ func (x *CreateKnowledgeBaseRequest) String() string {
 func (*CreateKnowledgeBaseRequest) ProtoMessage() {}
 
 func (x *CreateKnowledgeBaseRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[38]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2533,7 +2250,7 @@ func (x *CreateKnowledgeBaseRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateKnowledgeBaseRequest.ProtoReflect.Descriptor instead.
 func (*CreateKnowledgeBaseRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{38}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *CreateKnowledgeBaseRequest) GetUserId() int64 {
@@ -2587,7 +2304,7 @@ type CreateKnowledgeBaseReply struct {
 
 func (x *CreateKnowledgeBaseReply) Reset() {
 	*x = CreateKnowledgeBaseReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[39]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2599,7 +2316,7 @@ func (x *CreateKnowledgeBaseReply) String() string {
 func (*CreateKnowledgeBaseReply) ProtoMessage() {}
 
 func (x *CreateKnowledgeBaseReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[39]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2612,7 +2329,7 @@ func (x *CreateKnowledgeBaseReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateKnowledgeBaseReply.ProtoReflect.Descriptor instead.
 func (*CreateKnowledgeBaseReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{39}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *CreateKnowledgeBaseReply) GetKnowledgeBase() *KnowledgeBase {
@@ -2637,7 +2354,7 @@ type UpdateKnowledgeBaseRequest struct {
 
 func (x *UpdateKnowledgeBaseRequest) Reset() {
 	*x = UpdateKnowledgeBaseRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[40]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2649,7 +2366,7 @@ func (x *UpdateKnowledgeBaseRequest) String() string {
 func (*UpdateKnowledgeBaseRequest) ProtoMessage() {}
 
 func (x *UpdateKnowledgeBaseRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[40]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2662,7 +2379,7 @@ func (x *UpdateKnowledgeBaseRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateKnowledgeBaseRequest.ProtoReflect.Descriptor instead.
 func (*UpdateKnowledgeBaseRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{40}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *UpdateKnowledgeBaseRequest) GetId() int64 {
@@ -2716,7 +2433,7 @@ type UpdateKnowledgeBaseReply struct {
 
 func (x *UpdateKnowledgeBaseReply) Reset() {
 	*x = UpdateKnowledgeBaseReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[41]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2728,7 +2445,7 @@ func (x *UpdateKnowledgeBaseReply) String() string {
 func (*UpdateKnowledgeBaseReply) ProtoMessage() {}
 
 func (x *UpdateKnowledgeBaseReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[41]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2741,7 +2458,7 @@ func (x *UpdateKnowledgeBaseReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateKnowledgeBaseReply.ProtoReflect.Descriptor instead.
 func (*UpdateKnowledgeBaseReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{41}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *UpdateKnowledgeBaseReply) GetKnowledgeBase() *KnowledgeBase {
@@ -2761,7 +2478,7 @@ type DeleteKnowledgeBaseRequest struct {
 
 func (x *DeleteKnowledgeBaseRequest) Reset() {
 	*x = DeleteKnowledgeBaseRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[42]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2773,7 +2490,7 @@ func (x *DeleteKnowledgeBaseRequest) String() string {
 func (*DeleteKnowledgeBaseRequest) ProtoMessage() {}
 
 func (x *DeleteKnowledgeBaseRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[42]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2786,7 +2503,7 @@ func (x *DeleteKnowledgeBaseRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteKnowledgeBaseRequest.ProtoReflect.Descriptor instead.
 func (*DeleteKnowledgeBaseRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{42}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *DeleteKnowledgeBaseRequest) GetId() int64 {
@@ -2804,7 +2521,7 @@ type DeleteKnowledgeBaseReply struct {
 
 func (x *DeleteKnowledgeBaseReply) Reset() {
 	*x = DeleteKnowledgeBaseReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[43]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2816,7 +2533,7 @@ func (x *DeleteKnowledgeBaseReply) String() string {
 func (*DeleteKnowledgeBaseReply) ProtoMessage() {}
 
 func (x *DeleteKnowledgeBaseReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[43]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2829,7 +2546,7 @@ func (x *DeleteKnowledgeBaseReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteKnowledgeBaseReply.ProtoReflect.Descriptor instead.
 func (*DeleteKnowledgeBaseReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{43}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{37}
 }
 
 // 列出知识库
@@ -2845,7 +2562,7 @@ type ListKnowledgeBasesRequest struct {
 
 func (x *ListKnowledgeBasesRequest) Reset() {
 	*x = ListKnowledgeBasesRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[44]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2857,7 +2574,7 @@ func (x *ListKnowledgeBasesRequest) String() string {
 func (*ListKnowledgeBasesRequest) ProtoMessage() {}
 
 func (x *ListKnowledgeBasesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[44]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2870,7 +2587,7 @@ func (x *ListKnowledgeBasesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListKnowledgeBasesRequest.ProtoReflect.Descriptor instead.
 func (*ListKnowledgeBasesRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{44}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ListKnowledgeBasesRequest) GetUserId() int64 {
@@ -2913,7 +2630,7 @@ type ListKnowledgeBasesReply struct {
 
 func (x *ListKnowledgeBasesReply) Reset() {
 	*x = ListKnowledgeBasesReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[45]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2925,7 +2642,7 @@ func (x *ListKnowledgeBasesReply) String() string {
 func (*ListKnowledgeBasesReply) ProtoMessage() {}
 
 func (x *ListKnowledgeBasesReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[45]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2938,7 +2655,7 @@ func (x *ListKnowledgeBasesReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListKnowledgeBasesReply.ProtoReflect.Descriptor instead.
 func (*ListKnowledgeBasesReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{45}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *ListKnowledgeBasesReply) GetKnowledgeBases() []*KnowledgeBase {
@@ -2982,7 +2699,7 @@ type UploadDocumentRequest struct {
 
 func (x *UploadDocumentRequest) Reset() {
 	*x = UploadDocumentRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[46]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2994,7 +2711,7 @@ func (x *UploadDocumentRequest) String() string {
 func (*UploadDocumentRequest) ProtoMessage() {}
 
 func (x *UploadDocumentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[46]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3007,7 +2724,7 @@ func (x *UploadDocumentRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadDocumentRequest.ProtoReflect.Descriptor instead.
 func (*UploadDocumentRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{46}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *UploadDocumentRequest) GetKnowledgeBaseId() int64 {
@@ -3047,7 +2764,7 @@ type UploadDocumentReply struct {
 
 func (x *UploadDocumentReply) Reset() {
 	*x = UploadDocumentReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[47]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3059,7 +2776,7 @@ func (x *UploadDocumentReply) String() string {
 func (*UploadDocumentReply) ProtoMessage() {}
 
 func (x *UploadDocumentReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[47]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3072,7 +2789,7 @@ func (x *UploadDocumentReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadDocumentReply.ProtoReflect.Descriptor instead.
 func (*UploadDocumentReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{47}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *UploadDocumentReply) GetDocument() *Document {
@@ -3095,7 +2812,7 @@ type SearchKnowledgeRequest struct {
 
 func (x *SearchKnowledgeRequest) Reset() {
 	*x = SearchKnowledgeRequest{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[48]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3107,7 +2824,7 @@ func (x *SearchKnowledgeRequest) String() string {
 func (*SearchKnowledgeRequest) ProtoMessage() {}
 
 func (x *SearchKnowledgeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[48]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3120,7 +2837,7 @@ func (x *SearchKnowledgeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchKnowledgeRequest.ProtoReflect.Descriptor instead.
 func (*SearchKnowledgeRequest) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{48}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *SearchKnowledgeRequest) GetKnowledgeBaseId() int64 {
@@ -3160,7 +2877,7 @@ type SearchKnowledgeReply struct {
 
 func (x *SearchKnowledgeReply) Reset() {
 	*x = SearchKnowledgeReply{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[49]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3172,7 +2889,7 @@ func (x *SearchKnowledgeReply) String() string {
 func (*SearchKnowledgeReply) ProtoMessage() {}
 
 func (x *SearchKnowledgeReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[49]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3185,7 +2902,7 @@ func (x *SearchKnowledgeReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchKnowledgeReply.ProtoReflect.Descriptor instead.
 func (*SearchKnowledgeReply) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{49}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *SearchKnowledgeReply) GetChunks() []*KnowledgeChunk {
@@ -3209,7 +2926,7 @@ type KnowledgeChunk struct {
 
 func (x *KnowledgeChunk) Reset() {
 	*x = KnowledgeChunk{}
-	mi := &file_api_ai_v1_ai_proto_msgTypes[50]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3221,7 +2938,7 @@ func (x *KnowledgeChunk) String() string {
 func (*KnowledgeChunk) ProtoMessage() {}
 
 func (x *KnowledgeChunk) ProtoReflect() protoreflect.Message {
-	mi := &file_api_ai_v1_ai_proto_msgTypes[50]
+	mi := &file_api_ai_v1_ai_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3234,7 +2951,7 @@ func (x *KnowledgeChunk) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use KnowledgeChunk.ProtoReflect.Descriptor instead.
 func (*KnowledgeChunk) Descriptor() ([]byte, []int) {
-	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{50}
+	return file_api_ai_v1_ai_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *KnowledgeChunk) GetId() int64 {
@@ -3449,21 +3166,7 @@ const file_api_ai_v1_ai_proto_rawDesc = "" +
 	"\bmessages\x18\x01 \x03(\v2\x12.api.ai.v1.MessageR\bmessages\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x12\n" +
 	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"R\n" +
-	"\x11ListModelsRequest\x12\x1a\n" +
-	"\bprovider\x18\x01 \x01(\tR\bprovider\x12!\n" +
-	"\fonly_enabled\x18\x02 \x01(\bR\vonlyEnabled\"A\n" +
-	"\x0fListModelsReply\x12.\n" +
-	"\x06models\x18\x01 \x03(\v2\x16.api.ai.v1.ModelConfigR\x06models\"+\n" +
-	"\x15GetModelConfigRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"C\n" +
-	"\x13GetModelConfigReply\x12,\n" +
-	"\x05model\x18\x01 \x01(\v2\x16.api.ai.v1.ModelConfigR\x05model\"^\n" +
-	"\x18UpdateModelConfigRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12.\n" +
-	"\x06config\x18\x02 \x01(\v2\x16.api.ai.v1.ModelConfigR\x06config\"F\n" +
-	"\x16UpdateModelConfigReply\x12,\n" +
-	"\x05model\x18\x01 \x01(\v2\x16.api.ai.v1.ModelConfigR\x05model\"T\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"T\n" +
 	"\x10ListToolsRequest\x12\x1d\n" +
 	"\n" +
 	"mcp_server\x18\x01 \x01(\tR\tmcpServer\x12!\n" +
@@ -3557,7 +3260,7 @@ const file_api_ai_v1_ai_proto_rawDesc = "" +
 	"\bmetadata\x18\x05 \x03(\v2'.api.ai.v1.KnowledgeChunk.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x012\x92\x0e\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x012\x99\f\n" +
 	"\x02Ai\x12^\n" +
 	"\x12CreateConversation\x12$.api.ai.v1.CreateConversationRequest\x1a\".api.ai.v1.CreateConversationReply\x12U\n" +
 	"\x0fGetConversation\x12!.api.ai.v1.GetConversationRequest\x1a\x1f.api.ai.v1.GetConversationReply\x12^\n" +
@@ -3565,11 +3268,7 @@ const file_api_ai_v1_ai_proto_rawDesc = "" +
 	"\x12DeleteConversation\x12$.api.ai.v1.DeleteConversationRequest\x1a\".api.ai.v1.DeleteConversationReply\x12[\n" +
 	"\x11ListConversations\x12#.api.ai.v1.ListConversationsRequest\x1a!.api.ai.v1.ListConversationsReply\x12I\n" +
 	"\vSendMessage\x12\x1d.api.ai.v1.SendMessageRequest\x1a\x1b.api.ai.v1.SendMessageReply\x12I\n" +
-	"\vGetMessages\x12\x1d.api.ai.v1.GetMessagesRequest\x1a\x1b.api.ai.v1.GetMessagesReply\x12F\n" +
-	"\n" +
-	"ListModels\x12\x1c.api.ai.v1.ListModelsRequest\x1a\x1a.api.ai.v1.ListModelsReply\x12R\n" +
-	"\x0eGetModelConfig\x12 .api.ai.v1.GetModelConfigRequest\x1a\x1e.api.ai.v1.GetModelConfigReply\x12[\n" +
-	"\x11UpdateModelConfig\x12#.api.ai.v1.UpdateModelConfigRequest\x1a!.api.ai.v1.UpdateModelConfigReply\x12C\n" +
+	"\vGetMessages\x12\x1d.api.ai.v1.GetMessagesRequest\x1a\x1b.api.ai.v1.GetMessagesReply\x12C\n" +
 	"\tListTools\x12\x1b.api.ai.v1.ListToolsRequest\x1a\x19.api.ai.v1.ListToolsReply\x12C\n" +
 	"\bCallTool\x12\x1a.api.ai.v1.CallToolRequest\x1a\x1b.api.ai.v1.CallToolResponse\x12O\n" +
 	"\rGetToolSchema\x12\x1f.api.ai.v1.GetToolSchemaRequest\x1a\x1d.api.ai.v1.GetToolSchemaReply\x12O\n" +
@@ -3595,7 +3294,7 @@ func file_api_ai_v1_ai_proto_rawDescGZIP() []byte {
 	return file_api_ai_v1_ai_proto_rawDescData
 }
 
-var file_api_ai_v1_ai_proto_msgTypes = make([]protoimpl.MessageInfo, 62)
+var file_api_ai_v1_ai_proto_msgTypes = make([]protoimpl.MessageInfo, 56)
 var file_api_ai_v1_ai_proto_goTypes = []any{
 	(*Conversation)(nil),               // 0: api.ai.v1.Conversation
 	(*Message)(nil),                    // 1: api.ai.v1.Message
@@ -3619,135 +3318,119 @@ var file_api_ai_v1_ai_proto_goTypes = []any{
 	(*SendMessageReply)(nil),           // 19: api.ai.v1.SendMessageReply
 	(*GetMessagesRequest)(nil),         // 20: api.ai.v1.GetMessagesRequest
 	(*GetMessagesReply)(nil),           // 21: api.ai.v1.GetMessagesReply
-	(*ListModelsRequest)(nil),          // 22: api.ai.v1.ListModelsRequest
-	(*ListModelsReply)(nil),            // 23: api.ai.v1.ListModelsReply
-	(*GetModelConfigRequest)(nil),      // 24: api.ai.v1.GetModelConfigRequest
-	(*GetModelConfigReply)(nil),        // 25: api.ai.v1.GetModelConfigReply
-	(*UpdateModelConfigRequest)(nil),   // 26: api.ai.v1.UpdateModelConfigRequest
-	(*UpdateModelConfigReply)(nil),     // 27: api.ai.v1.UpdateModelConfigReply
-	(*ListToolsRequest)(nil),           // 28: api.ai.v1.ListToolsRequest
-	(*ListToolsReply)(nil),             // 29: api.ai.v1.ListToolsReply
-	(*CallToolRequest)(nil),            // 30: api.ai.v1.CallToolRequest
-	(*CallToolResponse)(nil),           // 31: api.ai.v1.CallToolResponse
-	(*GetToolSchemaRequest)(nil),       // 32: api.ai.v1.GetToolSchemaRequest
-	(*GetToolSchemaReply)(nil),         // 33: api.ai.v1.GetToolSchemaReply
-	(*ListResourcesRequest)(nil),       // 34: api.ai.v1.ListResourcesRequest
-	(*ListResourcesReply)(nil),         // 35: api.ai.v1.ListResourcesReply
-	(*GetResourceRequest)(nil),         // 36: api.ai.v1.GetResourceRequest
-	(*GetResourceReply)(nil),           // 37: api.ai.v1.GetResourceReply
-	(*CreateKnowledgeBaseRequest)(nil), // 38: api.ai.v1.CreateKnowledgeBaseRequest
-	(*CreateKnowledgeBaseReply)(nil),   // 39: api.ai.v1.CreateKnowledgeBaseReply
-	(*UpdateKnowledgeBaseRequest)(nil), // 40: api.ai.v1.UpdateKnowledgeBaseRequest
-	(*UpdateKnowledgeBaseReply)(nil),   // 41: api.ai.v1.UpdateKnowledgeBaseReply
-	(*DeleteKnowledgeBaseRequest)(nil), // 42: api.ai.v1.DeleteKnowledgeBaseRequest
-	(*DeleteKnowledgeBaseReply)(nil),   // 43: api.ai.v1.DeleteKnowledgeBaseReply
-	(*ListKnowledgeBasesRequest)(nil),  // 44: api.ai.v1.ListKnowledgeBasesRequest
-	(*ListKnowledgeBasesReply)(nil),    // 45: api.ai.v1.ListKnowledgeBasesReply
-	(*UploadDocumentRequest)(nil),      // 46: api.ai.v1.UploadDocumentRequest
-	(*UploadDocumentReply)(nil),        // 47: api.ai.v1.UploadDocumentReply
-	(*SearchKnowledgeRequest)(nil),     // 48: api.ai.v1.SearchKnowledgeRequest
-	(*SearchKnowledgeReply)(nil),       // 49: api.ai.v1.SearchKnowledgeReply
-	(*KnowledgeChunk)(nil),             // 50: api.ai.v1.KnowledgeChunk
-	nil,                                // 51: api.ai.v1.Conversation.ConfigEntry
-	nil,                                // 52: api.ai.v1.Message.MetadataEntry
-	nil,                                // 53: api.ai.v1.ModelConfig.ExtraParamsEntry
-	nil,                                // 54: api.ai.v1.Tool.MetadataEntry
-	nil,                                // 55: api.ai.v1.Resource.MetadataEntry
-	nil,                                // 56: api.ai.v1.CreateConversationRequest.ConfigEntry
-	nil,                                // 57: api.ai.v1.UpdateConversationRequest.ConfigEntry
-	nil,                                // 58: api.ai.v1.SendMessageRequest.OptionsEntry
-	nil,                                // 59: api.ai.v1.CallToolResponse.MetadataEntry
-	nil,                                // 60: api.ai.v1.GetResourceReply.MetadataEntry
-	nil,                                // 61: api.ai.v1.KnowledgeChunk.MetadataEntry
-	(*timestamppb.Timestamp)(nil),      // 62: google.protobuf.Timestamp
+	(*ListToolsRequest)(nil),           // 22: api.ai.v1.ListToolsRequest
+	(*ListToolsReply)(nil),             // 23: api.ai.v1.ListToolsReply
+	(*CallToolRequest)(nil),            // 24: api.ai.v1.CallToolRequest
+	(*CallToolResponse)(nil),           // 25: api.ai.v1.CallToolResponse
+	(*GetToolSchemaRequest)(nil),       // 26: api.ai.v1.GetToolSchemaRequest
+	(*GetToolSchemaReply)(nil),         // 27: api.ai.v1.GetToolSchemaReply
+	(*ListResourcesRequest)(nil),       // 28: api.ai.v1.ListResourcesRequest
+	(*ListResourcesReply)(nil),         // 29: api.ai.v1.ListResourcesReply
+	(*GetResourceRequest)(nil),         // 30: api.ai.v1.GetResourceRequest
+	(*GetResourceReply)(nil),           // 31: api.ai.v1.GetResourceReply
+	(*CreateKnowledgeBaseRequest)(nil), // 32: api.ai.v1.CreateKnowledgeBaseRequest
+	(*CreateKnowledgeBaseReply)(nil),   // 33: api.ai.v1.CreateKnowledgeBaseReply
+	(*UpdateKnowledgeBaseRequest)(nil), // 34: api.ai.v1.UpdateKnowledgeBaseRequest
+	(*UpdateKnowledgeBaseReply)(nil),   // 35: api.ai.v1.UpdateKnowledgeBaseReply
+	(*DeleteKnowledgeBaseRequest)(nil), // 36: api.ai.v1.DeleteKnowledgeBaseRequest
+	(*DeleteKnowledgeBaseReply)(nil),   // 37: api.ai.v1.DeleteKnowledgeBaseReply
+	(*ListKnowledgeBasesRequest)(nil),  // 38: api.ai.v1.ListKnowledgeBasesRequest
+	(*ListKnowledgeBasesReply)(nil),    // 39: api.ai.v1.ListKnowledgeBasesReply
+	(*UploadDocumentRequest)(nil),      // 40: api.ai.v1.UploadDocumentRequest
+	(*UploadDocumentReply)(nil),        // 41: api.ai.v1.UploadDocumentReply
+	(*SearchKnowledgeRequest)(nil),     // 42: api.ai.v1.SearchKnowledgeRequest
+	(*SearchKnowledgeReply)(nil),       // 43: api.ai.v1.SearchKnowledgeReply
+	(*KnowledgeChunk)(nil),             // 44: api.ai.v1.KnowledgeChunk
+	nil,                                // 45: api.ai.v1.Conversation.ConfigEntry
+	nil,                                // 46: api.ai.v1.Message.MetadataEntry
+	nil,                                // 47: api.ai.v1.ModelConfig.ExtraParamsEntry
+	nil,                                // 48: api.ai.v1.Tool.MetadataEntry
+	nil,                                // 49: api.ai.v1.Resource.MetadataEntry
+	nil,                                // 50: api.ai.v1.CreateConversationRequest.ConfigEntry
+	nil,                                // 51: api.ai.v1.UpdateConversationRequest.ConfigEntry
+	nil,                                // 52: api.ai.v1.SendMessageRequest.OptionsEntry
+	nil,                                // 53: api.ai.v1.CallToolResponse.MetadataEntry
+	nil,                                // 54: api.ai.v1.GetResourceReply.MetadataEntry
+	nil,                                // 55: api.ai.v1.KnowledgeChunk.MetadataEntry
+	(*timestamppb.Timestamp)(nil),      // 56: google.protobuf.Timestamp
 }
 var file_api_ai_v1_ai_proto_depIdxs = []int32{
-	51, // 0: api.ai.v1.Conversation.config:type_name -> api.ai.v1.Conversation.ConfigEntry
-	62, // 1: api.ai.v1.Conversation.created_at:type_name -> google.protobuf.Timestamp
-	62, // 2: api.ai.v1.Conversation.updated_at:type_name -> google.protobuf.Timestamp
+	45, // 0: api.ai.v1.Conversation.config:type_name -> api.ai.v1.Conversation.ConfigEntry
+	56, // 1: api.ai.v1.Conversation.created_at:type_name -> google.protobuf.Timestamp
+	56, // 2: api.ai.v1.Conversation.updated_at:type_name -> google.protobuf.Timestamp
 	2,  // 3: api.ai.v1.Message.tool_calls:type_name -> api.ai.v1.ToolCall
-	52, // 4: api.ai.v1.Message.metadata:type_name -> api.ai.v1.Message.MetadataEntry
-	62, // 5: api.ai.v1.Message.created_at:type_name -> google.protobuf.Timestamp
-	62, // 6: api.ai.v1.ToolCall.created_at:type_name -> google.protobuf.Timestamp
-	53, // 7: api.ai.v1.ModelConfig.extra_params:type_name -> api.ai.v1.ModelConfig.ExtraParamsEntry
-	54, // 8: api.ai.v1.Tool.metadata:type_name -> api.ai.v1.Tool.MetadataEntry
-	55, // 9: api.ai.v1.Resource.metadata:type_name -> api.ai.v1.Resource.MetadataEntry
-	62, // 10: api.ai.v1.KnowledgeBase.created_at:type_name -> google.protobuf.Timestamp
-	62, // 11: api.ai.v1.KnowledgeBase.updated_at:type_name -> google.protobuf.Timestamp
-	62, // 12: api.ai.v1.Document.created_at:type_name -> google.protobuf.Timestamp
-	62, // 13: api.ai.v1.Document.updated_at:type_name -> google.protobuf.Timestamp
-	56, // 14: api.ai.v1.CreateConversationRequest.config:type_name -> api.ai.v1.CreateConversationRequest.ConfigEntry
+	46, // 4: api.ai.v1.Message.metadata:type_name -> api.ai.v1.Message.MetadataEntry
+	56, // 5: api.ai.v1.Message.created_at:type_name -> google.protobuf.Timestamp
+	56, // 6: api.ai.v1.ToolCall.created_at:type_name -> google.protobuf.Timestamp
+	47, // 7: api.ai.v1.ModelConfig.extra_params:type_name -> api.ai.v1.ModelConfig.ExtraParamsEntry
+	48, // 8: api.ai.v1.Tool.metadata:type_name -> api.ai.v1.Tool.MetadataEntry
+	49, // 9: api.ai.v1.Resource.metadata:type_name -> api.ai.v1.Resource.MetadataEntry
+	56, // 10: api.ai.v1.KnowledgeBase.created_at:type_name -> google.protobuf.Timestamp
+	56, // 11: api.ai.v1.KnowledgeBase.updated_at:type_name -> google.protobuf.Timestamp
+	56, // 12: api.ai.v1.Document.created_at:type_name -> google.protobuf.Timestamp
+	56, // 13: api.ai.v1.Document.updated_at:type_name -> google.protobuf.Timestamp
+	50, // 14: api.ai.v1.CreateConversationRequest.config:type_name -> api.ai.v1.CreateConversationRequest.ConfigEntry
 	0,  // 15: api.ai.v1.CreateConversationReply.conversation:type_name -> api.ai.v1.Conversation
 	0,  // 16: api.ai.v1.GetConversationReply.conversation:type_name -> api.ai.v1.Conversation
-	57, // 17: api.ai.v1.UpdateConversationRequest.config:type_name -> api.ai.v1.UpdateConversationRequest.ConfigEntry
+	51, // 17: api.ai.v1.UpdateConversationRequest.config:type_name -> api.ai.v1.UpdateConversationRequest.ConfigEntry
 	0,  // 18: api.ai.v1.UpdateConversationReply.conversation:type_name -> api.ai.v1.Conversation
 	0,  // 19: api.ai.v1.ListConversationsReply.conversations:type_name -> api.ai.v1.Conversation
-	58, // 20: api.ai.v1.SendMessageRequest.options:type_name -> api.ai.v1.SendMessageRequest.OptionsEntry
+	52, // 20: api.ai.v1.SendMessageRequest.options:type_name -> api.ai.v1.SendMessageRequest.OptionsEntry
 	1,  // 21: api.ai.v1.SendMessageReply.user_message:type_name -> api.ai.v1.Message
 	1,  // 22: api.ai.v1.SendMessageReply.assistant_message:type_name -> api.ai.v1.Message
 	1,  // 23: api.ai.v1.GetMessagesReply.messages:type_name -> api.ai.v1.Message
-	3,  // 24: api.ai.v1.ListModelsReply.models:type_name -> api.ai.v1.ModelConfig
-	3,  // 25: api.ai.v1.GetModelConfigReply.model:type_name -> api.ai.v1.ModelConfig
-	3,  // 26: api.ai.v1.UpdateModelConfigRequest.config:type_name -> api.ai.v1.ModelConfig
-	3,  // 27: api.ai.v1.UpdateModelConfigReply.model:type_name -> api.ai.v1.ModelConfig
-	4,  // 28: api.ai.v1.ListToolsReply.tools:type_name -> api.ai.v1.Tool
-	59, // 29: api.ai.v1.CallToolResponse.metadata:type_name -> api.ai.v1.CallToolResponse.MetadataEntry
-	4,  // 30: api.ai.v1.GetToolSchemaReply.tool:type_name -> api.ai.v1.Tool
-	5,  // 31: api.ai.v1.ListResourcesReply.resources:type_name -> api.ai.v1.Resource
-	60, // 32: api.ai.v1.GetResourceReply.metadata:type_name -> api.ai.v1.GetResourceReply.MetadataEntry
-	6,  // 33: api.ai.v1.CreateKnowledgeBaseReply.knowledge_base:type_name -> api.ai.v1.KnowledgeBase
-	6,  // 34: api.ai.v1.UpdateKnowledgeBaseReply.knowledge_base:type_name -> api.ai.v1.KnowledgeBase
-	6,  // 35: api.ai.v1.ListKnowledgeBasesReply.knowledge_bases:type_name -> api.ai.v1.KnowledgeBase
-	7,  // 36: api.ai.v1.UploadDocumentReply.document:type_name -> api.ai.v1.Document
-	50, // 37: api.ai.v1.SearchKnowledgeReply.chunks:type_name -> api.ai.v1.KnowledgeChunk
-	61, // 38: api.ai.v1.KnowledgeChunk.metadata:type_name -> api.ai.v1.KnowledgeChunk.MetadataEntry
-	8,  // 39: api.ai.v1.Ai.CreateConversation:input_type -> api.ai.v1.CreateConversationRequest
-	10, // 40: api.ai.v1.Ai.GetConversation:input_type -> api.ai.v1.GetConversationRequest
-	12, // 41: api.ai.v1.Ai.UpdateConversation:input_type -> api.ai.v1.UpdateConversationRequest
-	14, // 42: api.ai.v1.Ai.DeleteConversation:input_type -> api.ai.v1.DeleteConversationRequest
-	16, // 43: api.ai.v1.Ai.ListConversations:input_type -> api.ai.v1.ListConversationsRequest
-	18, // 44: api.ai.v1.Ai.SendMessage:input_type -> api.ai.v1.SendMessageRequest
-	20, // 45: api.ai.v1.Ai.GetMessages:input_type -> api.ai.v1.GetMessagesRequest
-	22, // 46: api.ai.v1.Ai.ListModels:input_type -> api.ai.v1.ListModelsRequest
-	24, // 47: api.ai.v1.Ai.GetModelConfig:input_type -> api.ai.v1.GetModelConfigRequest
-	26, // 48: api.ai.v1.Ai.UpdateModelConfig:input_type -> api.ai.v1.UpdateModelConfigRequest
-	28, // 49: api.ai.v1.Ai.ListTools:input_type -> api.ai.v1.ListToolsRequest
-	30, // 50: api.ai.v1.Ai.CallTool:input_type -> api.ai.v1.CallToolRequest
-	32, // 51: api.ai.v1.Ai.GetToolSchema:input_type -> api.ai.v1.GetToolSchemaRequest
-	34, // 52: api.ai.v1.Ai.ListResources:input_type -> api.ai.v1.ListResourcesRequest
-	36, // 53: api.ai.v1.Ai.GetResource:input_type -> api.ai.v1.GetResourceRequest
-	38, // 54: api.ai.v1.Ai.CreateKnowledgeBase:input_type -> api.ai.v1.CreateKnowledgeBaseRequest
-	40, // 55: api.ai.v1.Ai.UpdateKnowledgeBase:input_type -> api.ai.v1.UpdateKnowledgeBaseRequest
-	42, // 56: api.ai.v1.Ai.DeleteKnowledgeBase:input_type -> api.ai.v1.DeleteKnowledgeBaseRequest
-	44, // 57: api.ai.v1.Ai.ListKnowledgeBases:input_type -> api.ai.v1.ListKnowledgeBasesRequest
-	46, // 58: api.ai.v1.Ai.UploadDocument:input_type -> api.ai.v1.UploadDocumentRequest
-	48, // 59: api.ai.v1.Ai.SearchKnowledge:input_type -> api.ai.v1.SearchKnowledgeRequest
-	9,  // 60: api.ai.v1.Ai.CreateConversation:output_type -> api.ai.v1.CreateConversationReply
-	11, // 61: api.ai.v1.Ai.GetConversation:output_type -> api.ai.v1.GetConversationReply
-	13, // 62: api.ai.v1.Ai.UpdateConversation:output_type -> api.ai.v1.UpdateConversationReply
-	15, // 63: api.ai.v1.Ai.DeleteConversation:output_type -> api.ai.v1.DeleteConversationReply
-	17, // 64: api.ai.v1.Ai.ListConversations:output_type -> api.ai.v1.ListConversationsReply
-	19, // 65: api.ai.v1.Ai.SendMessage:output_type -> api.ai.v1.SendMessageReply
-	21, // 66: api.ai.v1.Ai.GetMessages:output_type -> api.ai.v1.GetMessagesReply
-	23, // 67: api.ai.v1.Ai.ListModels:output_type -> api.ai.v1.ListModelsReply
-	25, // 68: api.ai.v1.Ai.GetModelConfig:output_type -> api.ai.v1.GetModelConfigReply
-	27, // 69: api.ai.v1.Ai.UpdateModelConfig:output_type -> api.ai.v1.UpdateModelConfigReply
-	29, // 70: api.ai.v1.Ai.ListTools:output_type -> api.ai.v1.ListToolsReply
-	31, // 71: api.ai.v1.Ai.CallTool:output_type -> api.ai.v1.CallToolResponse
-	33, // 72: api.ai.v1.Ai.GetToolSchema:output_type -> api.ai.v1.GetToolSchemaReply
-	35, // 73: api.ai.v1.Ai.ListResources:output_type -> api.ai.v1.ListResourcesReply
-	37, // 74: api.ai.v1.Ai.GetResource:output_type -> api.ai.v1.GetResourceReply
-	39, // 75: api.ai.v1.Ai.CreateKnowledgeBase:output_type -> api.ai.v1.CreateKnowledgeBaseReply
-	41, // 76: api.ai.v1.Ai.UpdateKnowledgeBase:output_type -> api.ai.v1.UpdateKnowledgeBaseReply
-	43, // 77: api.ai.v1.Ai.DeleteKnowledgeBase:output_type -> api.ai.v1.DeleteKnowledgeBaseReply
-	45, // 78: api.ai.v1.Ai.ListKnowledgeBases:output_type -> api.ai.v1.ListKnowledgeBasesReply
-	47, // 79: api.ai.v1.Ai.UploadDocument:output_type -> api.ai.v1.UploadDocumentReply
-	49, // 80: api.ai.v1.Ai.SearchKnowledge:output_type -> api.ai.v1.SearchKnowledgeReply
-	60, // [60:81] is the sub-list for method output_type
-	39, // [39:60] is the sub-list for method input_type
-	39, // [39:39] is the sub-list for extension type_name
-	39, // [39:39] is the sub-list for extension extendee
-	0,  // [0:39] is the sub-list for field type_name
+	4,  // 24: api.ai.v1.ListToolsReply.tools:type_name -> api.ai.v1.Tool
+	53, // 25: api.ai.v1.CallToolResponse.metadata:type_name -> api.ai.v1.CallToolResponse.MetadataEntry
+	4,  // 26: api.ai.v1.GetToolSchemaReply.tool:type_name -> api.ai.v1.Tool
+	5,  // 27: api.ai.v1.ListResourcesReply.resources:type_name -> api.ai.v1.Resource
+	54, // 28: api.ai.v1.GetResourceReply.metadata:type_name -> api.ai.v1.GetResourceReply.MetadataEntry
+	6,  // 29: api.ai.v1.CreateKnowledgeBaseReply.knowledge_base:type_name -> api.ai.v1.KnowledgeBase
+	6,  // 30: api.ai.v1.UpdateKnowledgeBaseReply.knowledge_base:type_name -> api.ai.v1.KnowledgeBase
+	6,  // 31: api.ai.v1.ListKnowledgeBasesReply.knowledge_bases:type_name -> api.ai.v1.KnowledgeBase
+	7,  // 32: api.ai.v1.UploadDocumentReply.document:type_name -> api.ai.v1.Document
+	44, // 33: api.ai.v1.SearchKnowledgeReply.chunks:type_name -> api.ai.v1.KnowledgeChunk
+	55, // 34: api.ai.v1.KnowledgeChunk.metadata:type_name -> api.ai.v1.KnowledgeChunk.MetadataEntry
+	8,  // 35: api.ai.v1.Ai.CreateConversation:input_type -> api.ai.v1.CreateConversationRequest
+	10, // 36: api.ai.v1.Ai.GetConversation:input_type -> api.ai.v1.GetConversationRequest
+	12, // 37: api.ai.v1.Ai.UpdateConversation:input_type -> api.ai.v1.UpdateConversationRequest
+	14, // 38: api.ai.v1.Ai.DeleteConversation:input_type -> api.ai.v1.DeleteConversationRequest
+	16, // 39: api.ai.v1.Ai.ListConversations:input_type -> api.ai.v1.ListConversationsRequest
+	18, // 40: api.ai.v1.Ai.SendMessage:input_type -> api.ai.v1.SendMessageRequest
+	20, // 41: api.ai.v1.Ai.GetMessages:input_type -> api.ai.v1.GetMessagesRequest
+	22, // 42: api.ai.v1.Ai.ListTools:input_type -> api.ai.v1.ListToolsRequest
+	24, // 43: api.ai.v1.Ai.CallTool:input_type -> api.ai.v1.CallToolRequest
+	26, // 44: api.ai.v1.Ai.GetToolSchema:input_type -> api.ai.v1.GetToolSchemaRequest
+	28, // 45: api.ai.v1.Ai.ListResources:input_type -> api.ai.v1.ListResourcesRequest
+	30, // 46: api.ai.v1.Ai.GetResource:input_type -> api.ai.v1.GetResourceRequest
+	32, // 47: api.ai.v1.Ai.CreateKnowledgeBase:input_type -> api.ai.v1.CreateKnowledgeBaseRequest
+	34, // 48: api.ai.v1.Ai.UpdateKnowledgeBase:input_type -> api.ai.v1.UpdateKnowledgeBaseRequest
+	36, // 49: api.ai.v1.Ai.DeleteKnowledgeBase:input_type -> api.ai.v1.DeleteKnowledgeBaseRequest
+	38, // 50: api.ai.v1.Ai.ListKnowledgeBases:input_type -> api.ai.v1.ListKnowledgeBasesRequest
+	40, // 51: api.ai.v1.Ai.UploadDocument:input_type -> api.ai.v1.UploadDocumentRequest
+	42, // 52: api.ai.v1.Ai.SearchKnowledge:input_type -> api.ai.v1.SearchKnowledgeRequest
+	9,  // 53: api.ai.v1.Ai.CreateConversation:output_type -> api.ai.v1.CreateConversationReply
+	11, // 54: api.ai.v1.Ai.GetConversation:output_type -> api.ai.v1.GetConversationReply
+	13, // 55: api.ai.v1.Ai.UpdateConversation:output_type -> api.ai.v1.UpdateConversationReply
+	15, // 56: api.ai.v1.Ai.DeleteConversation:output_type -> api.ai.v1.DeleteConversationReply
+	17, // 57: api.ai.v1.Ai.ListConversations:output_type -> api.ai.v1.ListConversationsReply
+	19, // 58: api.ai.v1.Ai.SendMessage:output_type -> api.ai.v1.SendMessageReply
+	21, // 59: api.ai.v1.Ai.GetMessages:output_type -> api.ai.v1.GetMessagesReply
+	23, // 60: api.ai.v1.Ai.ListTools:output_type -> api.ai.v1.ListToolsReply
+	25, // 61: api.ai.v1.Ai.CallTool:output_type -> api.ai.v1.CallToolResponse
+	27, // 62: api.ai.v1.Ai.GetToolSchema:output_type -> api.ai.v1.GetToolSchemaReply
+	29, // 63: api.ai.v1.Ai.ListResources:output_type -> api.ai.v1.ListResourcesReply
+	31, // 64: api.ai.v1.Ai.GetResource:output_type -> api.ai.v1.GetResourceReply
+	33, // 65: api.ai.v1.Ai.CreateKnowledgeBase:output_type -> api.ai.v1.CreateKnowledgeBaseReply
+	35, // 66: api.ai.v1.Ai.UpdateKnowledgeBase:output_type -> api.ai.v1.UpdateKnowledgeBaseReply
+	37, // 67: api.ai.v1.Ai.DeleteKnowledgeBase:output_type -> api.ai.v1.DeleteKnowledgeBaseReply
+	39, // 68: api.ai.v1.Ai.ListKnowledgeBases:output_type -> api.ai.v1.ListKnowledgeBasesReply
+	41, // 69: api.ai.v1.Ai.UploadDocument:output_type -> api.ai.v1.UploadDocumentReply
+	43, // 70: api.ai.v1.Ai.SearchKnowledge:output_type -> api.ai.v1.SearchKnowledgeReply
+	53, // [53:71] is the sub-list for method output_type
+	35, // [35:53] is the sub-list for method input_type
+	35, // [35:35] is the sub-list for extension type_name
+	35, // [35:35] is the sub-list for extension extendee
+	0,  // [0:35] is the sub-list for field type_name
 }
 
 func init() { file_api_ai_v1_ai_proto_init() }
@@ -3761,7 +3444,7 @@ func file_api_ai_v1_ai_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_ai_v1_ai_proto_rawDesc), len(file_api_ai_v1_ai_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   62,
+			NumMessages:   56,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

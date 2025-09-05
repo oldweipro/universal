@@ -2,6 +2,7 @@ package data
 
 import (
 	"universal/app/ai/internal/conf"
+	"universal/app/ai/internal/data/model"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -11,11 +12,21 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewAiRepo)
+var ProviderSet = wire.NewSet(NewData, NewAiRepo, NewProviderRepo, NewModelRepo, NewQuotaRepo, NewRateLimitRepo, NewHealthRepo)
 
 // Data .
 type Data struct {
 	db *gorm.DB
+}
+
+// GetDB returns the database instance
+func (d *Data) GetDB() *gorm.DB {
+	return d.db
+}
+
+// NewTestData creates a test Data instance
+func NewTestData(db *gorm.DB) *Data {
+	return &Data{db: db}
 }
 
 // NewData .
@@ -30,10 +41,18 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 		return nil, nil, err
 	}
 	// 数据库迁移
-	//if err = db.AutoMigrate(&model.User{}); err != nil {
-	//	helper.Fatalf("failed to migrate database: %v", err)
-	//	return nil, nil, err
-	//}
+	if err = db.AutoMigrate(
+		&model.Provider{},
+		&model.Model{},
+		&model.UserQuota{},
+		&model.UsageStats{},
+		&model.RateLimitConfig{},
+		&model.ModelHealth{},
+		&model.UserDefaultModel{},
+	); err != nil {
+		helper.Fatalf("failed to migrate database: %v", err)
+		return nil, nil, err
+	}
 	cleanup := func() {
 		helper.Info("closing the data resources")
 	}

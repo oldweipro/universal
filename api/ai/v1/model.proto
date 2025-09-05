@@ -1,0 +1,484 @@
+syntax = "proto3";
+
+package api.ai.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "universal/api/ai/v1;v1";
+option java_multiple_files = true;
+option java_package = "com.oldwei.universal.api.ai.v1";
+option java_outer_classname = "ModelProtoV1";
+
+// AI模型管理服务接口定义
+service Model {
+  // 模型提供商管理接口
+  
+  // CreateProvider 注册新的AI模型提供商
+  // 支持OpenAI、Claude、本地模型等不同类型的提供商
+  rpc CreateProvider (CreateProviderRequest) returns (CreateProviderReply);
+  
+  // UpdateProvider 更新模型提供商配置
+  // 可以修改API密钥、基础URL、状态等配置信息
+  rpc UpdateProvider (UpdateProviderRequest) returns (UpdateProviderReply);
+  
+  // DeleteProvider 删除模型提供商
+  // 软删除，同时会禁用该提供商下的所有模型
+  rpc DeleteProvider (DeleteProviderRequest) returns (DeleteProviderReply);
+  
+  // ListProviders 获取所有模型提供商列表
+  // 支持按状态过滤，可选择只显示启用的提供商
+  rpc ListProviders (ListProvidersRequest) returns (ListProvidersReply);
+  
+  // TestProvider 测试模型提供商连接
+  // 验证API密钥和网络连接是否正常
+  rpc TestProvider (TestProviderRequest) returns (TestProviderReply);
+  
+  // 模型管理接口
+  
+  // CreateModel 注册新的AI模型
+  // 在指定提供商下创建模型配置
+  rpc CreateModel (CreateModelRequest) returns (CreateModelReply);
+  
+  // UpdateModel 更新模型配置
+  // 修改模型参数、状态、限制等配置
+  rpc UpdateModel (UpdateModelRequest) returns (UpdateModelReply);
+  
+  // DeleteModel 删除模型
+  // 软删除，禁用模型但保留配置
+  rpc DeleteModel (DeleteModelRequest) returns (DeleteModelReply);
+  
+  // ListModels 获取可用的AI模型列表
+  // 支持按提供商、状态过滤
+  rpc ListModels (ListModelsRequest) returns (ListModelsReply);
+  
+  // GetModel 获取指定模型的详细信息
+  // 返回模型的完整配置和状态信息
+  rpc GetModel (GetModelRequest) returns (GetModelReply);
+  
+  // SwitchModel 为用户切换默认使用的模型
+  // 设置用户在对话中默认使用的模型
+  rpc SwitchModel (SwitchModelRequest) returns (SwitchModelReply);
+  
+  // 配额管理接口
+  
+  // GetUserQuota 获取用户的使用配额
+  // 返回用户在不同模型上的配额限制和已用量
+  rpc GetUserQuota (GetUserQuotaRequest) returns (GetUserQuotaReply);
+  
+  // UpdateUserQuota 更新用户配额
+  // 管理员接口，用于调整用户的使用限制
+  rpc UpdateUserQuota (UpdateUserQuotaRequest) returns (UpdateUserQuotaReply);
+  
+  // GetUsageStats 获取使用统计信息
+  // 支持按时间范围、模型、用户等维度统计
+  rpc GetUsageStats (GetUsageStatsRequest) returns (GetUsageStatsReply);
+  
+  // ResetUsage 重置用户使用量
+  // 管理员接口，用于重置特定用户或全局使用量
+  rpc ResetUsage (ResetUsageRequest) returns (ResetUsageReply);
+  
+  // 限流管理接口
+  
+  // CheckRateLimit 检查请求是否超出速率限制
+  // 在发送请求前检查用户是否还能继续请求
+  rpc CheckRateLimit (CheckRateLimitRequest) returns (CheckRateLimitReply);
+  
+  // GetRateLimitConfig 获取限流配置
+  // 返回不同模型和用户等级的限流规则
+  rpc GetRateLimitConfig (GetRateLimitConfigRequest) returns (GetRateLimitConfigReply);
+  
+  // UpdateRateLimitConfig 更新限流配置
+  // 管理员接口，用于调整限流规则
+  rpc UpdateRateLimitConfig (UpdateRateLimitConfigRequest) returns (UpdateRateLimitConfigReply);
+  
+  // 健康检查接口
+  
+  // HealthCheck 检查指定模型的健康状态
+  // 测试模型服务的可用性和响应时间
+  rpc HealthCheck (HealthCheckRequest) returns (HealthCheckReply);
+  
+  // GetModelMetrics 获取模型性能指标
+  // 返回模型的响应时间、成功率等监控数据
+  rpc GetModelMetrics (GetModelMetricsRequest) returns (GetModelMetricsReply);
+}
+
+// 数据模型定义
+
+// 模型提供商信息
+message Provider {
+  int64 id = 1;                                    // 提供商ID
+  string name = 2;                                 // 提供商名称 (openai/anthropic/local/etc)
+  string display_name = 3;                         // 显示名称
+  string description = 4;                          // 提供商描述
+  string api_base_url = 5;                        // API基础URL
+  string default_api_key = 6;                     // 默认API密钥
+  map<string, string> default_headers = 7;        // 默认请求头
+  map<string, string> config = 8;                 // 提供商特定配置
+  int32 status = 9;                               // 状态 (0:启用, 1:禁用, 2:维护中)
+  google.protobuf.Timestamp created_at = 10;      // 创建时间
+  google.protobuf.Timestamp updated_at = 11;      // 更新时间
+}
+
+// AI模型信息
+message ModelInfo {
+  int64 id = 1;                                    // 模型ID
+  int64 provider_id = 2;                          // 提供商ID
+  string name = 3;                                 // 模型名称
+  string display_name = 4;                         // 显示名称
+  string description = 5;                          // 模型描述
+  string version = 6;                              // 模型版本
+  ModelCapabilities capabilities = 7;              // 模型能力
+  ModelLimits limits = 8;                         // 模型限制
+  ModelPricing pricing = 9;                       // 定价信息
+  map<string, string> default_params = 10;       // 默认参数
+  int32 status = 11;                              // 状态 (0:可用, 1:不可用, 2:维护中)
+  google.protobuf.Timestamp created_at = 12;      // 创建时间
+  google.protobuf.Timestamp updated_at = 13;      // 更新时间
+}
+
+// 模型能力
+message ModelCapabilities {
+  bool supports_chat = 1;                          // 支持对话
+  bool supports_completion = 2;                    // 支持文本补全
+  bool supports_embedding = 3;                     // 支持向量化
+  bool supports_tools = 4;                         // 支持工具调用
+  bool supports_vision = 5;                        // 支持图像输入
+  bool supports_audio = 6;                         // 支持音频输入
+  bool supports_streaming = 7;                     // 支持流式输出
+  repeated string supported_formats = 8;           // 支持的输入格式
+}
+
+// 模型限制
+message ModelLimits {
+  int32 max_tokens = 1;                           // 最大token数
+  int32 max_input_tokens = 2;                     // 最大输入token数
+  int32 max_output_tokens = 3;                    // 最大输出token数
+  int32 context_window = 4;                       // 上下文窗口大小
+  double max_temperature = 5;                     // 最大温度值
+  double min_temperature = 6;                     // 最小温度值
+  int32 max_requests_per_minute = 7;              // 每分钟最大请求数
+  int32 max_tokens_per_minute = 8;                // 每分钟最大token数
+}
+
+// 定价信息
+message ModelPricing {
+  double input_price_per_token = 1;               // 输入token单价
+  double output_price_per_token = 2;              // 输出token单价
+  string currency = 3;                            // 货币单位
+  double batch_discount = 4;                      // 批量折扣
+}
+
+// 用户配额信息
+message UserQuota {
+  int64 user_id = 1;                              // 用户ID
+  int64 model_id = 2;                             // 模型ID
+  int64 daily_token_limit = 3;                    // 每日token限制
+  int64 monthly_token_limit = 4;                  // 每月token限制
+  int64 daily_request_limit = 5;                  // 每日请求限制
+  int64 monthly_request_limit = 6;                // 每月请求限制
+  int64 daily_tokens_used = 7;                    // 今日已用token
+  int64 monthly_tokens_used = 8;                  // 本月已用token
+  int64 daily_requests_used = 9;                  // 今日已用请求
+  int64 monthly_requests_used = 10;               // 本月已用请求
+  google.protobuf.Timestamp reset_daily_at = 11; // 每日重置时间
+  google.protobuf.Timestamp reset_monthly_at = 12; // 每月重置时间
+}
+
+// 使用统计
+message UsageStats {
+  int64 user_id = 1;                              // 用户ID
+  int64 model_id = 2;                             // 模型ID
+  string date = 3;                                // 统计日期
+  int64 total_requests = 4;                       // 总请求数
+  int64 successful_requests = 5;                  // 成功请求数
+  int64 failed_requests = 6;                      // 失败请求数
+  int64 total_tokens = 7;                         // 总token数
+  int64 input_tokens = 8;                         // 输入token数
+  int64 output_tokens = 9;                        // 输出token数
+  double total_cost = 10;                         // 总成本
+  double avg_response_time = 11;                  // 平均响应时间(毫秒)
+}
+
+// 限流配置
+message RateLimitConfig {
+  int64 id = 1;                                   // 配置ID
+  int64 model_id = 2;                             // 模型ID
+  string user_level = 3;                          // 用户等级 (free/pro/enterprise)
+  int32 requests_per_minute = 4;                  // 每分钟请求限制
+  int32 requests_per_hour = 5;                    // 每小时请求限制
+  int32 requests_per_day = 6;                     // 每天请求限制
+  int32 tokens_per_minute = 7;                    // 每分钟token限制
+  int32 concurrent_requests = 8;                  // 并发请求限制
+  int32 burst_limit = 9;                          // 突发请求限制
+  google.protobuf.Timestamp created_at = 10;     // 创建时间
+  google.protobuf.Timestamp updated_at = 11;     // 更新时间
+}
+
+// 模型健康状态
+message ModelHealth {
+  int64 model_id = 1;                             // 模型ID
+  bool is_healthy = 2;                            // 是否健康
+  double response_time = 3;                       // 响应时间(毫秒)
+  double success_rate = 4;                        // 成功率(0-1)
+  int64 total_requests = 5;                       // 总请求数
+  int64 failed_requests = 6;                      // 失败请求数
+  string error_message = 7;                       // 错误信息
+  google.protobuf.Timestamp last_check = 8;      // 最后检查时间
+}
+
+// 请求和响应消息定义
+
+// 创建提供商
+message CreateProviderRequest {
+  string name = 1;                                // 提供商名称
+  string display_name = 2;                        // 显示名称
+  string description = 3;                         // 描述
+  string api_base_url = 4;                       // API基础URL
+  string default_api_key = 5;                    // 默认API密钥
+  map<string, string> default_headers = 6;       // 默认请求头
+  map<string, string> config = 7;                // 配置参数
+}
+
+message CreateProviderReply {
+  Provider provider = 1;                          // 创建的提供商
+}
+
+// 更新提供商
+message UpdateProviderRequest {
+  int64 id = 1;                                   // 提供商ID
+  string display_name = 2;                        // 显示名称
+  string description = 3;                         // 描述
+  string api_base_url = 4;                       // API基础URL
+  string default_api_key = 5;                    // 默认API密钥
+  map<string, string> default_headers = 6;       // 默认请求头
+  map<string, string> config = 7;                // 配置参数
+  int32 status = 8;                               // 状态
+}
+
+message UpdateProviderReply {
+  Provider provider = 1;                          // 更新后的提供商
+}
+
+// 删除提供商
+message DeleteProviderRequest {
+  int64 id = 1;                                   // 提供商ID
+}
+
+message DeleteProviderReply {}
+
+// 列出提供商
+message ListProvidersRequest {
+  int32 status = 1;                               // 状态过滤(-1:全部, 0:启用, 1:禁用)
+  int32 page = 2;                                 // 页码
+  int32 page_size = 3;                            // 页面大小
+}
+
+message ListProvidersReply {
+  repeated Provider providers = 1;                // 提供商列表
+  int64 total = 2;                               // 总数
+}
+
+// 测试提供商
+message TestProviderRequest {
+  int64 id = 1;                                   // 提供商ID
+  string api_key = 2;                            // 测试用API密钥(可选)
+}
+
+message TestProviderReply {
+  bool is_available = 1;                          // 是否可用
+  double response_time = 2;                       // 响应时间(毫秒)
+  string error_message = 3;                       // 错误信息
+}
+
+// 创建模型
+message CreateModelRequest {
+  int64 provider_id = 1;                          // 提供商ID
+  string name = 2;                                // 模型名称
+  string display_name = 3;                        // 显示名称
+  string description = 4;                         // 描述
+  string version = 5;                             // 版本
+  ModelCapabilities capabilities = 6;             // 能力配置
+  ModelLimits limits = 7;                        // 限制配置
+  ModelPricing pricing = 8;                      // 定价配置
+  map<string, string> default_params = 9;        // 默认参数
+}
+
+message CreateModelReply {
+  ModelInfo model = 1;                                // 创建的模型
+}
+
+// 更新模型
+message UpdateModelRequest {
+  int64 id = 1;                                   // 模型ID
+  string display_name = 2;                        // 显示名称
+  string description = 3;                         // 描述
+  ModelCapabilities capabilities = 4;             // 能力配置
+  ModelLimits limits = 5;                        // 限制配置
+  ModelPricing pricing = 6;                      // 定价配置
+  map<string, string> default_params = 7;        // 默认参数
+  int32 status = 8;                               // 状态
+}
+
+message UpdateModelReply {
+  ModelInfo model = 1;                                // 更新后的模型
+}
+
+// 删除模型
+message DeleteModelRequest {
+  int64 id = 1;                                   // 模型ID
+}
+
+message DeleteModelReply {}
+
+// 列出模型
+message ListModelsRequest {
+  int64 provider_id = 1;                          // 提供商过滤
+  int32 status = 2;                               // 状态过滤(-1:全部, 0:可用, 1:不可用)
+  bool has_capabilities = 3;                      // 按能力过滤
+  repeated string required_capabilities = 4;      // 必需的能力列表
+  int32 page = 5;                                 // 页码
+  int32 page_size = 6;                            // 页面大小
+}
+
+message ListModelsReply {
+  repeated ModelInfo models = 1;                      // 模型列表
+  int64 total = 2;                               // 总数
+}
+
+// 获取模型
+message GetModelRequest {
+  int64 id = 1;                                   // 模型ID
+}
+
+message GetModelReply {
+  ModelInfo model = 1;                                // 模型信息
+}
+
+// 切换模型
+message SwitchModelRequest {
+  int64 user_id = 1;                              // 用户ID
+  int64 model_id = 2;                             // 新的默认模型ID
+}
+
+message SwitchModelReply {
+  bool success = 1;                               // 是否成功
+}
+
+// 获取用户配额
+message GetUserQuotaRequest {
+  int64 user_id = 1;                              // 用户ID
+  int64 model_id = 2;                             // 模型ID(可选，为空返回所有模型配额)
+}
+
+message GetUserQuotaReply {
+  repeated UserQuota quotas = 1;                  // 配额列表
+}
+
+// 更新用户配额
+message UpdateUserQuotaRequest {
+  int64 user_id = 1;                              // 用户ID
+  int64 model_id = 2;                             // 模型ID
+  int64 daily_token_limit = 3;                    // 每日token限制
+  int64 monthly_token_limit = 4;                  // 每月token限制
+  int64 daily_request_limit = 5;                  // 每日请求限制
+  int64 monthly_request_limit = 6;                // 每月请求限制
+}
+
+message UpdateUserQuotaReply {
+  UserQuota quota = 1;                            // 更新后的配额
+}
+
+// 获取使用统计
+message GetUsageStatsRequest {
+  int64 user_id = 1;                              // 用户ID(可选)
+  int64 model_id = 2;                             // 模型ID(可选)
+  string start_date = 3;                          // 开始日期
+  string end_date = 4;                            // 结束日期
+  string group_by = 5;                            // 分组方式(day/month/user/model)
+}
+
+message GetUsageStatsReply {
+  repeated UsageStats stats = 1;                  // 统计数据
+  int64 total_requests = 2;                       // 总请求数
+  int64 total_tokens = 3;                         // 总token数
+  double total_cost = 4;                          // 总成本
+}
+
+// 重置使用量
+message ResetUsageRequest {
+  int64 user_id = 1;                              // 用户ID(可选，为空重置所有用户)
+  int64 model_id = 2;                             // 模型ID(可选，为空重置所有模型)
+  string reset_type = 3;                          // 重置类型(daily/monthly/all)
+}
+
+message ResetUsageReply {
+  bool success = 1;                               // 是否成功
+  int64 affected_users = 2;                       // 影响的用户数
+}
+
+// 检查限流
+message CheckRateLimitRequest {
+  int64 user_id = 1;                              // 用户ID
+  int64 model_id = 2;                             // 模型ID
+  int32 requested_tokens = 3;                     // 请求的token数
+}
+
+message CheckRateLimitReply {
+  bool allowed = 1;                               // 是否允许
+  string reason = 2;                              // 拒绝原因
+  int32 retry_after_seconds = 3;                  // 重试等待时间
+  int32 remaining_requests = 4;                   // 剩余请求数
+  int32 remaining_tokens = 5;                     // 剩余token数
+}
+
+// 获取限流配置
+message GetRateLimitConfigRequest {
+  int64 model_id = 1;                             // 模型ID(可选)
+  string user_level = 2;                          // 用户等级(可选)
+}
+
+message GetRateLimitConfigReply {
+  repeated RateLimitConfig configs = 1;           // 限流配置列表
+}
+
+// 更新限流配置
+message UpdateRateLimitConfigRequest {
+  int64 id = 1;                                   // 配置ID
+  int64 model_id = 2;                             // 模型ID
+  string user_level = 3;                          // 用户等级
+  int32 requests_per_minute = 4;                  // 每分钟请求限制
+  int32 requests_per_hour = 5;                    // 每小时请求限制
+  int32 requests_per_day = 6;                     // 每天请求限制
+  int32 tokens_per_minute = 7;                    // 每分钟token限制
+  int32 concurrent_requests = 8;                  // 并发请求限制
+  int32 burst_limit = 9;                          // 突发请求限制
+}
+
+message UpdateRateLimitConfigReply {
+  RateLimitConfig config = 1;                     // 更新后的配置
+}
+
+// 健康检查
+message HealthCheckRequest {
+  int64 model_id = 1;                             // 模型ID(可选，为空检查所有模型)
+}
+
+message HealthCheckReply {
+  repeated ModelHealth health_status = 1;         // 健康状态列表
+}
+
+// 获取模型指标
+message GetModelMetricsRequest {
+  int64 model_id = 1;                             // 模型ID
+  string start_time = 2;                          // 开始时间
+  string end_time = 3;                            // 结束时间
+}
+
+message GetModelMetricsReply {
+  int64 model_id = 1;                             // 模型ID
+  double avg_response_time = 2;                   // 平均响应时间
+  double success_rate = 3;                        // 成功率
+  int64 total_requests = 4;                       // 总请求数
+  int64 error_count = 5;                          // 错误数量
+  repeated string top_errors = 6;                 // 主要错误类型
+}

@@ -43,20 +43,6 @@ service Ai {
   // 支持分页查询，可选择是否包含工具调用详情
   rpc GetMessages (GetMessagesRequest) returns (GetMessagesReply);
 
-  // 模型管理接口
-
-  // ListModels 获取可用的AI模型列表
-  // 支持按提供商过滤，可选择只显示启用的模型
-  rpc ListModels (ListModelsRequest) returns (ListModelsReply);
-
-  // GetModelConfig 获取指定模型的配置信息
-  // 返回模型的详细配置，包括API密钥、参数设置等
-  rpc GetModelConfig (GetModelConfigRequest) returns (GetModelConfigReply);
-
-  // UpdateModelConfig 更新模型的配置
-  // 修改模型的API密钥、参数设置、启用状态等
-  rpc UpdateModelConfig (UpdateModelConfigRequest) returns (UpdateModelConfigReply);
-
   // MCP工具相关接口
 
   // ListTools 获取可用的MCP工具列表
@@ -300,34 +286,7 @@ message GetMessagesReply {
   int32 page_size = 4;                           // 页面大小
 }
 
-// 列出可用模型
-message ListModelsRequest {
-  string provider = 1;                           // 提供商过滤(可选)
-  bool only_enabled = 2;                         // 只显示启用的模型
-}
-
-message ListModelsReply {
-  repeated ModelConfig models = 1;               // 模型列表
-}
-
-// 获取模型配置
-message GetModelConfigRequest {
-  string name = 1;                               // 模型名称
-}
-
-message GetModelConfigReply {
-  ModelConfig model = 1;                         // 模型配置
-}
-
-// 更新模型配置
-message UpdateModelConfigRequest {
-  string name = 1;                               // 模型名称
-  ModelConfig config = 2;                        // 新配置
-}
-
-message UpdateModelConfigReply {
-  ModelConfig model = 1;                         // 更新后的配置
-}
+// 注意：模型管理的请求/响应消息已迁移到 model.proto
 
 // 列出可用工具
 message ListToolsRequest {

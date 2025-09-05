@@ -37,15 +37,6 @@ func (s *AiService) SendMessage(ctx context.Context, req *pb.SendMessageRequest)
 func (s *AiService) GetMessages(ctx context.Context, req *pb.GetMessagesRequest) (*pb.GetMessagesReply, error) {
 	return &pb.GetMessagesReply{}, nil
 }
-func (s *AiService) ListModels(ctx context.Context, req *pb.ListModelsRequest) (*pb.ListModelsReply, error) {
-	return &pb.ListModelsReply{}, nil
-}
-func (s *AiService) GetModelConfig(ctx context.Context, req *pb.GetModelConfigRequest) (*pb.GetModelConfigReply, error) {
-	return &pb.GetModelConfigReply{}, nil
-}
-func (s *AiService) UpdateModelConfig(ctx context.Context, req *pb.UpdateModelConfigRequest) (*pb.UpdateModelConfigReply, error) {
-	return &pb.UpdateModelConfigReply{}, nil
-}
 func (s *AiService) ListTools(ctx context.Context, req *pb.ListToolsRequest) (*pb.ListToolsReply, error) {
 	return &pb.ListToolsReply{}, nil
 }
