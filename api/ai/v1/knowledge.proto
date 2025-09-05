@@ -1,0 +1,614 @@
+syntax = "proto3";
+
+package api.ai.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "universal/api/ai/v1;v1";
+option java_multiple_files = true;
+option java_package = "com.oldwei.universal.api.ai.v1";
+option java_outer_classname = "KnowledgeProtoV1";
+
+// 知识库管理服务
+service KnowledgeService {
+  // === 知识库管理 ===
+  
+  // CreateKnowledgeBase 创建新的知识库
+  // 为用户创建知识库，可以指定向量化模型和分块策略
+  rpc CreateKnowledgeBase (CreateKnowledgeBaseRequest) returns (CreateKnowledgeBaseReply);
+
+  // UpdateKnowledgeBase 更新知识库配置
+  // 修改知识库的名称、描述、向量化模型等配置
+  rpc UpdateKnowledgeBase (UpdateKnowledgeBaseRequest) returns (UpdateKnowledgeBaseReply);
+
+  // DeleteKnowledgeBase 删除知识库
+  // 软删除知识库及其所有文档和向量数据
+  rpc DeleteKnowledgeBase (DeleteKnowledgeBaseRequest) returns (DeleteKnowledgeBaseReply);
+
+  // ListKnowledgeBases 获取用户的知识库列表
+  // 支持分页查询和关键词搜索
+  rpc ListKnowledgeBases (ListKnowledgeBasesRequest) returns (ListKnowledgeBasesReply);
+
+  // GetKnowledgeBase 获取知识库详细信息
+  // 根据ID获取知识库的完整信息和统计数据
+  rpc GetKnowledgeBase (GetKnowledgeBaseRequest) returns (GetKnowledgeBaseReply);
+
+  // === 文档管理 ===
+
+  // UploadDocument 向知识库上传文档
+  // 上传文档到指定知识库，自动进行向量化处理
+  rpc UploadDocument (UploadDocumentRequest) returns (UploadDocumentReply);
+
+  // BatchUploadDocuments 批量上传文档
+  // 批量上传多个文档，支持进度跟踪
+  rpc BatchUploadDocuments (stream BatchUploadDocumentsRequest) returns (stream BatchUploadDocumentsReply);
+
+  // UpdateDocument 更新文档内容
+  // 更新已有文档的内容和元数据
+  rpc UpdateDocument (UpdateDocumentRequest) returns (UpdateDocumentReply);
+
+  // DeleteDocument 删除文档
+  // 从知识库中删除指定文档及其向量数据
+  rpc DeleteDocument (DeleteDocumentRequest) returns (DeleteDocumentReply);
+
+  // ListDocuments 获取知识库中的文档列表
+  // 支持分页查询和状态过滤
+  rpc ListDocuments (ListDocumentsRequest) returns (ListDocumentsReply);
+
+  // GetDocument 获取文档详细信息
+  // 根据ID获取文档的完整信息
+  rpc GetDocument (GetDocumentRequest) returns (GetDocumentReply);
+
+  // ProcessDocument 处理文档
+  // 手动触发文档的向量化处理
+  rpc ProcessDocument (ProcessDocumentRequest) returns (ProcessDocumentReply);
+
+  // === 知识搜索 ===
+
+  // SearchKnowledge 在知识库中搜索相关内容
+  // 基于语义相似度搜索知识库内容，支持相似度阈值过滤
+  rpc SearchKnowledge (SearchKnowledgeRequest) returns (SearchKnowledgeReply);
+
+  // HybridSearch 混合搜索
+  // 结合语义搜索和关键词搜索，提供更精确的结果
+  rpc HybridSearch (HybridSearchRequest) returns (HybridSearchReply);
+
+  // AdvancedSearch 高级搜索
+  // 支持多种搜索条件和过滤器的高级搜索
+  rpc AdvancedSearch (AdvancedSearchRequest) returns (AdvancedSearchReply);
+
+  // === 知识管理 ===
+
+  // GetKnowledgeChunk 获取知识块详细信息
+  // 根据块ID获取知识块的完整信息
+  rpc GetKnowledgeChunk (GetKnowledgeChunkRequest) returns (GetKnowledgeChunkReply);
+
+  // UpdateKnowledgeChunk 更新知识块
+  // 更新知识块的内容和元数据
+  rpc UpdateKnowledgeChunk (UpdateKnowledgeChunkRequest) returns (UpdateKnowledgeChunkReply);
+
+  // ListKnowledgeChunks 获取文档的知识块列表
+  // 获取指定文档的所有知识块
+  rpc ListKnowledgeChunks (ListKnowledgeChunksRequest) returns (ListKnowledgeChunksReply);
+
+  // ReindexKnowledgeBase 重新索引知识库
+  // 重新对知识库中的所有文档进行向量化处理
+  rpc ReindexKnowledgeBase (ReindexKnowledgeBaseRequest) returns (ReindexKnowledgeBaseReply);
+
+  // === 统计和分析 ===
+
+  // GetKnowledgeBaseStats 获取知识库统计信息
+  // 返回知识库的详细统计数据
+  rpc GetKnowledgeBaseStats (GetKnowledgeBaseStatsRequest) returns (GetKnowledgeBaseStatsReply);
+
+  // AnalyzeKnowledgeBase 分析知识库内容
+  // 分析知识库的内容分布、主题等
+  rpc AnalyzeKnowledgeBase (AnalyzeKnowledgeBaseRequest) returns (AnalyzeKnowledgeBaseReply);
+}
+
+// === 核心数据模型 ===
+
+// 知识库定义 - 增强版
+message KnowledgeBase {
+  int64 id = 1;                                  // 知识库ID
+  int64 user_id = 2;                             // 用户ID
+  string name = 3;                               // 知识库名称
+  string description = 4;                        // 知识库描述
+  string embedding_model = 5;                    // 向量化模型
+  int32 chunk_size = 6;                          // 文档分块大小
+  int32 chunk_overlap = 7;                       // 分块重叠大小
+  KnowledgeBaseStatus status = 8;                // 状态
+  google.protobuf.Timestamp created_at = 9;     // 创建时间
+  google.protobuf.Timestamp updated_at = 10;    // 更新时间
+
+  // 新增字段
+  KnowledgeBaseConfig config = 11;               // 知识库配置
+  KnowledgeBaseStats stats = 12;                // 统计信息
+  repeated string tags = 13;                     // 标签
+  int32 version = 14;                            // 版本号
+  string language = 15;                          // 主要语言
+  repeated string supported_file_types = 16;    // 支持的文件类型
+  int64 max_file_size = 17;                      // 最大文件大小
+  bool auto_process = 18;                        // 自动处理新文档
+  google.protobuf.Timestamp last_indexed_at = 19; // 最后索引时间
+}
+
+// 知识库状态枚举
+enum KnowledgeBaseStatus {
+  KNOWLEDGE_BASE_STATUS_UNSPECIFIED = 0;
+  KNOWLEDGE_BASE_STATUS_ACTIVE = 1;      // 活跃
+  KNOWLEDGE_BASE_STATUS_INDEXING = 2;    // 索引中
+  KNOWLEDGE_BASE_STATUS_ERROR = 3;       // 错误
+  KNOWLEDGE_BASE_STATUS_ARCHIVED = 4;    // 已归档
+  KNOWLEDGE_BASE_STATUS_DELETED = 5;     // 已删除
+}
+
+// 知识库配置
+message KnowledgeBaseConfig {
+  string embedding_model = 1;                    // 向量化模型
+  int32 embedding_dimension = 2;                 // 向量维度
+  int32 chunk_size = 3;                          // 分块大小
+  int32 chunk_overlap = 4;                       // 分块重叠
+  ChunkingStrategy chunking_strategy = 5;        // 分块策略
+  double similarity_threshold = 6;               // 相似度阈值
+  int32 max_chunks_per_query = 7;                // 每次查询最大块数
+  bool enable_metadata_filter = 8;               // 启用元数据过滤
+  repeated string stop_words = 9;                // 停用词列表
+  string text_splitter = 10;                     // 文本分割器类型
+  map<string, string> advanced_options = 11;    // 高级选项
+}
+
+// 分块策略枚举
+enum ChunkingStrategy {
+  CHUNKING_STRATEGY_UNSPECIFIED = 0;
+  CHUNKING_STRATEGY_FIXED_SIZE = 1;      // 固定大小
+  CHUNKING_STRATEGY_RECURSIVE = 2;       // 递归分割
+  CHUNKING_STRATEGY_SEMANTIC = 3;        // 语义分割
+  CHUNKING_STRATEGY_PARAGRAPH = 4;       // 段落分割
+  CHUNKING_STRATEGY_SENTENCE = 5;        // 句子分割
+}
+
+// 知识库统计信息
+message KnowledgeBaseStats {
+  int64 document_count = 1;                      // 文档总数
+  int64 chunk_count = 2;                         // 块总数
+  int64 total_characters = 3;                    // 总字符数
+  int64 total_tokens = 4;                        // 总token数
+  double average_chunk_size = 5;                 // 平均块大小
+  map<string, int64> file_type_distribution = 6; // 文件类型分布
+  map<string, int64> language_distribution = 7;  // 语言分布
+  google.protobuf.Timestamp last_updated = 8;   // 最后更新时间
+  double storage_size_mb = 9;                    // 存储大小(MB)
+  double index_size_mb = 10;                     // 索引大小(MB)
+}
+
+// 文档定义 - 增强版
+message Document {
+  int64 id = 1;                                  // 文档ID
+  int64 knowledge_base_id = 2;                   // 知识库ID
+  string name = 3;                               // 文档名称
+  string content = 4;                            // 文档内容
+  string file_path = 5;                          // 文件路径
+  string mime_type = 6;                          // 文件类型
+  int64 file_size = 7;                           // 文件大小
+  int32 chunk_count = 8;                         // 分块数量
+  DocumentStatus status = 9;                     // 状态
+  google.protobuf.Timestamp created_at = 10;    // 创建时间
+  google.protobuf.Timestamp updated_at = 11;    // 更新时间
+
+  // 新增字段
+  DocumentMetadata metadata = 12;                // 文档元数据
+  repeated string tags = 13;                     // 标签
+  string language = 14;                          // 文档语言
+  string source_url = 15;                        // 源URL
+  string hash = 16;                              // 文档哈希值
+  int32 version = 17;                            // 版本号
+  google.protobuf.Timestamp last_processed_at = 18; // 最后处理时间
+  string processing_error = 19;                  // 处理错误信息
+  double processing_progress = 20;               // 处理进度
+}
+
+// 文档状态枚举
+enum DocumentStatus {
+  DOCUMENT_STATUS_UNSPECIFIED = 0;
+  DOCUMENT_STATUS_UPLOADED = 1;      // 已上传
+  DOCUMENT_STATUS_PROCESSING = 2;    // 处理中
+  DOCUMENT_STATUS_PROCESSED = 3;     // 已处理
+  DOCUMENT_STATUS_FAILED = 4;        // 处理失败
+  DOCUMENT_STATUS_ARCHIVED = 5;      // 已归档
+  DOCUMENT_STATUS_DELETED = 6;       // 已删除
+}
+
+// 文档元数据
+message DocumentMetadata {
+  string title = 1;                              // 标题
+  string author = 2;                             // 作者
+  string subject = 3;                            // 主题
+  repeated string keywords = 4;                  // 关键词
+  google.protobuf.Timestamp created_date = 5;   // 创建日期
+  google.protobuf.Timestamp modified_date = 6;  // 修改日期
+  string category = 7;                           // 分类
+  int32 page_count = 8;                          // 页数
+  string encoding = 9;                           // 编码
+  map<string, string> custom_fields = 10;       // 自定义字段
+}
+
+// 知识库块 - 增强版
+message KnowledgeChunk {
+  int64 id = 1;                                  // 块ID
+  int64 document_id = 2;                         // 文档ID
+  int64 knowledge_base_id = 3;                   // 知识库ID
+  string content = 4;                            // 块内容
+  double score = 5;                              // 相似度分数
+  map<string, string> metadata = 6;             // 块元数据
+
+  // 新增字段
+  int32 chunk_index = 7;                         // 块索引
+  int32 start_position = 8;                      // 开始位置
+  int32 end_position = 9;                        // 结束位置
+  repeated float embedding = 10;                 // 向量嵌入
+  string language = 11;                          // 语言
+  repeated string keywords = 12;                 // 关键词
+  ChunkType chunk_type = 13;                     // 块类型
+  google.protobuf.Timestamp created_at = 14;    // 创建时间
+  int32 character_count = 15;                    // 字符数
+  int32 token_count = 16;                        // token数
+}
+
+// 块类型枚举
+enum ChunkType {
+  CHUNK_TYPE_UNSPECIFIED = 0;
+  CHUNK_TYPE_TEXT = 1;           // 文本块
+  CHUNK_TYPE_TITLE = 2;          // 标题块
+  CHUNK_TYPE_PARAGRAPH = 3;      // 段落块
+  CHUNK_TYPE_LIST = 4;           // 列表块
+  CHUNK_TYPE_TABLE = 5;          // 表格块
+  CHUNK_TYPE_CODE = 6;           // 代码块
+}
+
+// === 请求和响应消息 ===
+
+// 创建知识库
+message CreateKnowledgeBaseRequest {
+  int64 user_id = 1;                             // 用户ID
+  string name = 2;                               // 知识库名称
+  string description = 3;                        // 知识库描述
+  string embedding_model = 4;                    // 向量化模型(可选)
+  int32 chunk_size = 5;                          // 文档分块大小(可选)
+  int32 chunk_overlap = 6;                       // 分块重叠大小(可选)
+  KnowledgeBaseConfig config = 7;                // 知识库配置(可选)
+  repeated string tags = 8;                      // 标签(可选)
+  string language = 9;                           // 主要语言(可选)
+}
+
+message CreateKnowledgeBaseReply {
+  KnowledgeBase knowledge_base = 1;              // 创建的知识库
+}
+
+// 更新知识库
+message UpdateKnowledgeBaseRequest {
+  int64 id = 1;                                  // 知识库ID
+  string name = 2;                               // 知识库名称(可选)
+  string description = 3;                        // 知识库描述(可选)
+  string embedding_model = 4;                    // 向量化模型(可选)
+  int32 chunk_size = 5;                          // 文档分块大小(可选)
+  int32 chunk_overlap = 6;                       // 分块重叠大小(可选)
+  KnowledgeBaseConfig config = 7;                // 知识库配置(可选)
+  repeated string tags = 8;                      // 标签(可选)
+  bool reindex_after_update = 9;                 // 更新后是否重新索引
+}
+
+message UpdateKnowledgeBaseReply {
+  KnowledgeBase knowledge_base = 1;              // 更新后的知识库
+}
+
+// 删除知识库
+message DeleteKnowledgeBaseRequest {
+  int64 id = 1;                                  // 知识库ID
+  bool hard_delete = 2;                          // 是否硬删除
+}
+
+message DeleteKnowledgeBaseReply {}
+
+// 获取知识库
+message GetKnowledgeBaseRequest {
+  int64 id = 1;                                  // 知识库ID
+  bool include_stats = 2;                        // 是否包含统计信息
+  bool include_config = 3;                       // 是否包含配置信息
+}
+
+message GetKnowledgeBaseReply {
+  KnowledgeBase knowledge_base = 1;              // 知识库信息
+}
+
+// 列出知识库
+message ListKnowledgeBasesRequest {
+  int64 user_id = 1;                             // 用户ID
+  int32 page = 2;                                // 页码
+  int32 page_size = 3;                           // 页面大小
+  string keyword = 4;                            // 搜索关键词(可选)
+  KnowledgeBaseStatus status = 5;                // 状态过滤(可选)
+  repeated string tags = 6;                      // 标签过滤(可选)
+  string sort_by = 7;                            // 排序字段
+  bool sort_desc = 8;                            // 是否降序
+}
+
+message ListKnowledgeBasesReply {
+  repeated KnowledgeBase knowledge_bases = 1;    // 知识库列表
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 上传文档
+message UploadDocumentRequest {
+  int64 knowledge_base_id = 1;                   // 知识库ID
+  string name = 2;                               // 文档名称
+  bytes content = 3;                             // 文档内容
+  string mime_type = 4;                          // 文件类型
+  DocumentMetadata metadata = 5;                 // 文档元数据(可选)
+  repeated string tags = 6;                      // 标签(可选)
+  bool auto_process = 7;                         // 是否自动处理
+}
+
+message UploadDocumentReply {
+  Document document = 1;                         // 上传的文档
+}
+
+// 批量上传文档
+message BatchUploadDocumentsRequest {
+  int64 knowledge_base_id = 1;                   // 知识库ID
+  repeated DocumentUpload documents = 2;         // 文档列表
+}
+
+message DocumentUpload {
+  string name = 1;                               // 文档名称
+  bytes content = 2;                             // 文档内容
+  string mime_type = 3;                          // 文件类型
+  DocumentMetadata metadata = 4;                 // 文档元数据(可选)
+  repeated string tags = 5;                      // 标签(可选)
+}
+
+message BatchUploadDocumentsReply {
+  repeated Document documents = 1;               // 上传的文档列表
+  int32 success_count = 2;                       // 成功数量
+  int32 failed_count = 3;                        // 失败数量
+  repeated string errors = 4;                    // 错误信息
+  double progress = 5;                           // 进度百分比
+}
+
+// 更新文档
+message UpdateDocumentRequest {
+  int64 id = 1;                                  // 文档ID
+  string name = 2;                               // 文档名称(可选)
+  bytes content = 3;                             // 文档内容(可选)
+  DocumentMetadata metadata = 4;                 // 文档元数据(可选)
+  repeated string tags = 5;                      // 标签(可选)
+  bool reprocess = 6;                            // 是否重新处理
+}
+
+message UpdateDocumentReply {
+  Document document = 1;                         // 更新后的文档
+}
+
+// 删除文档
+message DeleteDocumentRequest {
+  repeated int64 document_ids = 1;               // 文档ID列表
+  bool hard_delete = 2;                          // 是否硬删除
+}
+
+message DeleteDocumentReply {}
+
+// 获取文档
+message GetDocumentRequest {
+  int64 id = 1;                                  // 文档ID
+  bool include_content = 2;                      // 是否包含内容
+  bool include_chunks = 3;                       // 是否包含块信息
+}
+
+message GetDocumentReply {
+  Document document = 1;                         // 文档信息
+  repeated KnowledgeChunk chunks = 2;            // 知识块列表(可选)
+}
+
+// 列出文档
+message ListDocumentsRequest {
+  int64 knowledge_base_id = 1;                   // 知识库ID
+  int32 page = 2;                                // 页码
+  int32 page_size = 3;                           // 页面大小
+  string keyword = 4;                            // 搜索关键词(可选)
+  DocumentStatus status = 5;                     // 状态过滤(可选)
+  repeated string tags = 6;                      // 标签过滤(可选)
+  string mime_type = 7;                          // 文件类型过滤(可选)
+  string sort_by = 8;                            // 排序字段
+  bool sort_desc = 9;                            // 是否降序
+}
+
+message ListDocumentsReply {
+  repeated Document documents = 1;               // 文档列表
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 处理文档
+message ProcessDocumentRequest {
+  int64 document_id = 1;                         // 文档ID
+  bool force_reprocess = 2;                      // 是否强制重新处理
+  map<string, string> options = 3;              // 处理选项
+}
+
+message ProcessDocumentReply {
+  string job_id = 1;                             // 处理任务ID
+  DocumentStatus status = 2;                     // 处理状态
+}
+
+// 搜索知识
+message SearchKnowledgeRequest {
+  int64 knowledge_base_id = 1;                   // 知识库ID
+  string query = 2;                              // 搜索查询
+  int32 limit = 3;                               // 返回结果数量限制
+  double threshold = 4;                          // 相似度阈值
+  map<string, string> filters = 5;              // 元数据过滤器
+  bool include_metadata = 6;                     // 是否包含元数据
+}
+
+message SearchKnowledgeReply {
+  repeated KnowledgeChunk chunks = 1;            // 搜索结果
+  double max_score = 2;                          // 最高分数
+  double min_score = 3;                          // 最低分数
+  int32 total_results = 4;                       // 总结果数
+}
+
+// 混合搜索
+message HybridSearchRequest {
+  int64 knowledge_base_id = 1;                   // 知识库ID
+  string query = 2;                              // 搜索查询
+  int32 limit = 3;                               // 返回结果数量限制
+  double semantic_weight = 4;                    // 语义搜索权重(0-1)
+  double keyword_weight = 5;                     // 关键词搜索权重(0-1)
+  double threshold = 6;                          // 相似度阈值
+  map<string, string> filters = 7;              // 元数据过滤器
+}
+
+message HybridSearchReply {
+  repeated HybridSearchResult results = 1;       // 搜索结果
+  double max_score = 2;                          // 最高分数
+  int32 total_results = 3;                       // 总结果数
+}
+
+message HybridSearchResult {
+  KnowledgeChunk chunk = 1;                      // 知识块
+  double semantic_score = 2;                     // 语义分数
+  double keyword_score = 3;                      // 关键词分数
+  double combined_score = 4;                     // 综合分数
+}
+
+// 高级搜索
+message AdvancedSearchRequest {
+  int64 knowledge_base_id = 1;                   // 知识库ID
+  SearchQuery query = 2;                         // 复杂查询
+  int32 limit = 3;                               // 返回结果数量限制
+  int32 offset = 4;                              // 偏移量
+  repeated SearchSort sort = 5;                  // 排序条件
+  map<string, string> filters = 6;              // 过滤器
+}
+
+message SearchQuery {
+  string text = 1;                               // 查询文本
+  SearchMode mode = 2;                           // 搜索模式
+  repeated string keywords = 3;                  // 关键词列表
+  repeated string exclude_keywords = 4;          // 排除关键词
+  DateRange date_range = 5;                      // 日期范围
+}
+
+enum SearchMode {
+  SEARCH_MODE_UNSPECIFIED = 0;
+  SEARCH_MODE_SEMANTIC = 1;          // 语义搜索
+  SEARCH_MODE_KEYWORD = 2;           // 关键词搜索
+  SEARCH_MODE_HYBRID = 3;            // 混合搜索
+  SEARCH_MODE_EXACT = 4;             // 精确匹配
+}
+
+message DateRange {
+  google.protobuf.Timestamp start = 1;          // 开始时间
+  google.protobuf.Timestamp end = 2;            // 结束时间
+}
+
+message SearchSort {
+  string field = 1;                              // 排序字段
+  bool desc = 2;                                 // 是否降序
+}
+
+message AdvancedSearchReply {
+  repeated KnowledgeChunk chunks = 1;            // 搜索结果
+  int64 total_count = 2;                         // 总数量
+  map<string, int64> facets = 3;                // 分面统计
+}
+
+// 获取知识块
+message GetKnowledgeChunkRequest {
+  int64 id = 1;                                  // 块ID
+  bool include_embedding = 2;                    // 是否包含向量
+}
+
+message GetKnowledgeChunkReply {
+  KnowledgeChunk chunk = 1;                      // 知识块信息
+}
+
+// 更新知识块
+message UpdateKnowledgeChunkRequest {
+  int64 id = 1;                                  // 块ID
+  string content = 2;                            // 块内容(可选)
+  map<string, string> metadata = 3;             // 元数据(可选)
+  repeated string keywords = 4;                  // 关键词(可选)
+}
+
+message UpdateKnowledgeChunkReply {
+  KnowledgeChunk chunk = 1;                      // 更新后的知识块
+}
+
+// 列出知识块
+message ListKnowledgeChunksRequest {
+  int64 document_id = 1;                         // 文档ID
+  int32 page = 2;                                // 页码
+  int32 page_size = 3;                           // 页面大小
+  ChunkType chunk_type = 4;                      // 块类型过滤(可选)
+}
+
+message ListKnowledgeChunksReply {
+  repeated KnowledgeChunk chunks = 1;            // 知识块列表
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 重新索引知识库
+message ReindexKnowledgeBaseRequest {
+  int64 id = 1;                                  // 知识库ID
+  bool force_reindex = 2;                        // 是否强制重新索引
+}
+
+message ReindexKnowledgeBaseReply {
+  string job_id = 1;                             // 索引任务ID
+  string status = 2;                             // 任务状态
+}
+
+// 获取知识库统计
+message GetKnowledgeBaseStatsRequest {
+  int64 id = 1;                                  // 知识库ID
+  bool include_detailed = 2;                     // 是否包含详细统计
+}
+
+message GetKnowledgeBaseStatsReply {
+  KnowledgeBaseStats stats = 1;                  // 统计信息
+  map<string, double> performance_metrics = 2;  // 性能指标
+}
+
+// 分析知识库
+message AnalyzeKnowledgeBaseRequest {
+  int64 id = 1;                                  // 知识库ID
+  repeated AnalysisType analysis_types = 2;      // 分析类型
+}
+
+enum AnalysisType {
+  ANALYSIS_TYPE_UNSPECIFIED = 0;
+  ANALYSIS_TYPE_CONTENT_DISTRIBUTION = 1;       // 内容分布
+  ANALYSIS_TYPE_TOPIC_MODELING = 2;             // 主题建模
+  ANALYSIS_TYPE_SIMILARITY_ANALYSIS = 3;        // 相似性分析
+  ANALYSIS_TYPE_QUALITY_ASSESSMENT = 4;         // 质量评估
+}
+
+message AnalyzeKnowledgeBaseReply {
+  repeated AnalysisResult results = 1;           // 分析结果
+}
+
+message AnalysisResult {
+  AnalysisType type = 1;                         // 分析类型
+  string title = 2;                              // 结果标题
+  string description = 3;                        // 结果描述
+  map<string, double> metrics = 4;              // 指标数据
+  repeated string insights = 5;                  // 洞察信息
+  bytes visualization_data = 6;                  // 可视化数据
+}

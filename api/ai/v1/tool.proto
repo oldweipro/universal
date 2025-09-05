@@ -1,0 +1,757 @@
+syntax = "proto3";
+
+package api.ai.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "universal/api/ai/v1;v1";
+option java_multiple_files = true;
+option java_package = "com.oldwei.universal.api.ai.v1";
+option java_outer_classname = "ToolProtoV1";
+
+// MCP工具和资源管理服务
+service ToolService {
+  // === MCP工具管理 ===
+  
+  // ListTools 获取可用的MCP工具列表
+  // 支持按MCP服务器过滤，可选择只显示启用的工具
+  rpc ListTools (ListToolsRequest) returns (ListToolsReply);
+
+  // GetTool 获取指定工具的详细信息
+  // 根据工具名称获取工具的完整配置和元数据
+  rpc GetTool (GetToolRequest) returns (GetToolReply);
+
+  // CallTool 调用指定的MCP工具
+  // 执行工具调用并返回结果，支持传入对话上下文
+  rpc CallTool (CallToolRequest) returns (CallToolResponse);
+
+  // CallToolStream 流式调用工具
+  // 支持长时间运行的工具调用，实时返回执行进度
+  rpc CallToolStream (CallToolRequest) returns (stream CallToolStreamResponse);
+
+  // GetToolSchema 获取工具的参数Schema
+  // 返回工具的详细信息和参数定义，用于动态表单生成
+  rpc GetToolSchema (GetToolSchemaRequest) returns (GetToolSchemaReply);
+
+  // ValidateToolArguments 验证工具参数
+  // 在实际调用前验证参数是否符合工具的Schema定义
+  rpc ValidateToolArguments (ValidateToolArgumentsRequest) returns (ValidateToolArgumentsReply);
+
+  // BatchCallTools 批量调用工具
+  // 同时调用多个工具，支持并行执行和依赖关系管理
+  rpc BatchCallTools (BatchCallToolsRequest) returns (BatchCallToolsReply);
+
+  // === MCP服务器管理 ===
+
+  // ListMcpServers 获取MCP服务器列表
+  // 返回所有已注册的MCP服务器信息
+  rpc ListMcpServers (ListMcpServersRequest) returns (ListMcpServersReply);
+
+  // GetMcpServer 获取MCP服务器详细信息
+  // 根据服务器ID获取服务器的配置和状态信息
+  rpc GetMcpServer (GetMcpServerRequest) returns (GetMcpServerReply);
+
+  // RegisterMcpServer 注册新的MCP服务器
+  // 添加新的MCP服务器到系统中
+  rpc RegisterMcpServer (RegisterMcpServerRequest) returns (RegisterMcpServerReply);
+
+  // UpdateMcpServer 更新MCP服务器配置
+  // 修改已注册的MCP服务器的配置信息
+  rpc UpdateMcpServer (UpdateMcpServerRequest) returns (UpdateMcpServerReply);
+
+  // DeleteMcpServer 删除MCP服务器
+  // 从系统中移除MCP服务器及其所有工具和资源
+  rpc DeleteMcpServer (DeleteMcpServerRequest) returns (DeleteMcpServerReply);
+
+  // TestMcpServer 测试MCP服务器连接
+  // 验证MCP服务器的连接状态和可用性
+  rpc TestMcpServer (TestMcpServerRequest) returns (TestMcpServerReply);
+
+  // === 资源管理 ===
+
+  // ListResources 获取可用的MCP资源列表
+  // 支持按MCP服务器和MIME类型过滤
+  rpc ListResources (ListResourcesRequest) returns (ListResourcesReply);
+
+  // GetResource 获取指定资源的内容
+  // 根据资源URI获取资源内容和元数据
+  rpc GetResource (GetResourceRequest) returns (GetResourceReply);
+
+  // SearchResources 搜索资源
+  // 基于关键词和元数据搜索可用资源
+  rpc SearchResources (SearchResourcesRequest) returns (SearchResourcesReply);
+
+  // WatchResource 监视资源变化
+  // 订阅资源变化通知，实时获取资源更新
+  rpc WatchResource (WatchResourceRequest) returns (stream WatchResourceReply);
+
+  // === 工具执行历史 ===
+
+  // GetToolExecutionHistory 获取工具执行历史
+  // 查询指定工具的执行历史记录
+  rpc GetToolExecutionHistory (GetToolExecutionHistoryRequest) returns (GetToolExecutionHistoryReply);
+
+  // GetToolExecutionStats 获取工具执行统计
+  // 获取工具使用的统计信息和性能指标
+  rpc GetToolExecutionStats (GetToolExecutionStatsRequest) returns (GetToolExecutionStatsReply);
+
+  // === 工具配置管理 ===
+
+  // EnableTool 启用工具
+  // 启用指定的工具，使其可被调用
+  rpc EnableTool (EnableToolRequest) returns (EnableToolReply);
+
+  // DisableTool 禁用工具
+  // 禁用指定的工具，阻止其被调用
+  rpc DisableTool (DisableToolRequest) returns (DisableToolReply);
+
+  // ConfigureTool 配置工具
+  // 设置工具的特定配置参数
+  rpc ConfigureTool (ConfigureToolRequest) returns (ConfigureToolReply);
+
+  // GetToolConfig 获取工具配置
+  // 获取工具的当前配置信息
+  rpc GetToolConfig (GetToolConfigRequest) returns (GetToolConfigReply);
+}
+
+// === 核心数据模型 ===
+
+// MCP工具定义 - 增强版
+message Tool {
+  string name = 1;                               // 工具名称
+  string description = 2;                        // 工具描述
+  string schema = 3;                             // 参数schema(JSON格式)
+  string mcp_server = 4;                         // MCP服务器标识
+  map<string, string> metadata = 5;             // 工具元数据
+  bool enabled = 6;                              // 是否启用
+
+  // 新增字段
+  ToolType type = 7;                             // 工具类型
+  ToolCategory category = 8;                     // 工具分类
+  repeated string tags = 9;                      // 标签
+  ToolConfig config = 10;                        // 工具配置
+  ToolStats stats = 11;                          // 使用统计
+  SecurityLevel security_level = 12;             // 安全级别
+  repeated ToolDependency dependencies = 13;     // 依赖关系
+  ToolVersionInfo version = 14;                  // 版本信息
+  google.protobuf.Timestamp created_at = 15;    // 创建时间
+  google.protobuf.Timestamp updated_at = 16;    // 更新时间
+}
+
+// 工具类型枚举
+enum ToolType {
+  TOOL_TYPE_UNSPECIFIED = 0;
+  TOOL_TYPE_FUNCTION = 1;        // 功能工具
+  TOOL_TYPE_API = 2;             // API工具
+  TOOL_TYPE_SCRIPT = 3;          // 脚本工具
+  TOOL_TYPE_SERVICE = 4;         // 服务工具
+  TOOL_TYPE_DATABASE = 5;        // 数据库工具
+  TOOL_TYPE_FILE = 6;            // 文件工具
+  TOOL_TYPE_NETWORK = 7;         // 网络工具
+}
+
+// 工具分类枚举
+enum ToolCategory {
+  TOOL_CATEGORY_UNSPECIFIED = 0;
+  TOOL_CATEGORY_PRODUCTIVITY = 1;    // 生产力工具
+  TOOL_CATEGORY_DEVELOPMENT = 2;     // 开发工具
+  TOOL_CATEGORY_ANALYSIS = 3;        // 分析工具
+  TOOL_CATEGORY_COMMUNICATION = 4;   // 通讯工具
+  TOOL_CATEGORY_CONTENT = 5;         // 内容工具
+  TOOL_CATEGORY_SYSTEM = 6;          // 系统工具
+  TOOL_CATEGORY_UTILITY = 7;         // 实用工具
+}
+
+// 安全级别枚举
+enum SecurityLevel {
+  SECURITY_LEVEL_UNSPECIFIED = 0;
+  SECURITY_LEVEL_PUBLIC = 1;         // 公开
+  SECURITY_LEVEL_RESTRICTED = 2;     // 受限
+  SECURITY_LEVEL_PRIVATE = 3;        // 私有
+  SECURITY_LEVEL_ADMIN = 4;          // 管理员
+}
+
+// 工具配置
+message ToolConfig {
+  int32 timeout_seconds = 1;                     // 超时时间(秒)
+  int32 retry_count = 2;                         // 重试次数
+  bool cache_enabled = 3;                        // 是否启用缓存
+  int32 cache_ttl_seconds = 4;                   // 缓存TTL(秒)
+  int32 rate_limit_per_minute = 5;               // 每分钟调用限制
+  bool async_execution = 6;                      // 是否异步执行
+  map<string, string> environment_vars = 7;     // 环境变量
+  repeated string required_permissions = 8;      // 所需权限
+  string execution_context = 9;                  // 执行上下文
+  map<string, google.protobuf.Any> custom_config = 10; // 自定义配置
+}
+
+// 工具统计信息
+message ToolStats {
+  int64 total_calls = 1;                         // 总调用次数
+  int64 successful_calls = 2;                    // 成功调用次数
+  int64 failed_calls = 3;                        // 失败调用次数
+  double average_duration = 4;                   // 平均执行时间
+  google.protobuf.Timestamp last_called = 5;    // 最后调用时间
+  double success_rate = 6;                       // 成功率
+  map<string, int64> error_counts = 7;          // 错误统计
+  double total_cost = 8;                         // 总成本
+}
+
+// 工具依赖
+message ToolDependency {
+  string tool_name = 1;                          // 依赖的工具名称
+  DependencyType type = 2;                       // 依赖类型
+  bool required = 3;                             // 是否必需
+  string version_constraint = 4;                 // 版本约束
+}
+
+// 依赖类型枚举
+enum DependencyType {
+  DEPENDENCY_TYPE_UNSPECIFIED = 0;
+  DEPENDENCY_TYPE_PREREQUISITE = 1;    // 前置依赖
+  DEPENDENCY_TYPE_OPTIONAL = 2;        // 可选依赖
+  DEPENDENCY_TYPE_CONFLICT = 3;        // 冲突依赖
+}
+
+// 工具版本信息
+message ToolVersionInfo {
+  string version = 1;                            // 版本号
+  string changelog = 2;                          // 变更日志
+  bool deprecated = 3;                           // 是否已弃用
+  string deprecation_message = 4;                // 弃用说明
+  google.protobuf.Timestamp release_date = 5;   // 发布日期
+}
+
+// MCP服务器定义 - 增强版
+message McpServer {
+  string id = 1;                                 // 服务器ID
+  string name = 2;                               // 服务器名称
+  string description = 3;                        // 服务器描述
+  string endpoint = 4;                           // 服务器端点
+  McpServerStatus status = 5;                    // 服务器状态
+  McpServerConfig config = 6;                    // 服务器配置
+  map<string, string> metadata = 7;             // 服务器元数据
+  google.protobuf.Timestamp created_at = 8;     // 创建时间
+  google.protobuf.Timestamp updated_at = 9;     // 更新时间
+
+  // 新增字段
+  string version = 10;                           // 服务器版本
+  repeated string supported_protocols = 11;     // 支持的协议
+  McpServerStats stats = 12;                     // 服务器统计
+  HealthStatus health = 13;                      // 健康状态
+  repeated string capabilities = 14;             // 服务器能力
+  string owner = 15;                             // 所有者
+  repeated string tags = 16;                     // 标签
+  SecurityPolicy security_policy = 17;          // 安全策略
+}
+
+// MCP服务器状态枚举
+enum McpServerStatus {
+  MCP_SERVER_STATUS_UNSPECIFIED = 0;
+  MCP_SERVER_STATUS_ACTIVE = 1;         // 活跃
+  MCP_SERVER_STATUS_INACTIVE = 2;       // 非活跃
+  MCP_SERVER_STATUS_ERROR = 3;          // 错误
+  MCP_SERVER_STATUS_MAINTENANCE = 4;    // 维护中
+  MCP_SERVER_STATUS_DEPRECATED = 5;     // 已弃用
+}
+
+// MCP服务器配置
+message McpServerConfig {
+  string transport_type = 1;                     // 传输类型
+  map<string, string> connection_params = 2;    // 连接参数
+  int32 connection_timeout = 3;                  // 连接超时
+  int32 request_timeout = 4;                     // 请求超时
+  int32 max_retries = 5;                         // 最大重试次数
+  bool ssl_enabled = 6;                          // 是否启用SSL
+  string ssl_cert_path = 7;                      // SSL证书路径
+  bool authentication_required = 8;              // 是否需要认证
+  map<string, string> auth_config = 9;          // 认证配置
+  int32 rate_limit = 10;                         // 速率限制
+  map<string, google.protobuf.Any> custom_config = 11; // 自定义配置
+}
+
+// MCP服务器统计
+message McpServerStats {
+  int64 total_requests = 1;                      // 总请求数
+  int64 successful_requests = 2;                 // 成功请求数
+  int64 failed_requests = 3;                     // 失败请求数
+  double average_response_time = 4;              // 平均响应时间
+  google.protobuf.Timestamp last_request_at = 5; // 最后请求时间
+  int64 active_connections = 6;                  // 活跃连接数
+  map<string, int64> error_counts = 7;          // 错误统计
+  double uptime_percentage = 8;                  // 运行时间百分比
+}
+
+// 健康状态
+message HealthStatus {
+  HealthLevel level = 1;                         // 健康级别
+  string message = 2;                            // 状态消息
+  google.protobuf.Timestamp last_check = 3;     // 最后检查时间
+  repeated HealthCheck checks = 4;               // 健康检查详情
+}
+
+// 健康级别枚举
+enum HealthLevel {
+  HEALTH_LEVEL_UNSPECIFIED = 0;
+  HEALTH_LEVEL_HEALTHY = 1;          // 健康
+  HEALTH_LEVEL_WARNING = 2;          // 警告
+  HEALTH_LEVEL_CRITICAL = 3;         // 严重
+  HEALTH_LEVEL_UNKNOWN = 4;          // 未知
+}
+
+// 健康检查
+message HealthCheck {
+  string name = 1;                               // 检查名称
+  HealthLevel status = 2;                        // 检查状态
+  string message = 3;                            // 检查消息
+  google.protobuf.Duration duration = 4;        // 检查耗时
+}
+
+// 安全策略
+message SecurityPolicy {
+  repeated string allowed_origins = 1;           // 允许的来源
+  repeated string blocked_origins = 2;           // 阻止的来源
+  repeated string required_permissions = 3;      // 必需权限
+  bool audit_enabled = 4;                        // 是否启用审计
+  int32 max_request_size = 5;                    // 最大请求大小
+  bool rate_limiting_enabled = 6;                // 是否启用速率限制
+  map<string, string> security_headers = 7;     // 安全头
+}
+
+// 资源定义 - 增强版
+message Resource {
+  string uri = 1;                                // 资源URI
+  string name = 2;                               // 资源名称
+  string description = 3;                        // 资源描述
+  string mime_type = 4;                          // MIME类型
+  string mcp_server = 5;                         // MCP服务器标识
+  map<string, string> metadata = 6;             // 资源元数据
+
+  // 新增字段
+  ResourceType type = 7;                         // 资源类型
+  int64 size = 8;                                // 资源大小
+  string hash = 9;                               // 资源哈希
+  bool cached = 10;                              // 是否缓存
+  google.protobuf.Timestamp last_modified = 11; // 最后修改时间
+  ResourcePermissions permissions = 12;          // 资源权限
+  repeated string tags = 13;                     // 标签
+  string version = 14;                           // 资源版本
+  ResourceStats stats = 15;                      // 访问统计
+}
+
+// 资源类型枚举
+enum ResourceType {
+  RESOURCE_TYPE_UNSPECIFIED = 0;
+  RESOURCE_TYPE_FILE = 1;            // 文件
+  RESOURCE_TYPE_DATABASE = 2;        // 数据库
+  RESOURCE_TYPE_API = 3;             // API端点
+  RESOURCE_TYPE_STREAM = 4;          // 数据流
+  RESOURCE_TYPE_MEMORY = 5;          // 内存资源
+  RESOURCE_TYPE_CACHE = 6;           // 缓存资源
+}
+
+// 资源权限
+message ResourcePermissions {
+  bool readable = 1;                             // 可读
+  bool writable = 2;                             // 可写
+  bool executable = 3;                           // 可执行
+  bool deletable = 4;                            // 可删除
+  repeated string required_roles = 5;            // 需要的角色
+  repeated string allowed_users = 6;             // 允许的用户
+}
+
+// 资源统计
+message ResourceStats {
+  int64 access_count = 1;                        // 访问次数
+  google.protobuf.Timestamp last_accessed = 2;  // 最后访问时间
+  int64 download_count = 3;                      // 下载次数
+  double average_access_duration = 4;            // 平均访问时长
+}
+
+// === 工具执行相关 ===
+
+// 工具执行记录
+message ToolExecution {
+  string id = 1;                                 // 执行ID
+  string tool_name = 2;                          // 工具名称
+  string arguments = 3;                          // 执行参数
+  string result = 4;                             // 执行结果
+  ToolExecutionStatus status = 5;                // 执行状态
+  string error_message = 6;                      // 错误信息
+  google.protobuf.Timestamp started_at = 7;     // 开始时间
+  google.protobuf.Timestamp completed_at = 8;   // 完成时间
+  google.protobuf.Duration duration = 9;        // 执行时长
+  
+  // 新增字段
+  string user_id = 10;                           // 用户ID
+  string conversation_id = 11;                   // 对话ID
+  ExecutionContext context = 12;                 // 执行上下文
+  ExecutionMetrics metrics = 13;                 // 执行指标
+  repeated string warnings = 14;                 // 警告信息
+  string trace_id = 15;                          // 追踪ID
+}
+
+// 工具执行状态枚举
+enum ToolExecutionStatus {
+  TOOL_EXECUTION_STATUS_UNSPECIFIED = 0;
+  TOOL_EXECUTION_STATUS_PENDING = 1;      // 待执行
+  TOOL_EXECUTION_STATUS_RUNNING = 2;      // 执行中
+  TOOL_EXECUTION_STATUS_SUCCESS = 3;      // 成功
+  TOOL_EXECUTION_STATUS_FAILED = 4;       // 失败
+  TOOL_EXECUTION_STATUS_TIMEOUT = 5;      // 超时
+  TOOL_EXECUTION_STATUS_CANCELLED = 6;    // 已取消
+}
+
+// 执行上下文
+message ExecutionContext {
+  map<string, string> environment = 1;          // 环境变量
+  string working_directory = 2;                 // 工作目录
+  repeated string permissions = 3;               // 权限列表
+  map<string, google.protobuf.Any> variables = 4; // 上下文变量
+  string session_id = 5;                         // 会话ID
+}
+
+// 执行指标
+message ExecutionMetrics {
+  int64 memory_used = 1;                         // 内存使用(字节)
+  double cpu_usage = 2;                          // CPU使用率
+  int64 network_bytes_sent = 3;                  // 网络发送字节数
+  int64 network_bytes_received = 4;              // 网络接收字节数
+  int32 file_operations = 5;                     // 文件操作次数
+  double cost = 6;                               // 执行成本
+}
+
+// === 请求和响应消息 ===
+
+// 列出工具
+message ListToolsRequest {
+  string mcp_server = 1;                         // MCP服务器过滤(可选)
+  bool only_enabled = 2;                         // 只显示启用的工具
+  ToolType type_filter = 3;                      // 工具类型过滤(可选)
+  ToolCategory category_filter = 4;              // 工具分类过滤(可选)
+  repeated string tag_filters = 5;               // 标签过滤(可选)
+  SecurityLevel max_security_level = 6;          // 最大安全级别(可选)
+  int32 page = 7;                                // 页码
+  int32 page_size = 8;                           // 页面大小
+}
+
+message ListToolsReply {
+  repeated Tool tools = 1;                       // 工具列表
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 获取工具
+message GetToolRequest {
+  string name = 1;                               // 工具名称
+  bool include_stats = 2;                        // 是否包含统计信息
+  bool include_config = 3;                       // 是否包含配置信息
+}
+
+message GetToolReply {
+  Tool tool = 1;                                 // 工具信息
+}
+
+// 调用工具
+message CallToolRequest {
+  string name = 1;                               // 工具名称
+  string arguments = 2;                          // 参数(JSON格式)
+  int64 conversation_id = 3;                     // 对话ID(可选，用于上下文)
+  ExecutionContext context = 4;                  // 执行上下文(可选)
+  int32 timeout_seconds = 5;                     // 超时时间(可选)
+  bool async = 6;                                // 是否异步执行
+  string trace_id = 7;                           // 追踪ID(可选)
+}
+
+message CallToolResponse {
+  string result = 1;                             // 执行结果
+  ToolExecutionStatus status = 2;                // 状态码
+  string error_message = 3;                      // 错误信息(如果失败)
+  map<string, string> metadata = 4;             // 执行元数据
+  string execution_id = 5;                       // 执行ID
+  ExecutionMetrics metrics = 6;                  // 执行指标
+  repeated string warnings = 7;                  // 警告信息
+}
+
+// 流式工具调用响应
+message CallToolStreamResponse {
+  string chunk = 1;                              // 数据块
+  ToolExecutionStatus status = 2;                // 当前状态
+  bool is_complete = 3;                          // 是否完成
+  string final_result = 4;                       // 最终结果(完成时)
+  string error = 5;                              // 错误信息(如果有)
+  double progress = 6;                           // 执行进度(0-1)
+}
+
+// 获取工具Schema
+message GetToolSchemaRequest {
+  string name = 1;                               // 工具名称
+}
+
+message GetToolSchemaReply {
+  Tool tool = 1;                                 // 工具信息和Schema
+}
+
+// 验证工具参数
+message ValidateToolArgumentsRequest {
+  string tool_name = 1;                          // 工具名称
+  string arguments = 2;                          // 参数(JSON格式)
+}
+
+message ValidateToolArgumentsReply {
+  bool valid = 1;                                // 是否有效
+  repeated string errors = 2;                    // 验证错误
+  repeated string warnings = 3;                  // 验证警告
+  string normalized_arguments = 4;               // 规范化后的参数
+}
+
+// 批量调用工具
+message BatchCallToolsRequest {
+  repeated BatchToolCall tool_calls = 1;         // 工具调用列表
+  bool parallel = 2;                             // 是否并行执行
+  int32 max_concurrency = 3;                     // 最大并发数
+  bool stop_on_error = 4;                        // 遇到错误时是否停止
+}
+
+message BatchToolCall {
+  string id = 1;                                 // 调用ID
+  string tool_name = 2;                          // 工具名称
+  string arguments = 3;                          // 参数
+  repeated string depends_on = 4;                // 依赖的调用ID
+  int32 timeout_seconds = 5;                     // 超时时间
+}
+
+message BatchCallToolsReply {
+  repeated BatchToolResult results = 1;          // 执行结果列表
+  bool all_success = 2;                          // 是否全部成功
+  int32 success_count = 3;                       // 成功数量
+  int32 failed_count = 4;                        // 失败数量
+}
+
+message BatchToolResult {
+  string id = 1;                                 // 调用ID
+  CallToolResponse response = 2;                 // 执行结果
+}
+
+// 列出MCP服务器
+message ListMcpServersRequest {
+  McpServerStatus status_filter = 1;             // 状态过滤(可选)
+  repeated string tag_filters = 2;               // 标签过滤(可选)
+  bool include_stats = 3;                        // 是否包含统计信息
+  int32 page = 4;                                // 页码
+  int32 page_size = 5;                           // 页面大小
+}
+
+message ListMcpServersReply {
+  repeated McpServer servers = 1;                // 服务器列表
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 获取MCP服务器
+message GetMcpServerRequest {
+  string id = 1;                                 // 服务器ID
+  bool include_stats = 2;                        // 是否包含统计信息
+  bool include_health = 3;                       // 是否包含健康状态
+}
+
+message GetMcpServerReply {
+  McpServer server = 1;                          // 服务器信息
+}
+
+// 注册MCP服务器
+message RegisterMcpServerRequest {
+  string name = 1;                               // 服务器名称
+  string description = 2;                        // 服务器描述
+  string endpoint = 3;                           // 服务器端点
+  McpServerConfig config = 4;                    // 服务器配置
+  map<string, string> metadata = 5;             // 服务器元数据
+  repeated string tags = 6;                      // 标签
+}
+
+message RegisterMcpServerReply {
+  McpServer server = 1;                          // 注册的服务器
+}
+
+// 更新MCP服务器
+message UpdateMcpServerRequest {
+  string id = 1;                                 // 服务器ID
+  string name = 2;                               // 服务器名称(可选)
+  string description = 3;                        // 服务器描述(可选)
+  string endpoint = 4;                           // 服务器端点(可选)
+  McpServerConfig config = 5;                    // 服务器配置(可选)
+  map<string, string> metadata = 6;             // 服务器元数据(可选)
+  repeated string tags = 7;                      // 标签(可选)
+}
+
+message UpdateMcpServerReply {
+  McpServer server = 1;                          // 更新后的服务器
+}
+
+// 删除MCP服务器
+message DeleteMcpServerRequest {
+  string id = 1;                                 // 服务器ID
+  bool force_delete = 2;                         // 是否强制删除
+}
+
+message DeleteMcpServerReply {}
+
+// 测试MCP服务器
+message TestMcpServerRequest {
+  string id = 1;                                 // 服务器ID
+  repeated string test_cases = 2;                // 测试用例
+}
+
+message TestMcpServerReply {
+  bool success = 1;                              // 测试是否成功
+  repeated TestResult results = 2;               // 测试结果
+  HealthStatus health = 3;                       // 健康状态
+}
+
+message TestResult {
+  string test_case = 1;                          // 测试用例
+  bool passed = 2;                               // 是否通过
+  string message = 3;                            // 测试消息
+  google.protobuf.Duration duration = 4;        // 测试耗时
+}
+
+// 列出资源
+message ListResourcesRequest {
+  string mcp_server = 1;                         // MCP服务器过滤(可选)
+  string mime_type = 2;                          // MIME类型过滤(可选)
+  ResourceType type_filter = 3;                  // 资源类型过滤(可选)
+  repeated string tag_filters = 4;               // 标签过滤(可选)
+  int32 page = 5;                                // 页码
+  int32 page_size = 6;                           // 页面大小
+}
+
+message ListResourcesReply {
+  repeated Resource resources = 1;               // 资源列表
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 获取资源
+message GetResourceRequest {
+  string uri = 1;                                // 资源URI
+  bool include_content = 2;                      // 是否包含内容
+  bool use_cache = 3;                            // 是否使用缓存
+}
+
+message GetResourceReply {
+  string content = 1;                            // 资源内容
+  string mime_type = 2;                          // MIME类型
+  map<string, string> metadata = 3;             // 资源元数据
+  Resource resource_info = 4;                    // 资源信息
+}
+
+// 搜索资源
+message SearchResourcesRequest {
+  string query = 1;                              // 搜索查询
+  repeated string mcp_servers = 2;               // MCP服务器过滤
+  repeated string mime_types = 3;                // MIME类型过滤
+  map<string, string> metadata_filters = 4;     // 元数据过滤器
+  int32 limit = 5;                               // 结果数量限制
+}
+
+message SearchResourcesReply {
+  repeated ResourceSearchResult results = 1;     // 搜索结果
+  int32 total_count = 2;                         // 总结果数
+}
+
+message ResourceSearchResult {
+  Resource resource = 1;                         // 资源信息
+  double relevance_score = 2;                    // 相关性分数
+  repeated string matched_fields = 3;            // 匹配的字段
+}
+
+// 监视资源
+message WatchResourceRequest {
+  string uri = 1;                                // 资源URI
+  repeated string event_types = 2;               // 关注的事件类型
+}
+
+message WatchResourceReply {
+  string event_type = 1;                         // 事件类型
+  Resource resource = 2;                         // 资源信息
+  google.protobuf.Timestamp timestamp = 3;      // 事件时间
+  map<string, string> event_data = 4;           // 事件数据
+}
+
+// 获取工具执行历史
+message GetToolExecutionHistoryRequest {
+  string tool_name = 1;                          // 工具名称(可选)
+  string user_id = 2;                            // 用户ID(可选)
+  string conversation_id = 3;                    // 对话ID(可选)
+  google.protobuf.Timestamp start_time = 4;     // 开始时间(可选)
+  google.protobuf.Timestamp end_time = 5;       // 结束时间(可选)
+  ToolExecutionStatus status_filter = 6;        // 状态过滤(可选)
+  int32 page = 7;                                // 页码
+  int32 page_size = 8;                           // 页面大小
+}
+
+message GetToolExecutionHistoryReply {
+  repeated ToolExecution executions = 1;         // 执行历史
+  int64 total = 2;                               // 总数
+  int32 page = 3;                                // 当前页
+  int32 page_size = 4;                           // 页面大小
+}
+
+// 获取工具执行统计
+message GetToolExecutionStatsRequest {
+  string tool_name = 1;                          // 工具名称(可选)
+  google.protobuf.Timestamp start_time = 2;     // 开始时间(可选)
+  google.protobuf.Timestamp end_time = 3;       // 结束时间(可选)
+  string group_by = 4;                           // 分组字段(可选)
+}
+
+message GetToolExecutionStatsReply {
+  map<string, ToolStats> tool_stats = 1;        // 工具统计映射
+  ExecutionSummary summary = 2;                  // 执行摘要
+}
+
+message ExecutionSummary {
+  int64 total_executions = 1;                    // 总执行次数
+  double average_duration = 2;                   // 平均持续时间
+  double success_rate = 3;                       // 成功率
+  double total_cost = 4;                         // 总成本
+  map<string, int64> status_distribution = 5;   // 状态分布
+}
+
+// 启用工具
+message EnableToolRequest {
+  string tool_name = 1;                          // 工具名称
+  string reason = 2;                             // 启用原因(可选)
+}
+
+message EnableToolReply {}
+
+// 禁用工具
+message DisableToolRequest {
+  string tool_name = 1;                          // 工具名称
+  string reason = 2;                             // 禁用原因(可选)
+}
+
+message DisableToolReply {}
+
+// 配置工具
+message ConfigureToolRequest {
+  string tool_name = 1;                          // 工具名称
+  ToolConfig config = 2;                         // 工具配置
+}
+
+message ConfigureToolReply {}
+
+// 获取工具配置
+message GetToolConfigRequest {
+  string tool_name = 1;                          // 工具名称
+}
+
+message GetToolConfigReply {
+  ToolConfig config = 1;                         // 工具配置
+}
