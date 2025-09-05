@@ -4,174 +4,66 @@ package api.universal.v1;
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
-import "validate/validate.proto";
 
 option go_package = "universal/api/gateway/v1;v1";
 option java_multiple_files = true;
 option java_package = "com.oldwei.universal.api.gateway.v1";
 option java_outer_classname = "GatewayProtoV1";
 
-
 service Gateway {
-  // 基础CRUD操作
-  rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+  // 获取网关信息
+  rpc GetGatewayInfo (GetGatewayInfoRequest) returns (GetGatewayInfoReply) {
     option (google.api.http) = {
-      post: "/api/user/v1/users"
-      body: "*"
+      get: "/api/gateway/v1/info"
     };
   }
-  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+  
+  // 获取网关健康状态
+  rpc GetGatewayHealth (GetGatewayHealthRequest) returns (GetGatewayHealthReply) {
     option (google.api.http) = {
-      put: "/api/user/v1/users/{id}"
-      body: "*"
-    };
-  }
-  rpc DeleteUser (DeleteUserRequest) returns (OperationReply) {
-    option (google.api.http) = {
-      delete: "/api/user/v1/users/{id}"
-    };
-  }
-  rpc GetUser (GetUserRequest) returns (GetUserReply) {
-    option (google.api.http) = {
-      get: "/api/user/v1/users/{id}"
-    };
-  }
-  rpc ListUser (ListUserRequest) returns (ListUserReply) {
-    option (google.api.http) = {
-      get: "/api/user/v1/users"
-    };
-  }
-
-  // 扩展操作
-  rpc BatchDeleteUser (BatchDeleteUserRequest) returns (BatchDeleteUserReply) {
-    option (google.api.http) = {
-      post: "/api/user/v1/users/batch-delete"
-      body: "*"
-    };
-  }
-  rpc UpdateUserStatus (UpdateUserStatusRequest) returns (OperationReply) {
-    option (google.api.http) = {
-      patch: "/api/user/v1/users/{id}/status"
-      body: "*"
-    };
-  }
-  rpc ChangePassword (ChangePasswordRequest) returns (OperationReply) {
-    option (google.api.http) = {
-      patch: "/api/user/v1/users/{id}/password"
-      body: "*"
-    };
-  }
-  rpc GetUserStats (GetUserStatsRequest) returns (GetUserStatsReply) {
-    option (google.api.http) = {
-      get: "/api/user/v1/users/stats"
+      get: "/api/gateway/v1/health"
     };
   }
 }
 
-message UserInfo {
-  int64 id = 1;
-  string username = 2;
-  string email = 3;
-  // 密码字段已移除，不在响应中返回
-  string phone = 4;
-  string nickname = 5;
-  string avatar = 6;
-  int32 status = 7; // 1:正常 0:禁用
-  google.protobuf.Timestamp created_at = 8;
-  google.protobuf.Timestamp updated_at = 9;
+// 网关信息
+message GatewayInfo {
+  string name = 1;                           // 网关名称
+  string version = 2;                        // 网关版本
+  string description = 3;                    // 网关描述
+  google.protobuf.Timestamp start_time = 4;  // 启动时间
+  int64 uptime_seconds = 5;                  // 运行时长（秒）
+  repeated string supported_apis = 6;         // 支持的API列表
 }
 
-message CreateUserRequest {
-  string username = 1 [(validate.rules).string = {min_len: 3, max_len: 50}];
-  string email = 2 [(validate.rules).string.email = true];
-  string password = 3 [(validate.rules).string.min_len = 6];
-  string phone = 4;
-  string nickname = 5 [(validate.rules).string.max_len = 100];
-  string avatar = 6;
-  int32 status = 7;
+// 获取网关信息请求
+message GetGatewayInfoRequest {
+  // 无需参数
 }
 
-message CreateUserReply {
-  UserInfo user = 1;
+// 获取网关信息响应
+message GetGatewayInfoReply {
+  GatewayInfo info = 1;
 }
 
-message UpdateUserRequest {
-  int64 id = 1 [(validate.rules).int64.gt = 0];
-  string email = 2 [(validate.rules).string.email = true];
-  string password = 3;
-  string phone = 4;
-  string nickname = 5 [(validate.rules).string.max_len = 100];
-  string avatar = 6;
-  int32 status = 7;
+// 获取网关健康状态请求  
+message GetGatewayHealthRequest {
+  // 无需参数
 }
 
-message UpdateUserReply {
-  UserInfo user = 1;
+// 获取网关健康状态响应
+message GetGatewayHealthReply {
+  string status = 1;                         // 状态: "healthy", "unhealthy", "degraded"
+  string message = 2;                        // 状态消息
+  google.protobuf.Timestamp check_time = 3;  // 检查时间
+  repeated ServiceStatus services = 4;        // 后端服务状态
 }
 
-message DeleteUserRequest {
-  int64 id = 1 [(validate.rules).int64.gt = 0];
-}
-
-message GetUserRequest {
-  int64 id = 1 [(validate.rules).int64.gt = 0];
-}
-
-message GetUserReply {
-  UserInfo user = 1;
-}
-
-message ListUserRequest {
-  int32 page = 1 [(validate.rules).int32 = {gte: 1}];
-  int32 page_size = 2 [(validate.rules).int32 = {gte: 1, lte: 100}];
-  string keyword = 3;
-  int32 status = 4;
-}
-
-message ListUserReply {
-  repeated UserInfo users = 1;
-  int64 total = 2;
-  int32 page = 3;
-  int32 page_size = 4;
-}
-
-// 通用操作响应
-message OperationReply {
-  bool success = 1;           // 操作是否成功
-  string message = 2;         // 操作结果消息
-  int32 affected_count = 3;   // 影响的记录数
-}
-
-// 扩展操作消息定义
-message BatchDeleteUserRequest {
-  repeated int64 ids = 1 [(validate.rules).repeated.min_items = 1];
-}
-
-message BatchDeleteUserReply {
-  int32 deleted_count = 1;        // 成功删除数量
-  int32 failed_count = 2;         // 删除失败数量
-  repeated int64 failed_ids = 3;  // 删除失败的ID列表
-  string message = 4;             // 操作结果消息
-}
-
-message UpdateUserStatusRequest {
-  int64 id = 1 [(validate.rules).int64.gt = 0];
-  int32 status = 2 [(validate.rules).int32 = {in: [0, 1]}];
-}
-
-message ChangePasswordRequest {
-  int64 id = 1 [(validate.rules).int64.gt = 0];
-  string old_password = 2 [(validate.rules).string.min_len = 6];
-  string new_password = 3 [(validate.rules).string.min_len = 6];
-}
-
-message GetUserStatsRequest {
-  // 统计查询请求，暂时无需参数，但保留扩展性
-}
-
-message GetUserStatsReply {
-  int64 total_users = 1;      // 总用户数
-  int64 active_users = 2;     // 活跃用户数
-  int64 disabled_users = 3;   // 禁用用户数
-  int64 today_new_users = 4;  // 今日新增用户数
+// 服务状态
+message ServiceStatus {
+  string name = 1;                           // 服务名称
+  string status = 2;                         // 服务状态
+  string endpoint = 3;                       // 服务端点
+  int32 response_time_ms = 4;                // 响应时间（毫秒）
+  string message = 5;                        // 状态消息
 }

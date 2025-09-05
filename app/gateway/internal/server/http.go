@@ -12,7 +12,12 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, gatewayService *service.GatewayService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server,
+	greeter *service.GreeterService,
+	gatewayService *service.GatewayService,
+	userService *service.UserService,
+	logger log.Logger,
+) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -30,5 +35,6 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, gatewayServi
 	srv := http.NewServer(opts...)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
 	gatewayv1.RegisterGatewayHTTPServer(srv, gatewayService)
+	gatewayv1.RegisterUserHTTPServer(srv, userService)
 	return srv
 }

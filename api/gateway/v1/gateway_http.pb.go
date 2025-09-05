@@ -19,254 +19,63 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationGatewayBatchDeleteUser = "/api.universal.v1.Gateway/BatchDeleteUser"
-const OperationGatewayChangePassword = "/api.universal.v1.Gateway/ChangePassword"
-const OperationGatewayCreateUser = "/api.universal.v1.Gateway/CreateUser"
-const OperationGatewayDeleteUser = "/api.universal.v1.Gateway/DeleteUser"
-const OperationGatewayGetUser = "/api.universal.v1.Gateway/GetUser"
-const OperationGatewayGetUserStats = "/api.universal.v1.Gateway/GetUserStats"
-const OperationGatewayListUser = "/api.universal.v1.Gateway/ListUser"
-const OperationGatewayUpdateUser = "/api.universal.v1.Gateway/UpdateUser"
-const OperationGatewayUpdateUserStatus = "/api.universal.v1.Gateway/UpdateUserStatus"
+const OperationGatewayGetGatewayHealth = "/api.universal.v1.Gateway/GetGatewayHealth"
+const OperationGatewayGetGatewayInfo = "/api.universal.v1.Gateway/GetGatewayInfo"
 
 type GatewayHTTPServer interface {
-	// BatchDeleteUser 扩展操作
-	BatchDeleteUser(context.Context, *BatchDeleteUserRequest) (*BatchDeleteUserReply, error)
-	ChangePassword(context.Context, *ChangePasswordRequest) (*OperationReply, error)
-	// CreateUser 基础CRUD操作
-	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
-	DeleteUser(context.Context, *DeleteUserRequest) (*OperationReply, error)
-	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
-	GetUserStats(context.Context, *GetUserStatsRequest) (*GetUserStatsReply, error)
-	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
-	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
-	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*OperationReply, error)
+	// GetGatewayHealth 获取网关健康状态
+	GetGatewayHealth(context.Context, *GetGatewayHealthRequest) (*GetGatewayHealthReply, error)
+	// GetGatewayInfo 获取网关信息
+	GetGatewayInfo(context.Context, *GetGatewayInfoRequest) (*GetGatewayInfoReply, error)
 }
 
 func RegisterGatewayHTTPServer(s *http.Server, srv GatewayHTTPServer) {
 	r := s.Route("/")
-	r.POST("/api/user/v1/users", _Gateway_CreateUser0_HTTP_Handler(srv))
-	r.PUT("/api/user/v1/users/{id}", _Gateway_UpdateUser0_HTTP_Handler(srv))
-	r.DELETE("/api/user/v1/users/{id}", _Gateway_DeleteUser0_HTTP_Handler(srv))
-	r.GET("/api/user/v1/users/{id}", _Gateway_GetUser0_HTTP_Handler(srv))
-	r.GET("/api/user/v1/users", _Gateway_ListUser0_HTTP_Handler(srv))
-	r.POST("/api/user/v1/users/batch-delete", _Gateway_BatchDeleteUser0_HTTP_Handler(srv))
-	r.PATCH("/api/user/v1/users/{id}/status", _Gateway_UpdateUserStatus0_HTTP_Handler(srv))
-	r.PATCH("/api/user/v1/users/{id}/password", _Gateway_ChangePassword0_HTTP_Handler(srv))
-	r.GET("/api/user/v1/users/stats", _Gateway_GetUserStats0_HTTP_Handler(srv))
+	r.GET("/api/gateway/v1/info", _Gateway_GetGatewayInfo0_HTTP_Handler(srv))
+	r.GET("/api/gateway/v1/health", _Gateway_GetGatewayHealth0_HTTP_Handler(srv))
 }
 
-func _Gateway_CreateUser0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
+func _Gateway_GetGatewayInfo0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in CreateUserRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
+		var in GetGatewayInfoRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationGatewayCreateUser)
+		http.SetOperation(ctx, OperationGatewayGetGatewayInfo)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreateUser(ctx, req.(*CreateUserRequest))
+			return srv.GetGatewayInfo(ctx, req.(*GetGatewayInfoRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateUserReply)
+		reply := out.(*GetGatewayInfoReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Gateway_UpdateUser0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
+func _Gateway_GetGatewayHealth0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateUserRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
+		var in GetGatewayHealthRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationGatewayUpdateUser)
+		http.SetOperation(ctx, OperationGatewayGetGatewayHealth)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
+			return srv.GetGatewayHealth(ctx, req.(*GetGatewayHealthRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateUserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Gateway_DeleteUser0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationGatewayDeleteUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteUser(ctx, req.(*DeleteUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*OperationReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Gateway_GetUser0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationGatewayGetUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUser(ctx, req.(*GetUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetUserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Gateway_ListUser0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationGatewayListUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListUser(ctx, req.(*ListUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListUserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Gateway_BatchDeleteUser0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in BatchDeleteUserRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationGatewayBatchDeleteUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.BatchDeleteUser(ctx, req.(*BatchDeleteUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*BatchDeleteUserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Gateway_UpdateUserStatus0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UpdateUserStatusRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationGatewayUpdateUserStatus)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*OperationReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Gateway_ChangePassword0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ChangePasswordRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationGatewayChangePassword)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ChangePassword(ctx, req.(*ChangePasswordRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*OperationReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Gateway_GetUserStats0_HTTP_Handler(srv GatewayHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetUserStatsRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationGatewayGetUserStats)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUserStats(ctx, req.(*GetUserStatsRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetUserStatsReply)
+		reply := out.(*GetGatewayHealthReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type GatewayHTTPClient interface {
-	BatchDeleteUser(ctx context.Context, req *BatchDeleteUserRequest, opts ...http.CallOption) (rsp *BatchDeleteUserReply, err error)
-	ChangePassword(ctx context.Context, req *ChangePasswordRequest, opts ...http.CallOption) (rsp *OperationReply, err error)
-	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserReply, err error)
-	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *OperationReply, err error)
-	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserReply, err error)
-	GetUserStats(ctx context.Context, req *GetUserStatsRequest, opts ...http.CallOption) (rsp *GetUserStatsReply, err error)
-	ListUser(ctx context.Context, req *ListUserRequest, opts ...http.CallOption) (rsp *ListUserReply, err error)
-	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserReply, err error)
-	UpdateUserStatus(ctx context.Context, req *UpdateUserStatusRequest, opts ...http.CallOption) (rsp *OperationReply, err error)
+	GetGatewayHealth(ctx context.Context, req *GetGatewayHealthRequest, opts ...http.CallOption) (rsp *GetGatewayHealthReply, err error)
+	GetGatewayInfo(ctx context.Context, req *GetGatewayInfoRequest, opts ...http.CallOption) (rsp *GetGatewayInfoReply, err error)
 }
 
 type GatewayHTTPClientImpl struct {
@@ -277,63 +86,11 @@ func NewGatewayHTTPClient(client *http.Client) GatewayHTTPClient {
 	return &GatewayHTTPClientImpl{client}
 }
 
-func (c *GatewayHTTPClientImpl) BatchDeleteUser(ctx context.Context, in *BatchDeleteUserRequest, opts ...http.CallOption) (*BatchDeleteUserReply, error) {
-	var out BatchDeleteUserReply
-	pattern := "/api/user/v1/users/batch-delete"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationGatewayBatchDeleteUser))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *GatewayHTTPClientImpl) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...http.CallOption) (*OperationReply, error) {
-	var out OperationReply
-	pattern := "/api/user/v1/users/{id}/password"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationGatewayChangePassword))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PATCH", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *GatewayHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*CreateUserReply, error) {
-	var out CreateUserReply
-	pattern := "/api/user/v1/users"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationGatewayCreateUser))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *GatewayHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...http.CallOption) (*OperationReply, error) {
-	var out OperationReply
-	pattern := "/api/user/v1/users/{id}"
+func (c *GatewayHTTPClientImpl) GetGatewayHealth(ctx context.Context, in *GetGatewayHealthRequest, opts ...http.CallOption) (*GetGatewayHealthReply, error) {
+	var out GetGatewayHealthReply
+	pattern := "/api/gateway/v1/health"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationGatewayDeleteUser))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *GatewayHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserReply, error) {
-	var out GetUserReply
-	pattern := "/api/user/v1/users/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationGatewayGetUser))
+	opts = append(opts, http.Operation(OperationGatewayGetGatewayHealth))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -342,52 +99,13 @@ func (c *GatewayHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest,
 	return &out, nil
 }
 
-func (c *GatewayHTTPClientImpl) GetUserStats(ctx context.Context, in *GetUserStatsRequest, opts ...http.CallOption) (*GetUserStatsReply, error) {
-	var out GetUserStatsReply
-	pattern := "/api/user/v1/users/stats"
+func (c *GatewayHTTPClientImpl) GetGatewayInfo(ctx context.Context, in *GetGatewayInfoRequest, opts ...http.CallOption) (*GetGatewayInfoReply, error) {
+	var out GetGatewayInfoReply
+	pattern := "/api/gateway/v1/info"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationGatewayGetUserStats))
+	opts = append(opts, http.Operation(OperationGatewayGetGatewayInfo))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *GatewayHTTPClientImpl) ListUser(ctx context.Context, in *ListUserRequest, opts ...http.CallOption) (*ListUserReply, error) {
-	var out ListUserReply
-	pattern := "/api/user/v1/users"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationGatewayListUser))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *GatewayHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...http.CallOption) (*UpdateUserReply, error) {
-	var out UpdateUserReply
-	pattern := "/api/user/v1/users/{id}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationGatewayUpdateUser))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *GatewayHTTPClientImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...http.CallOption) (*OperationReply, error) {
-	var out OperationReply
-	pattern := "/api/user/v1/users/{id}/status"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationGatewayUpdateUserStatus))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PATCH", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

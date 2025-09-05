@@ -19,32 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Gateway_CreateUser_FullMethodName       = "/api.universal.v1.Gateway/CreateUser"
-	Gateway_UpdateUser_FullMethodName       = "/api.universal.v1.Gateway/UpdateUser"
-	Gateway_DeleteUser_FullMethodName       = "/api.universal.v1.Gateway/DeleteUser"
-	Gateway_GetUser_FullMethodName          = "/api.universal.v1.Gateway/GetUser"
-	Gateway_ListUser_FullMethodName         = "/api.universal.v1.Gateway/ListUser"
-	Gateway_BatchDeleteUser_FullMethodName  = "/api.universal.v1.Gateway/BatchDeleteUser"
-	Gateway_UpdateUserStatus_FullMethodName = "/api.universal.v1.Gateway/UpdateUserStatus"
-	Gateway_ChangePassword_FullMethodName   = "/api.universal.v1.Gateway/ChangePassword"
-	Gateway_GetUserStats_FullMethodName     = "/api.universal.v1.Gateway/GetUserStats"
+	Gateway_GetGatewayInfo_FullMethodName   = "/api.universal.v1.Gateway/GetGatewayInfo"
+	Gateway_GetGatewayHealth_FullMethodName = "/api.universal.v1.Gateway/GetGatewayHealth"
 )
 
 // GatewayClient is the client API for Gateway service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GatewayClient interface {
-	// 基础CRUD操作
-	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserReply, error)
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserReply, error)
-	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*OperationReply, error)
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error)
-	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error)
-	// 扩展操作
-	BatchDeleteUser(ctx context.Context, in *BatchDeleteUserRequest, opts ...grpc.CallOption) (*BatchDeleteUserReply, error)
-	UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...grpc.CallOption) (*OperationReply, error)
-	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*OperationReply, error)
-	GetUserStats(ctx context.Context, in *GetUserStatsRequest, opts ...grpc.CallOption) (*GetUserStatsReply, error)
+	// 获取网关信息
+	GetGatewayInfo(ctx context.Context, in *GetGatewayInfoRequest, opts ...grpc.CallOption) (*GetGatewayInfoReply, error)
+	// 获取网关健康状态
+	GetGatewayHealth(ctx context.Context, in *GetGatewayHealthRequest, opts ...grpc.CallOption) (*GetGatewayHealthReply, error)
 }
 
 type gatewayClient struct {
@@ -55,90 +41,20 @@ func NewGatewayClient(cc grpc.ClientConnInterface) GatewayClient {
 	return &gatewayClient{cc}
 }
 
-func (c *gatewayClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserReply, error) {
+func (c *gatewayClient) GetGatewayInfo(ctx context.Context, in *GetGatewayInfoRequest, opts ...grpc.CallOption) (*GetGatewayInfoReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateUserReply)
-	err := c.cc.Invoke(ctx, Gateway_CreateUser_FullMethodName, in, out, cOpts...)
+	out := new(GetGatewayInfoReply)
+	err := c.cc.Invoke(ctx, Gateway_GetGatewayInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gatewayClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserReply, error) {
+func (c *gatewayClient) GetGatewayHealth(ctx context.Context, in *GetGatewayHealthRequest, opts ...grpc.CallOption) (*GetGatewayHealthReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateUserReply)
-	err := c.cc.Invoke(ctx, Gateway_UpdateUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gatewayClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*OperationReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OperationReply)
-	err := c.cc.Invoke(ctx, Gateway_DeleteUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gatewayClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserReply)
-	err := c.cc.Invoke(ctx, Gateway_GetUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gatewayClient) ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListUserReply)
-	err := c.cc.Invoke(ctx, Gateway_ListUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gatewayClient) BatchDeleteUser(ctx context.Context, in *BatchDeleteUserRequest, opts ...grpc.CallOption) (*BatchDeleteUserReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BatchDeleteUserReply)
-	err := c.cc.Invoke(ctx, Gateway_BatchDeleteUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gatewayClient) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...grpc.CallOption) (*OperationReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OperationReply)
-	err := c.cc.Invoke(ctx, Gateway_UpdateUserStatus_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gatewayClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*OperationReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OperationReply)
-	err := c.cc.Invoke(ctx, Gateway_ChangePassword_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gatewayClient) GetUserStats(ctx context.Context, in *GetUserStatsRequest, opts ...grpc.CallOption) (*GetUserStatsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserStatsReply)
-	err := c.cc.Invoke(ctx, Gateway_GetUserStats_FullMethodName, in, out, cOpts...)
+	out := new(GetGatewayHealthReply)
+	err := c.cc.Invoke(ctx, Gateway_GetGatewayHealth_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -149,17 +65,10 @@ func (c *gatewayClient) GetUserStats(ctx context.Context, in *GetUserStatsReques
 // All implementations must embed UnimplementedGatewayServer
 // for forward compatibility.
 type GatewayServer interface {
-	// 基础CRUD操作
-	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
-	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
-	DeleteUser(context.Context, *DeleteUserRequest) (*OperationReply, error)
-	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
-	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
-	// 扩展操作
-	BatchDeleteUser(context.Context, *BatchDeleteUserRequest) (*BatchDeleteUserReply, error)
-	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*OperationReply, error)
-	ChangePassword(context.Context, *ChangePasswordRequest) (*OperationReply, error)
-	GetUserStats(context.Context, *GetUserStatsRequest) (*GetUserStatsReply, error)
+	// 获取网关信息
+	GetGatewayInfo(context.Context, *GetGatewayInfoRequest) (*GetGatewayInfoReply, error)
+	// 获取网关健康状态
+	GetGatewayHealth(context.Context, *GetGatewayHealthRequest) (*GetGatewayHealthReply, error)
 	mustEmbedUnimplementedGatewayServer()
 }
 
@@ -170,32 +79,11 @@ type GatewayServer interface {
 // pointer dereference when methods are called.
 type UnimplementedGatewayServer struct{}
 
-func (UnimplementedGatewayServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+func (UnimplementedGatewayServer) GetGatewayInfo(context.Context, *GetGatewayInfoRequest) (*GetGatewayInfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGatewayInfo not implemented")
 }
-func (UnimplementedGatewayServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
-}
-func (UnimplementedGatewayServer) DeleteUser(context.Context, *DeleteUserRequest) (*OperationReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
-}
-func (UnimplementedGatewayServer) GetUser(context.Context, *GetUserRequest) (*GetUserReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
-}
-func (UnimplementedGatewayServer) ListUser(context.Context, *ListUserRequest) (*ListUserReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
-}
-func (UnimplementedGatewayServer) BatchDeleteUser(context.Context, *BatchDeleteUserRequest) (*BatchDeleteUserReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BatchDeleteUser not implemented")
-}
-func (UnimplementedGatewayServer) UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*OperationReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserStatus not implemented")
-}
-func (UnimplementedGatewayServer) ChangePassword(context.Context, *ChangePasswordRequest) (*OperationReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
-}
-func (UnimplementedGatewayServer) GetUserStats(context.Context, *GetUserStatsRequest) (*GetUserStatsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserStats not implemented")
+func (UnimplementedGatewayServer) GetGatewayHealth(context.Context, *GetGatewayHealthRequest) (*GetGatewayHealthReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGatewayHealth not implemented")
 }
 func (UnimplementedGatewayServer) mustEmbedUnimplementedGatewayServer() {}
 func (UnimplementedGatewayServer) testEmbeddedByValue()                 {}
@@ -218,164 +106,38 @@ func RegisterGatewayServer(s grpc.ServiceRegistrar, srv GatewayServer) {
 	s.RegisterService(&Gateway_ServiceDesc, srv)
 }
 
-func _Gateway_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateUserRequest)
+func _Gateway_GetGatewayInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGatewayInfoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GatewayServer).CreateUser(ctx, in)
+		return srv.(GatewayServer).GetGatewayInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Gateway_CreateUser_FullMethodName,
+		FullMethod: Gateway_GetGatewayInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).CreateUser(ctx, req.(*CreateUserRequest))
+		return srv.(GatewayServer).GetGatewayInfo(ctx, req.(*GetGatewayInfoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Gateway_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserRequest)
+func _Gateway_GetGatewayHealth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGatewayHealthRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GatewayServer).UpdateUser(ctx, in)
+		return srv.(GatewayServer).GetGatewayHealth(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Gateway_UpdateUser_FullMethodName,
+		FullMethod: Gateway_GetGatewayHealth_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).UpdateUser(ctx, req.(*UpdateUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Gateway_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GatewayServer).DeleteUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Gateway_DeleteUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).DeleteUser(ctx, req.(*DeleteUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Gateway_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GatewayServer).GetUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Gateway_GetUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).GetUser(ctx, req.(*GetUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Gateway_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GatewayServer).ListUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Gateway_ListUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).ListUser(ctx, req.(*ListUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Gateway_BatchDeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BatchDeleteUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GatewayServer).BatchDeleteUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Gateway_BatchDeleteUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).BatchDeleteUser(ctx, req.(*BatchDeleteUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Gateway_UpdateUserStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserStatusRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GatewayServer).UpdateUserStatus(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Gateway_UpdateUserStatus_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Gateway_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChangePasswordRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GatewayServer).ChangePassword(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Gateway_ChangePassword_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).ChangePassword(ctx, req.(*ChangePasswordRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Gateway_GetUserStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserStatsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GatewayServer).GetUserStats(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Gateway_GetUserStats_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GatewayServer).GetUserStats(ctx, req.(*GetUserStatsRequest))
+		return srv.(GatewayServer).GetGatewayHealth(ctx, req.(*GetGatewayHealthRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -388,40 +150,12 @@ var Gateway_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*GatewayServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateUser",
-			Handler:    _Gateway_CreateUser_Handler,
+			MethodName: "GetGatewayInfo",
+			Handler:    _Gateway_GetGatewayInfo_Handler,
 		},
 		{
-			MethodName: "UpdateUser",
-			Handler:    _Gateway_UpdateUser_Handler,
-		},
-		{
-			MethodName: "DeleteUser",
-			Handler:    _Gateway_DeleteUser_Handler,
-		},
-		{
-			MethodName: "GetUser",
-			Handler:    _Gateway_GetUser_Handler,
-		},
-		{
-			MethodName: "ListUser",
-			Handler:    _Gateway_ListUser_Handler,
-		},
-		{
-			MethodName: "BatchDeleteUser",
-			Handler:    _Gateway_BatchDeleteUser_Handler,
-		},
-		{
-			MethodName: "UpdateUserStatus",
-			Handler:    _Gateway_UpdateUserStatus_Handler,
-		},
-		{
-			MethodName: "ChangePassword",
-			Handler:    _Gateway_ChangePassword_Handler,
-		},
-		{
-			MethodName: "GetUserStats",
-			Handler:    _Gateway_GetUserStats_Handler,
+			MethodName: "GetGatewayHealth",
+			Handler:    _Gateway_GetGatewayHealth_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
