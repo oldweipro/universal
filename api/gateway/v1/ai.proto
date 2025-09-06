@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package api.universal.v1;
+
+import "google/api/annotations.proto";
+import "api/ai/v1/ai.proto";
+
+option go_package = "universal/api/gateway/v1;v1";
+option java_multiple_files = true;
+option java_package = "com.oldwei.universal.api.gateway.v1";
+option java_outer_classname = "AiProtoV1";
+
+// Gateway AI服务接口 - 提供HTTP访问AI服务的统一入口
+service Ai {
+  // === 对话统计分析接口 ===
+  
+  // GetConversationAnalytics 获取对话统计分析数据
+  rpc GetConversationAnalytics (api.ai.v1.GetConversationAnalyticsRequest) returns (api.ai.v1.GetConversationAnalyticsReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/analytics/conversations"
+      body: "*"
+    };
+  }
+  
+  // GetUserUsageStats 获取用户使用统计
+  rpc GetUserUsageStats (api.ai.v1.GetUserUsageStatsRequest) returns (api.ai.v1.GetUserUsageStatsReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/analytics/usage/users"
+      body: "*"
+    };
+  }
+  
+  // GetModelPerformanceStats 获取模型性能统计
+  rpc GetModelPerformanceStats (api.ai.v1.GetModelPerformanceStatsRequest) returns (api.ai.v1.GetModelPerformanceStatsReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/analytics/models/performance"
+      body: "*"
+    };
+  }
+  
+  // GetConversationTrends 获取对话趋势分析
+  rpc GetConversationTrends (api.ai.v1.GetConversationTrendsRequest) returns (api.ai.v1.GetConversationTrendsReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/analytics/conversations/trends"
+      body: "*"
+    };
+  }
+  
+  // GetTopicAnalysis 获取话题分析
+  rpc GetTopicAnalysis (api.ai.v1.GetTopicAnalysisRequest) returns (api.ai.v1.GetTopicAnalysisReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/analytics/topics"
+      body: "*"
+    };
+  }
+  
+  // GetSystemOverview 获取系统总览统计
+  rpc GetSystemOverview (api.ai.v1.GetSystemOverviewRequest) returns (api.ai.v1.GetSystemOverviewReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/analytics/system/overview"
+    };
+  }
+}

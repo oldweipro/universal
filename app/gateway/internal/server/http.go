@@ -16,6 +16,10 @@ func NewHTTPServer(c *conf.Server,
 	greeter *service.GreeterService,
 	gatewayService *service.GatewayService,
 	userService *service.UserService,
+	aiService *service.AiService,
+	conversationService *service.ConversationService,
+	knowledgeService *service.KnowledgeService,
+	toolService *service.ToolService,
 	logger log.Logger,
 ) *http.Server {
 	var opts = []http.ServerOption{
@@ -36,5 +40,12 @@ func NewHTTPServer(c *conf.Server,
 	v1.RegisterGreeterHTTPServer(srv, greeter)
 	gatewayv1.RegisterGatewayHTTPServer(srv, gatewayService)
 	gatewayv1.RegisterUserHTTPServer(srv, userService)
+
+	// 注册Gateway AI服务的HTTP接口 - 这是主要的HTTP API入口
+	gatewayv1.RegisterAiHTTPServer(srv, aiService)
+	gatewayv1.RegisterConversationHTTPServer(srv, conversationService)
+	gatewayv1.RegisterKnowledgeHTTPServer(srv, knowledgeService)
+	gatewayv1.RegisterToolHTTPServer(srv, toolService)
+
 	return srv
 }

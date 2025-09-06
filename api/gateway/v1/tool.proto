@@ -1,0 +1,219 @@
+syntax = "proto3";
+
+package api.universal.v1;
+
+import "google/api/annotations.proto";
+import "api/ai/v1/tool.proto";
+
+option go_package = "universal/api/gateway/v1;v1";
+option java_multiple_files = true;
+option java_package = "com.oldwei.universal.api.gateway.v1";
+option java_outer_classname = "ToolProtoV1";
+
+// Gateway 工具服务接口 - 提供HTTP访问工具服务的统一入口
+service Tool {
+  // === MCP工具管理 ===
+  
+  // ListTools 获取可用的MCP工具列表
+  // 支持按MCP服务器过滤，可选择只显示启用的工具
+  rpc ListTools (api.ai.v1.ListToolsRequest) returns (api.ai.v1.ListToolsReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools"
+    };
+  }
+
+  // GetTool 获取指定工具的详细信息
+  // 根据工具名称获取工具的完整配置和元数据
+  rpc GetTool (api.ai.v1.GetToolRequest) returns (api.ai.v1.GetToolReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/{name}"
+    };
+  }
+
+  // CallTool 调用指定的MCP工具
+  // 执行工具调用并返回结果，支持传入对话上下文
+  rpc CallTool (api.ai.v1.CallToolRequest) returns (api.ai.v1.CallToolResponse) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/tools/call"
+      body: "*"
+    };
+  }
+
+  // CallToolStream 流式调用工具
+  // 支持长时间运行的工具调用，实时返回执行进度
+  rpc CallToolStream (api.ai.v1.CallToolRequest) returns (stream api.ai.v1.CallToolStreamResponse) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/tools/call/stream"
+      body: "*"
+    };
+  }
+
+  // GetToolSchema 获取工具的参数Schema
+  // 返回工具的详细信息和参数定义，用于动态表单生成
+  rpc GetToolSchema (api.ai.v1.GetToolSchemaRequest) returns (api.ai.v1.GetToolSchemaReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/{name}/schema"
+    };
+  }
+
+  // ValidateToolArguments 验证工具参数
+  // 在实际调用前验证参数是否符合工具的Schema定义
+  rpc ValidateToolArguments (api.ai.v1.ValidateToolArgumentsRequest) returns (api.ai.v1.ValidateToolArgumentsReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/tools/validate"
+      body: "*"
+    };
+  }
+
+  // BatchCallTools 批量调用工具
+  // 同时调用多个工具，支持并行执行和依赖关系管理
+  rpc BatchCallTools (api.ai.v1.BatchCallToolsRequest) returns (api.ai.v1.BatchCallToolsReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/tools/batch-call"
+      body: "*"
+    };
+  }
+
+  // === MCP服务器管理 ===
+
+  // ListMcpServers 获取MCP服务器列表
+  // 返回所有已注册的MCP服务器信息
+  rpc ListMcpServers (api.ai.v1.ListMcpServersRequest) returns (api.ai.v1.ListMcpServersReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/mcp/servers"
+    };
+  }
+
+  // GetMcpServer 获取MCP服务器详细信息
+  // 根据服务器ID获取服务器的配置和状态信息
+  rpc GetMcpServer (api.ai.v1.GetMcpServerRequest) returns (api.ai.v1.GetMcpServerReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/mcp/servers/{id}"
+    };
+  }
+
+  // RegisterMcpServer 注册新的MCP服务器
+  // 添加新的MCP服务器到系统中
+  rpc RegisterMcpServer (api.ai.v1.RegisterMcpServerRequest) returns (api.ai.v1.RegisterMcpServerReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/tools/mcp/servers"
+      body: "*"
+    };
+  }
+
+  // UpdateMcpServer 更新MCP服务器配置
+  // 修改已注册的MCP服务器的配置信息
+  rpc UpdateMcpServer (api.ai.v1.UpdateMcpServerRequest) returns (api.ai.v1.UpdateMcpServerReply) {
+    option (google.api.http) = {
+      put: "/api/ai/v1/tools/mcp/servers/{id}"
+      body: "*"
+    };
+  }
+
+  // DeleteMcpServer 删除MCP服务器
+  // 从系统中移除MCP服务器及其所有工具和资源
+  rpc DeleteMcpServer (api.ai.v1.DeleteMcpServerRequest) returns (api.ai.v1.DeleteMcpServerReply) {
+    option (google.api.http) = {
+      delete: "/api/ai/v1/tools/mcp/servers/{id}"
+    };
+  }
+
+  // TestMcpServer 测试MCP服务器连接
+  // 验证MCP服务器的连接状态和可用性
+  rpc TestMcpServer (api.ai.v1.TestMcpServerRequest) returns (api.ai.v1.TestMcpServerReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/tools/mcp/servers/{id}/test"
+      body: "*"
+    };
+  }
+
+  // === 资源管理 ===
+
+  // ListResources 获取可用的MCP资源列表
+  // 支持按MCP服务器和MIME类型过滤
+  rpc ListResources (api.ai.v1.ListResourcesRequest) returns (api.ai.v1.ListResourcesReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/mcp/resources"
+    };
+  }
+
+  // GetResource 获取指定资源的内容
+  // 根据资源URI获取资源内容和元数据
+  rpc GetResource (api.ai.v1.GetResourceRequest) returns (api.ai.v1.GetResourceReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/mcp/resources/{uri}"
+    };
+  }
+
+  // SearchResources 搜索资源
+  // 基于关键词和元数据搜索可用资源
+  rpc SearchResources (api.ai.v1.SearchResourcesRequest) returns (api.ai.v1.SearchResourcesReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/tools/mcp/resources/search"
+      body: "*"
+    };
+  }
+
+  // WatchResource 监视资源变化
+  // 订阅资源变化通知，实时获取资源更新
+  rpc WatchResource (api.ai.v1.WatchResourceRequest) returns (stream api.ai.v1.WatchResourceReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/mcp/resources/{uri}/watch"
+    };
+  }
+
+  // === 工具执行历史 ===
+
+  // GetToolExecutionHistory 获取工具执行历史
+  // 查询指定工具的执行历史记录
+  rpc GetToolExecutionHistory (api.ai.v1.GetToolExecutionHistoryRequest) returns (api.ai.v1.GetToolExecutionHistoryReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/execution/history"
+    };
+  }
+
+  // GetToolExecutionStats 获取工具执行统计
+  // 获取工具使用的统计信息和性能指标
+  rpc GetToolExecutionStats (api.ai.v1.GetToolExecutionStatsRequest) returns (api.ai.v1.GetToolExecutionStatsReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/execution/stats"
+    };
+  }
+
+  // === 工具配置管理 ===
+
+  // EnableTool 启用工具
+  // 启用指定的工具，使其可被调用
+  rpc EnableTool (api.ai.v1.EnableToolRequest) returns (api.ai.v1.EnableToolReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/tools/{tool_name}/enable"
+      body: "*"
+    };
+  }
+
+  // DisableTool 禁用工具
+  // 禁用指定的工具，阻止其被调用
+  rpc DisableTool (api.ai.v1.DisableToolRequest) returns (api.ai.v1.DisableToolReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/tools/{tool_name}/disable"
+      body: "*"
+    };
+  }
+
+  // ConfigureTool 配置工具
+  // 设置工具的特定配置参数
+  rpc ConfigureTool (api.ai.v1.ConfigureToolRequest) returns (api.ai.v1.ConfigureToolReply) {
+    option (google.api.http) = {
+      put: "/api/ai/v1/tools/{tool_name}/config"
+      body: "*"
+    };
+  }
+
+  // GetToolConfig 获取工具配置
+  // 获取工具的当前配置信息
+  rpc GetToolConfig (api.ai.v1.GetToolConfigRequest) returns (api.ai.v1.GetToolConfigReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/tools/{tool_name}/config"
+    };
+  }
+}

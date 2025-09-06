@@ -16,6 +16,10 @@ func NewGRPCServer(c *conf.Server,
 	greeter *service.GreeterService,
 	gatewayService *service.GatewayService,
 	userService *service.UserService,
+	aiService *service.AiService,
+	conversationService *service.ConversationService,
+	knowledgeService *service.KnowledgeService,
+	toolService *service.ToolService,
 	logger log.Logger,
 ) *grpc.Server {
 	var opts = []grpc.ServerOption{
@@ -36,5 +40,12 @@ func NewGRPCServer(c *conf.Server,
 	v1.RegisterGreeterServer(srv, greeter)
 	gatewayv1.RegisterGatewayServer(srv, gatewayService)
 	gatewayv1.RegisterUserServer(srv, userService)
+
+	// 注册Gateway AI服务 - 提供gRPC接口
+	gatewayv1.RegisterAiServer(srv, aiService)
+	gatewayv1.RegisterConversationServer(srv, conversationService)
+	gatewayv1.RegisterKnowledgeServer(srv, knowledgeService)
+	gatewayv1.RegisterToolServer(srv, toolService)
+
 	return srv
 }

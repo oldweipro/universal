@@ -1,0 +1,181 @@
+syntax = "proto3";
+
+package api.universal.v1;
+
+import "google/api/annotations.proto";
+import "api/ai/v1/conversation.proto";
+
+option go_package = "universal/api/gateway/v1;v1";
+option java_multiple_files = true;
+option java_package = "com.oldwei.universal.api.gateway.v1";
+option java_outer_classname = "ConversationProtoV1";
+
+// Gateway 对话服务接口 - 提供HTTP访问对话服务的统一入口
+service Conversation {
+  // === 会话创建、管理和持久化 ===
+  
+  // CreateConversation 创建新的对话会话
+  rpc CreateConversation (api.ai.v1.CreateConversationRequest) returns (api.ai.v1.CreateConversationReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/conversations"
+      body: "*"
+    };
+  }
+
+  // GetConversation 获取指定对话的详细信息
+  rpc GetConversation (api.ai.v1.GetConversationRequest) returns (api.ai.v1.GetConversationReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/conversations/{id}"
+    };
+  }
+
+  // UpdateConversation 更新对话的配置信息
+  rpc UpdateConversation (api.ai.v1.UpdateConversationRequest) returns (api.ai.v1.UpdateConversationReply) {
+    option (google.api.http) = {
+      put: "/api/ai/v1/conversations/{id}"
+      body: "*"
+    };
+  }
+
+  // DeleteConversation 删除指定的对话
+  rpc DeleteConversation (api.ai.v1.DeleteConversationRequest) returns (api.ai.v1.DeleteConversationReply) {
+    option (google.api.http) = {
+      delete: "/api/ai/v1/conversations/{id}"
+    };
+  }
+
+  // ListConversations 获取用户的对话列表
+  rpc ListConversations (api.ai.v1.ListConversationsRequest) returns (api.ai.v1.ListConversationsReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/users/{user_id}/conversations"
+    };
+  }
+
+  // ArchiveConversation 归档对话
+  rpc ArchiveConversation (api.ai.v1.ArchiveConversationRequest) returns (api.ai.v1.ArchiveConversationReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/conversations/{id}/archive"
+      body: "*"
+    };
+  }
+
+  // RestoreConversation 恢复已删除的对话
+  rpc RestoreConversation (api.ai.v1.RestoreConversationRequest) returns (api.ai.v1.RestoreConversationReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/conversations/{id}/restore"
+      body: "*"
+    };
+  }
+
+  // === 消息发送与多轮对话 ===
+
+  // SendMessage 向指定对话发送消息并获取AI回复
+  rpc SendMessage (api.ai.v1.SendMessageRequest) returns (api.ai.v1.SendMessageReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/conversations/{conversation_id}/messages"
+      body: "*"
+    };
+  }
+
+  // SendStreamMessage 流式发送消息并获取AI回复
+  rpc SendStreamMessage (api.ai.v1.SendMessageRequest) returns (stream api.ai.v1.SendMessageStreamReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/conversations/{conversation_id}/messages/stream"
+      body: "*"
+    };
+  }
+
+  // GetMessages 获取对话的消息历史
+  rpc GetMessages (api.ai.v1.GetMessagesRequest) returns (api.ai.v1.GetMessagesReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/conversations/{conversation_id}/messages"
+    };
+  }
+
+  // DeleteMessage 删除指定消息
+  rpc DeleteMessage (api.ai.v1.DeleteMessageRequest) returns (api.ai.v1.DeleteMessageReply) {
+    option (google.api.http) = {
+      delete: "/api/ai/v1/messages"
+    };
+  }
+
+  // RegenerateMessage 重新生成AI回复
+  rpc RegenerateMessage (api.ai.v1.RegenerateMessageRequest) returns (api.ai.v1.RegenerateMessageReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/messages/{message_id}/regenerate"
+      body: "*"
+    };
+  }
+
+  // === 上下文维护和记忆管理 ===
+
+  // GetConversationContext 获取对话上下文信息
+  rpc GetConversationContext (api.ai.v1.GetConversationContextRequest) returns (api.ai.v1.GetConversationContextReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/conversations/{conversation_id}/context"
+    };
+  }
+
+  // UpdateConversationContext 更新对话上下文
+  rpc UpdateConversationContext (api.ai.v1.UpdateConversationContextRequest) returns (api.ai.v1.UpdateConversationContextReply) {
+    option (google.api.http) = {
+      put: "/api/ai/v1/conversations/{conversation_id}/context"
+      body: "*"
+    };
+  }
+
+  // SummarizeConversation 总结对话内容
+  rpc SummarizeConversation (api.ai.v1.SummarizeConversationRequest) returns (api.ai.v1.SummarizeConversationReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/conversations/{conversation_id}/summarize"
+      body: "*"
+    };
+  }
+
+  // ClearConversationHistory 清空对话历史
+  rpc ClearConversationHistory (api.ai.v1.ClearConversationHistoryRequest) returns (api.ai.v1.ClearConversationHistoryReply) {
+    option (google.api.http) = {
+      delete: "/api/ai/v1/conversations/{conversation_id}/history"
+    };
+  }
+
+  // SetConversationMemory 设置对话记忆
+  rpc SetConversationMemory (api.ai.v1.SetConversationMemoryRequest) returns (api.ai.v1.SetConversationMemoryReply) {
+    option (google.api.http) = {
+      put: "/api/ai/v1/conversations/{conversation_id}/memory"
+      body: "*"
+    };
+  }
+
+  // GetConversationMemory 获取对话记忆
+  rpc GetConversationMemory (api.ai.v1.GetConversationMemoryRequest) returns (api.ai.v1.GetConversationMemoryReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/conversations/{conversation_id}/memory"
+    };
+  }
+
+  // === 会话状态管理 ===
+
+  // GetConversationStats 获取对话统计信息
+  rpc GetConversationStats (api.ai.v1.GetConversationStatsRequest) returns (api.ai.v1.GetConversationStatsReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/conversations/{conversation_id}/stats"
+    };
+  }
+
+  // ExportConversation 导出对话数据
+  rpc ExportConversation (api.ai.v1.ExportConversationRequest) returns (api.ai.v1.ExportConversationReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/conversations/{conversation_id}/export"
+      body: "*"
+    };
+  }
+
+  // ImportConversation 导入对话数据
+  rpc ImportConversation (api.ai.v1.ImportConversationRequest) returns (api.ai.v1.ImportConversationReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/users/{user_id}/conversations/import"
+      body: "*"
+    };
+  }
+}

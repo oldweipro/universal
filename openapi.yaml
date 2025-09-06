@@ -3,8 +3,1512 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: Knowledge API
+    description: Gateway 知识库服务接口 - 提供HTTP访问知识库服务的统一入口
     version: 0.0.1
-paths: {}
+paths:
+    /api/ai/v1/knowledge/bases:
+        get:
+            tags:
+                - Knowledge
+            description: |-
+                ListKnowledgeBases 获取用户的知识库列表
+                 支持分页查询和关键词搜索
+            operationId: Knowledge_ListKnowledgeBases
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: integer
+                    format: enum
+                - name: tags
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: sortBy
+                  in: query
+                  schema:
+                    type: string
+                - name: sortDesc
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListKnowledgeBasesReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Knowledge
+            description: |-
+                CreateKnowledgeBase 创建新的知识库
+                 为用户创建知识库，可以指定向量化模型和分块策略
+            operationId: Knowledge_CreateKnowledgeBase
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateKnowledgeBaseRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateKnowledgeBaseReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/bases/{id}:
+        get:
+            tags:
+                - Knowledge
+            description: |-
+                GetKnowledgeBase 获取知识库详细信息
+                 根据ID获取知识库的完整信息和统计数据
+            operationId: Knowledge_GetKnowledgeBase
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: includeStats
+                  in: query
+                  schema:
+                    type: boolean
+                - name: includeConfig
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetKnowledgeBaseReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Knowledge
+            description: |-
+                UpdateKnowledgeBase 更新知识库配置
+                 修改知识库的名称、描述、向量化模型等配置
+            operationId: Knowledge_UpdateKnowledgeBase
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateKnowledgeBaseRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateKnowledgeBaseReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Knowledge
+            description: |-
+                DeleteKnowledgeBase 删除知识库
+                 软删除知识库及其所有文档和向量数据
+            operationId: Knowledge_DeleteKnowledgeBase
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: hardDelete
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteKnowledgeBaseReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/bases/{id}/analyze:
+        post:
+            tags:
+                - Knowledge
+            description: |-
+                AnalyzeKnowledgeBase 分析知识库内容
+                 分析知识库的内容分布、主题等
+            operationId: Knowledge_AnalyzeKnowledgeBase
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AnalyzeKnowledgeBaseRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AnalyzeKnowledgeBaseReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/bases/{id}/reindex:
+        post:
+            tags:
+                - Knowledge
+            description: |-
+                ReindexKnowledgeBase 重新索引知识库
+                 重新对知识库中的所有文档进行向量化处理
+            operationId: Knowledge_ReindexKnowledgeBase
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ReindexKnowledgeBaseRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ReindexKnowledgeBaseReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/bases/{id}/stats:
+        get:
+            tags:
+                - Knowledge
+            description: |-
+                GetKnowledgeBaseStats 获取知识库统计信息
+                 返回知识库的详细统计数据
+            operationId: Knowledge_GetKnowledgeBaseStats
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: includeDetailed
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetKnowledgeBaseStatsReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/bases/{knowledgeBaseId}/documents:
+        get:
+            tags:
+                - Knowledge
+            description: |-
+                ListDocuments 获取知识库中的文档列表
+                 支持分页查询和状态过滤
+            operationId: Knowledge_ListDocuments
+            parameters:
+                - name: knowledgeBaseId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: integer
+                    format: enum
+                - name: tags
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: mimeType
+                  in: query
+                  schema:
+                    type: string
+                - name: sortBy
+                  in: query
+                  schema:
+                    type: string
+                - name: sortDesc
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDocumentsReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Knowledge
+            description: |-
+                UploadDocument 向知识库上传文档
+                 上传文档到指定知识库，自动进行向量化处理
+            operationId: Knowledge_UploadDocument
+            parameters:
+                - name: knowledgeBaseId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UploadDocumentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UploadDocumentReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/bases/{knowledgeBaseId}/documents/batch:
+        post:
+            tags:
+                - Knowledge
+            description: |-
+                BatchUploadDocuments 批量上传文档
+                 批量上传多个文档，支持进度跟踪
+            operationId: Knowledge_BatchUploadDocuments
+            parameters:
+                - name: knowledgeBaseId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BatchUploadDocumentsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BatchUploadDocumentsReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/chunks/{id}:
+        get:
+            tags:
+                - Knowledge
+            description: |-
+                GetKnowledgeChunk 获取知识块详细信息
+                 根据块ID获取知识块的完整信息
+            operationId: Knowledge_GetKnowledgeChunk
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: includeEmbedding
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetKnowledgeChunkReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Knowledge
+            description: |-
+                UpdateKnowledgeChunk 更新知识块
+                 更新知识块的内容和元数据
+            operationId: Knowledge_UpdateKnowledgeChunk
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateKnowledgeChunkRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateKnowledgeChunkReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/documents:
+        delete:
+            tags:
+                - Knowledge
+            description: |-
+                DeleteDocument 删除文档
+                 从知识库中删除指定文档及其向量数据
+            operationId: Knowledge_DeleteDocument
+            parameters:
+                - name: documentIds
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: hardDelete
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteDocumentReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/documents/{documentId}/chunks:
+        get:
+            tags:
+                - Knowledge
+            description: |-
+                ListKnowledgeChunks 获取文档的知识块列表
+                 获取指定文档的所有知识块
+            operationId: Knowledge_ListKnowledgeChunks
+            parameters:
+                - name: documentId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: chunkType
+                  in: query
+                  schema:
+                    type: integer
+                    format: enum
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListKnowledgeChunksReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/documents/{documentId}/process:
+        post:
+            tags:
+                - Knowledge
+            description: |-
+                ProcessDocument 处理文档
+                 手动触发文档的向量化处理
+            operationId: Knowledge_ProcessDocument
+            parameters:
+                - name: documentId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ProcessDocumentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProcessDocumentReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/documents/{id}:
+        get:
+            tags:
+                - Knowledge
+            description: |-
+                GetDocument 获取文档详细信息
+                 根据ID获取文档的完整信息
+            operationId: Knowledge_GetDocument
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: includeContent
+                  in: query
+                  schema:
+                    type: boolean
+                - name: includeChunks
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetDocumentReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Knowledge
+            description: |-
+                UpdateDocument 更新文档内容
+                 更新已有文档的内容和元数据
+            operationId: Knowledge_UpdateDocument
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDocumentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDocumentReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/search:
+        post:
+            tags:
+                - Knowledge
+            description: |-
+                SearchKnowledge 在知识库中搜索相关内容
+                 基于语义相似度搜索知识库内容，支持相似度阈值过滤
+            operationId: Knowledge_SearchKnowledge
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SearchKnowledgeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SearchKnowledgeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/search/advanced:
+        post:
+            tags:
+                - Knowledge
+            description: |-
+                AdvancedSearch 高级搜索
+                 支持多种搜索条件和过滤器的高级搜索
+            operationId: Knowledge_AdvancedSearch
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AdvancedSearchRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AdvancedSearchReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/ai/v1/knowledge/search/hybrid:
+        post:
+            tags:
+                - Knowledge
+            description: |-
+                HybridSearch 混合搜索
+                 结合语义搜索和关键词搜索，提供更精确的结果
+            operationId: Knowledge_HybridSearch
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/HybridSearchRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/HybridSearchReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
-    schemas: {}
+    schemas:
+        AdvancedSearchReply:
+            type: object
+            properties:
+                chunks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/KnowledgeChunk'
+                totalCount:
+                    type: string
+                facets:
+                    type: object
+                    additionalProperties:
+                        type: string
+        AdvancedSearchRequest:
+            type: object
+            properties:
+                knowledgeBaseId:
+                    type: string
+                query:
+                    $ref: '#/components/schemas/SearchQuery'
+                limit:
+                    type: integer
+                    format: int32
+                offset:
+                    type: integer
+                    format: int32
+                sort:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SearchSort'
+                filters:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: 高级搜索
+        AnalysisResult:
+            type: object
+            properties:
+                type:
+                    type: integer
+                    format: enum
+                title:
+                    type: string
+                description:
+                    type: string
+                metrics:
+                    type: object
+                    additionalProperties:
+                        type: number
+                        format: double
+                insights:
+                    type: array
+                    items:
+                        type: string
+                visualizationData:
+                    type: string
+                    format: bytes
+        AnalyzeKnowledgeBaseReply:
+            type: object
+            properties:
+                results:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AnalysisResult'
+        AnalyzeKnowledgeBaseRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                analysisTypes:
+                    type: array
+                    items:
+                        type: integer
+                        format: enum
+            description: 分析知识库
+        BatchUploadDocumentsReply:
+            type: object
+            properties:
+                documents:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Document'
+                successCount:
+                    type: integer
+                    format: int32
+                failedCount:
+                    type: integer
+                    format: int32
+                errors:
+                    type: array
+                    items:
+                        type: string
+                progress:
+                    type: number
+                    format: double
+        BatchUploadDocumentsRequest:
+            type: object
+            properties:
+                knowledgeBaseId:
+                    type: string
+                documents:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DocumentUpload'
+            description: 批量上传文档
+        CreateKnowledgeBaseReply:
+            type: object
+            properties:
+                knowledgeBase:
+                    $ref: '#/components/schemas/KnowledgeBase'
+        CreateKnowledgeBaseRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                embeddingModel:
+                    type: string
+                chunkSize:
+                    type: integer
+                    format: int32
+                chunkOverlap:
+                    type: integer
+                    format: int32
+                config:
+                    $ref: '#/components/schemas/KnowledgeBaseConfig'
+                tags:
+                    type: array
+                    items:
+                        type: string
+                language:
+                    type: string
+            description: 创建知识库
+        DateRange:
+            type: object
+            properties:
+                start:
+                    type: string
+                    format: date-time
+                end:
+                    type: string
+                    format: date-time
+        DeleteDocumentReply:
+            type: object
+            properties: {}
+        DeleteKnowledgeBaseReply:
+            type: object
+            properties: {}
+        Document:
+            type: object
+            properties:
+                id:
+                    type: string
+                knowledgeBaseId:
+                    type: string
+                name:
+                    type: string
+                content:
+                    type: string
+                filePath:
+                    type: string
+                mimeType:
+                    type: string
+                fileSize:
+                    type: string
+                chunkCount:
+                    type: integer
+                    format: int32
+                status:
+                    type: integer
+                    format: enum
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                metadata:
+                    allOf:
+                        - $ref: '#/components/schemas/DocumentMetadata'
+                    description: 新增字段
+                tags:
+                    type: array
+                    items:
+                        type: string
+                language:
+                    type: string
+                sourceUrl:
+                    type: string
+                hash:
+                    type: string
+                version:
+                    type: integer
+                    format: int32
+                lastProcessedAt:
+                    type: string
+                    format: date-time
+                processingError:
+                    type: string
+                processingProgress:
+                    type: number
+                    format: double
+            description: 文档定义 - 增强版
+        DocumentMetadata:
+            type: object
+            properties:
+                title:
+                    type: string
+                author:
+                    type: string
+                subject:
+                    type: string
+                keywords:
+                    type: array
+                    items:
+                        type: string
+                createdDate:
+                    type: string
+                    format: date-time
+                modifiedDate:
+                    type: string
+                    format: date-time
+                category:
+                    type: string
+                pageCount:
+                    type: integer
+                    format: int32
+                encoding:
+                    type: string
+                customFields:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: 文档元数据
+        DocumentUpload:
+            type: object
+            properties:
+                name:
+                    type: string
+                content:
+                    type: string
+                    format: bytes
+                mimeType:
+                    type: string
+                metadata:
+                    $ref: '#/components/schemas/DocumentMetadata'
+                tags:
+                    type: array
+                    items:
+                        type: string
+        GetDocumentReply:
+            type: object
+            properties:
+                document:
+                    $ref: '#/components/schemas/Document'
+                chunks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/KnowledgeChunk'
+        GetKnowledgeBaseReply:
+            type: object
+            properties:
+                knowledgeBase:
+                    $ref: '#/components/schemas/KnowledgeBase'
+        GetKnowledgeBaseStatsReply:
+            type: object
+            properties:
+                stats:
+                    $ref: '#/components/schemas/KnowledgeBaseStats'
+                performanceMetrics:
+                    type: object
+                    additionalProperties:
+                        type: number
+                        format: double
+        GetKnowledgeChunkReply:
+            type: object
+            properties:
+                chunk:
+                    $ref: '#/components/schemas/KnowledgeChunk'
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        HybridSearchReply:
+            type: object
+            properties:
+                results:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/HybridSearchResult'
+                maxScore:
+                    type: number
+                    format: double
+                totalResults:
+                    type: integer
+                    format: int32
+        HybridSearchRequest:
+            type: object
+            properties:
+                knowledgeBaseId:
+                    type: string
+                query:
+                    type: string
+                limit:
+                    type: integer
+                    format: int32
+                semanticWeight:
+                    type: number
+                    format: double
+                keywordWeight:
+                    type: number
+                    format: double
+                threshold:
+                    type: number
+                    format: double
+                filters:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: 混合搜索
+        HybridSearchResult:
+            type: object
+            properties:
+                chunk:
+                    $ref: '#/components/schemas/KnowledgeChunk'
+                semanticScore:
+                    type: number
+                    format: double
+                keywordScore:
+                    type: number
+                    format: double
+                combinedScore:
+                    type: number
+                    format: double
+        KnowledgeBase:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                embeddingModel:
+                    type: string
+                chunkSize:
+                    type: integer
+                    format: int32
+                chunkOverlap:
+                    type: integer
+                    format: int32
+                status:
+                    type: integer
+                    format: enum
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                config:
+                    allOf:
+                        - $ref: '#/components/schemas/KnowledgeBaseConfig'
+                    description: 新增字段
+                stats:
+                    $ref: '#/components/schemas/KnowledgeBaseStats'
+                tags:
+                    type: array
+                    items:
+                        type: string
+                version:
+                    type: integer
+                    format: int32
+                language:
+                    type: string
+                supportedFileTypes:
+                    type: array
+                    items:
+                        type: string
+                maxFileSize:
+                    type: string
+                autoProcess:
+                    type: boolean
+                lastIndexedAt:
+                    type: string
+                    format: date-time
+            description: 知识库定义 - 增强版
+        KnowledgeBaseConfig:
+            type: object
+            properties:
+                embeddingModel:
+                    type: string
+                embeddingDimension:
+                    type: integer
+                    format: int32
+                chunkSize:
+                    type: integer
+                    format: int32
+                chunkOverlap:
+                    type: integer
+                    format: int32
+                chunkingStrategy:
+                    type: integer
+                    format: enum
+                similarityThreshold:
+                    type: number
+                    format: double
+                maxChunksPerQuery:
+                    type: integer
+                    format: int32
+                enableMetadataFilter:
+                    type: boolean
+                stopWords:
+                    type: array
+                    items:
+                        type: string
+                textSplitter:
+                    type: string
+                advancedOptions:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: 知识库配置
+        KnowledgeBaseStats:
+            type: object
+            properties:
+                documentCount:
+                    type: string
+                chunkCount:
+                    type: string
+                totalCharacters:
+                    type: string
+                totalTokens:
+                    type: string
+                averageChunkSize:
+                    type: number
+                    format: double
+                fileTypeDistribution:
+                    type: object
+                    additionalProperties:
+                        type: string
+                languageDistribution:
+                    type: object
+                    additionalProperties:
+                        type: string
+                lastUpdated:
+                    type: string
+                    format: date-time
+                storageSizeMb:
+                    type: number
+                    format: double
+                indexSizeMb:
+                    type: number
+                    format: double
+            description: 知识库统计信息
+        KnowledgeChunk:
+            type: object
+            properties:
+                id:
+                    type: string
+                documentId:
+                    type: string
+                knowledgeBaseId:
+                    type: string
+                content:
+                    type: string
+                score:
+                    type: number
+                    format: double
+                metadata:
+                    type: object
+                    additionalProperties:
+                        type: string
+                chunkIndex:
+                    type: integer
+                    description: 新增字段
+                    format: int32
+                startPosition:
+                    type: integer
+                    format: int32
+                endPosition:
+                    type: integer
+                    format: int32
+                embedding:
+                    type: array
+                    items:
+                        type: number
+                        format: float
+                language:
+                    type: string
+                keywords:
+                    type: array
+                    items:
+                        type: string
+                chunkType:
+                    type: integer
+                    format: enum
+                createdAt:
+                    type: string
+                    format: date-time
+                characterCount:
+                    type: integer
+                    format: int32
+                tokenCount:
+                    type: integer
+                    format: int32
+            description: 知识库块 - 增强版
+        ListDocumentsReply:
+            type: object
+            properties:
+                documents:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Document'
+                total:
+                    type: string
+                page:
+                    type: integer
+                    format: int32
+                pageSize:
+                    type: integer
+                    format: int32
+        ListKnowledgeBasesReply:
+            type: object
+            properties:
+                knowledgeBases:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/KnowledgeBase'
+                total:
+                    type: string
+                page:
+                    type: integer
+                    format: int32
+                pageSize:
+                    type: integer
+                    format: int32
+        ListKnowledgeChunksReply:
+            type: object
+            properties:
+                chunks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/KnowledgeChunk'
+                total:
+                    type: string
+                page:
+                    type: integer
+                    format: int32
+                pageSize:
+                    type: integer
+                    format: int32
+        ProcessDocumentReply:
+            type: object
+            properties:
+                jobId:
+                    type: string
+                status:
+                    type: integer
+                    format: enum
+        ProcessDocumentRequest:
+            type: object
+            properties:
+                documentId:
+                    type: string
+                forceReprocess:
+                    type: boolean
+                options:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: 处理文档
+        ReindexKnowledgeBaseReply:
+            type: object
+            properties:
+                jobId:
+                    type: string
+                status:
+                    type: string
+        ReindexKnowledgeBaseRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                forceReindex:
+                    type: boolean
+            description: 重新索引知识库
+        SearchKnowledgeReply:
+            type: object
+            properties:
+                chunks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/KnowledgeChunk'
+                maxScore:
+                    type: number
+                    format: double
+                minScore:
+                    type: number
+                    format: double
+                totalResults:
+                    type: integer
+                    format: int32
+        SearchKnowledgeRequest:
+            type: object
+            properties:
+                knowledgeBaseId:
+                    type: string
+                query:
+                    type: string
+                limit:
+                    type: integer
+                    format: int32
+                threshold:
+                    type: number
+                    format: double
+                filters:
+                    type: object
+                    additionalProperties:
+                        type: string
+                includeMetadata:
+                    type: boolean
+            description: 搜索知识
+        SearchQuery:
+            type: object
+            properties:
+                text:
+                    type: string
+                mode:
+                    type: integer
+                    format: enum
+                keywords:
+                    type: array
+                    items:
+                        type: string
+                excludeKeywords:
+                    type: array
+                    items:
+                        type: string
+                dateRange:
+                    $ref: '#/components/schemas/DateRange'
+        SearchSort:
+            type: object
+            properties:
+                field:
+                    type: string
+                desc:
+                    type: boolean
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateDocumentReply:
+            type: object
+            properties:
+                document:
+                    $ref: '#/components/schemas/Document'
+        UpdateDocumentRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                content:
+                    type: string
+                    format: bytes
+                metadata:
+                    $ref: '#/components/schemas/DocumentMetadata'
+                tags:
+                    type: array
+                    items:
+                        type: string
+                reprocess:
+                    type: boolean
+            description: 更新文档
+        UpdateKnowledgeBaseReply:
+            type: object
+            properties:
+                knowledgeBase:
+                    $ref: '#/components/schemas/KnowledgeBase'
+        UpdateKnowledgeBaseRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                embeddingModel:
+                    type: string
+                chunkSize:
+                    type: integer
+                    format: int32
+                chunkOverlap:
+                    type: integer
+                    format: int32
+                config:
+                    $ref: '#/components/schemas/KnowledgeBaseConfig'
+                tags:
+                    type: array
+                    items:
+                        type: string
+                reindexAfterUpdate:
+                    type: boolean
+            description: 更新知识库
+        UpdateKnowledgeChunkReply:
+            type: object
+            properties:
+                chunk:
+                    $ref: '#/components/schemas/KnowledgeChunk'
+        UpdateKnowledgeChunkRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                content:
+                    type: string
+                metadata:
+                    type: object
+                    additionalProperties:
+                        type: string
+                keywords:
+                    type: array
+                    items:
+                        type: string
+            description: 更新知识块
+        UploadDocumentReply:
+            type: object
+            properties:
+                document:
+                    $ref: '#/components/schemas/Document'
+        UploadDocumentRequest:
+            type: object
+            properties:
+                knowledgeBaseId:
+                    type: string
+                name:
+                    type: string
+                content:
+                    type: string
+                    format: bytes
+                mimeType:
+                    type: string
+                metadata:
+                    $ref: '#/components/schemas/DocumentMetadata'
+                tags:
+                    type: array
+                    items:
+                        type: string
+                autoProcess:
+                    type: boolean
+            description: 上传文档
+tags:
+    - name: Knowledge

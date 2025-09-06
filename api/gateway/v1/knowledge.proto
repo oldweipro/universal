@@ -1,0 +1,204 @@
+syntax = "proto3";
+
+package api.universal.v1;
+
+import "google/api/annotations.proto";
+import "api/ai/v1/knowledge.proto";
+
+option go_package = "universal/api/gateway/v1;v1";
+option java_multiple_files = true;
+option java_package = "com.oldwei.universal.api.gateway.v1";
+option java_outer_classname = "GatewayKnowledgeProtoV1";
+
+// Gateway 知识库服务接口 - 提供HTTP访问知识库服务的统一入口
+service Knowledge {
+  // === 知识库管理 ===
+  
+  // CreateKnowledgeBase 创建新的知识库
+  // 为用户创建知识库，可以指定向量化模型和分块策略
+  rpc CreateKnowledgeBase (api.ai.v1.CreateKnowledgeBaseRequest) returns (api.ai.v1.CreateKnowledgeBaseReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/knowledge/bases"
+      body: "*"
+    };
+  }
+
+  // UpdateKnowledgeBase 更新知识库配置
+  // 修改知识库的名称、描述、向量化模型等配置
+  rpc UpdateKnowledgeBase (api.ai.v1.UpdateKnowledgeBaseRequest) returns (api.ai.v1.UpdateKnowledgeBaseReply) {
+    option (google.api.http) = {
+      put: "/api/ai/v1/knowledge/bases/{id}"
+      body: "*"
+    };
+  }
+
+  // DeleteKnowledgeBase 删除知识库
+  // 软删除知识库及其所有文档和向量数据
+  rpc DeleteKnowledgeBase (api.ai.v1.DeleteKnowledgeBaseRequest) returns (api.ai.v1.DeleteKnowledgeBaseReply) {
+    option (google.api.http) = {
+      delete: "/api/ai/v1/knowledge/bases/{id}"
+    };
+  }
+
+  // ListKnowledgeBases 获取用户的知识库列表
+  // 支持分页查询和关键词搜索
+  rpc ListKnowledgeBases (api.ai.v1.ListKnowledgeBasesRequest) returns (api.ai.v1.ListKnowledgeBasesReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/knowledge/bases"
+    };
+  }
+
+  // GetKnowledgeBase 获取知识库详细信息
+  // 根据ID获取知识库的完整信息和统计数据
+  rpc GetKnowledgeBase (api.ai.v1.GetKnowledgeBaseRequest) returns (api.ai.v1.GetKnowledgeBaseReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/knowledge/bases/{id}"
+    };
+  }
+
+  // === 文档管理 ===
+
+  // UploadDocument 向知识库上传文档
+  // 上传文档到指定知识库，自动进行向量化处理
+  rpc UploadDocument (api.ai.v1.UploadDocumentRequest) returns (api.ai.v1.UploadDocumentReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/knowledge/bases/{knowledge_base_id}/documents"
+      body: "*"
+    };
+  }
+
+  // BatchUploadDocuments 批量上传文档
+  // 批量上传多个文档，支持进度跟踪
+  rpc BatchUploadDocuments (stream api.ai.v1.BatchUploadDocumentsRequest) returns (stream api.ai.v1.BatchUploadDocumentsReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/knowledge/bases/{knowledge_base_id}/documents/batch"
+      body: "*"
+    };
+  }
+
+  // UpdateDocument 更新文档内容
+  // 更新已有文档的内容和元数据
+  rpc UpdateDocument (api.ai.v1.UpdateDocumentRequest) returns (api.ai.v1.UpdateDocumentReply) {
+    option (google.api.http) = {
+      put: "/api/ai/v1/knowledge/documents/{id}"
+      body: "*"
+    };
+  }
+
+  // DeleteDocument 删除文档
+  // 从知识库中删除指定文档及其向量数据
+  rpc DeleteDocument (api.ai.v1.DeleteDocumentRequest) returns (api.ai.v1.DeleteDocumentReply) {
+    option (google.api.http) = {
+      delete: "/api/ai/v1/knowledge/documents"
+    };
+  }
+
+  // ListDocuments 获取知识库中的文档列表
+  // 支持分页查询和状态过滤
+  rpc ListDocuments (api.ai.v1.ListDocumentsRequest) returns (api.ai.v1.ListDocumentsReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/knowledge/bases/{knowledge_base_id}/documents"
+    };
+  }
+
+  // GetDocument 获取文档详细信息
+  // 根据ID获取文档的完整信息
+  rpc GetDocument (api.ai.v1.GetDocumentRequest) returns (api.ai.v1.GetDocumentReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/knowledge/documents/{id}"
+    };
+  }
+
+  // ProcessDocument 处理文档
+  // 手动触发文档的向量化处理
+  rpc ProcessDocument (api.ai.v1.ProcessDocumentRequest) returns (api.ai.v1.ProcessDocumentReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/knowledge/documents/{document_id}/process"
+      body: "*"
+    };
+  }
+
+  // === 知识搜索 ===
+
+  // SearchKnowledge 在知识库中搜索相关内容
+  // 基于语义相似度搜索知识库内容，支持相似度阈值过滤
+  rpc SearchKnowledge (api.ai.v1.SearchKnowledgeRequest) returns (api.ai.v1.SearchKnowledgeReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/knowledge/search"
+      body: "*"
+    };
+  }
+
+  // HybridSearch 混合搜索
+  // 结合语义搜索和关键词搜索，提供更精确的结果
+  rpc HybridSearch (api.ai.v1.HybridSearchRequest) returns (api.ai.v1.HybridSearchReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/knowledge/search/hybrid"
+      body: "*"
+    };
+  }
+
+  // AdvancedSearch 高级搜索
+  // 支持多种搜索条件和过滤器的高级搜索
+  rpc AdvancedSearch (api.ai.v1.AdvancedSearchRequest) returns (api.ai.v1.AdvancedSearchReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/knowledge/search/advanced"
+      body: "*"
+    };
+  }
+
+  // === 知识管理 ===
+
+  // GetKnowledgeChunk 获取知识块详细信息
+  // 根据块ID获取知识块的完整信息
+  rpc GetKnowledgeChunk (api.ai.v1.GetKnowledgeChunkRequest) returns (api.ai.v1.GetKnowledgeChunkReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/knowledge/chunks/{id}"
+    };
+  }
+
+  // UpdateKnowledgeChunk 更新知识块
+  // 更新知识块的内容和元数据
+  rpc UpdateKnowledgeChunk (api.ai.v1.UpdateKnowledgeChunkRequest) returns (api.ai.v1.UpdateKnowledgeChunkReply) {
+    option (google.api.http) = {
+      put: "/api/ai/v1/knowledge/chunks/{id}"
+      body: "*"
+    };
+  }
+
+  // ListKnowledgeChunks 获取文档的知识块列表
+  // 获取指定文档的所有知识块
+  rpc ListKnowledgeChunks (api.ai.v1.ListKnowledgeChunksRequest) returns (api.ai.v1.ListKnowledgeChunksReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/knowledge/documents/{document_id}/chunks"
+    };
+  }
+
+  // ReindexKnowledgeBase 重新索引知识库
+  // 重新对知识库中的所有文档进行向量化处理
+  rpc ReindexKnowledgeBase (api.ai.v1.ReindexKnowledgeBaseRequest) returns (api.ai.v1.ReindexKnowledgeBaseReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/knowledge/bases/{id}/reindex"
+      body: "*"
+    };
+  }
+
+  // === 统计和分析 ===
+
+  // GetKnowledgeBaseStats 获取知识库统计信息
+  // 返回知识库的详细统计数据
+  rpc GetKnowledgeBaseStats (api.ai.v1.GetKnowledgeBaseStatsRequest) returns (api.ai.v1.GetKnowledgeBaseStatsReply) {
+    option (google.api.http) = {
+      get: "/api/ai/v1/knowledge/bases/{id}/stats"
+    };
+  }
+
+  // AnalyzeKnowledgeBase 分析知识库内容
+  // 分析知识库的内容分布、主题等
+  rpc AnalyzeKnowledgeBase (api.ai.v1.AnalyzeKnowledgeBaseRequest) returns (api.ai.v1.AnalyzeKnowledgeBaseReply) {
+    option (google.api.http) = {
+      post: "/api/ai/v1/knowledge/bases/{id}/analyze"
+      body: "*"
+    };
+  }
+}
