@@ -24,12 +24,12 @@ import (
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, registry *conf.Registry, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
+	dataData, cleanup, err := data.NewData(confData)
 	if err != nil {
 		return nil, nil, err
 	}
 	aiRepo := data.NewAiRepo(dataData, logger)
-	aiUsecase := biz.NewAiUsecase(aiRepo, logger)
+	aiUsecase := biz.NewAiUsecase(aiRepo)
 	aiService := service.NewAiService(aiUsecase)
 	providerRepo := data.NewProviderRepo(dataData, logger)
 	modelRepo := data.NewModelRepo(dataData, logger)

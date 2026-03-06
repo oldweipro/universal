@@ -19,16 +19,15 @@ type AiRepo interface {
 // AiUsecase is an Ai usecase.
 type AiUsecase struct {
 	repo AiRepo
-	log  *log.Helper
 }
 
 // NewAiUsecase new an Ai usecase.
-func NewAiUsecase(repo AiRepo, logger log.Logger) *AiUsecase {
-	return &AiUsecase{repo: repo, log: log.NewHelper(logger)}
+func NewAiUsecase(repo AiRepo) *AiUsecase {
+	return &AiUsecase{repo: repo}
 }
 
 // CreateAi creates an Ai, and returns the new Ai.
 func (uc *AiUsecase) CreateAi(ctx context.Context, g *Ai) (*Ai, error) {
-	uc.log.WithContext(ctx).Infof("CreateAi: %v", g.Hello)
+	log.Infof("CreateAi: %v", g.Hello)
 	return uc.repo.CreateAi(ctx, g)
 }

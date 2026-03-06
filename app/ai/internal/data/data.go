@@ -30,14 +30,13 @@ func NewTestData(db *gorm.DB) *Data {
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
-	helper := log.NewHelper(logger)
+func NewData(c *conf.Data) (*Data, func(), error) {
 	// 初始化数据库连接
 	db, err := gorm.Open(mysql.Open(c.Database.Source), &gorm.Config{
 		Logger: gormlogger.Default.LogMode(gormlogger.Info),
 	})
 	if err != nil {
-		helper.Fatalf("failed to connect database: %v", err)
+		log.Fatalf("failed to connect database: %v", err)
 		return nil, nil, err
 	}
 	// 数据库迁移
@@ -60,11 +59,11 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 		&model.ProcessingJob{},
 		&model.SearchHistory{},
 	); err != nil {
-		helper.Fatalf("failed to migrate database: %v", err)
+		log.Fatalf("failed to migrate database: %v", err)
 		return nil, nil, err
 	}
 	cleanup := func() {
-		helper.Info("closing the data resources")
+		log.Info("closing the data resources")
 	}
 	d := &Data{
 		db: db,
